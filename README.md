@@ -31,7 +31,8 @@ shijing-things/
 ├── 📁 data/                   # 原始数据文件
 │   ├── shijing.json           # 诗经305篇全文（原始数据）
 │   ├── shijing_data.json      # 草木鸟兽基础数据
-│   └── image_mapping.json     # 图片映射数据
+│   ├── image_mapping.json     # 图片映射数据
+│   └── 📁 img/                # 下载的本地图片（191张）
 │
 ├── 📁 scripts/                # Python 脚本
 │   ├── process_shijing.py     # 处理诗经数据生成 JSON
@@ -85,6 +86,22 @@ python3 process_shijing.py
 
 这会从 `data/shijing.json` 读取原始数据，处理后生成 `app/src/data/poemFullText.json`。
 
+### 下载图片
+
+如需重新下载所有图片（数据中的图片 URL 已更新为本地路径）：
+
+```bash
+cd scripts
+python3 download_images.py
+```
+
+这会：
+1. 下载所有图片到 `data/img/` 目录
+2. 复制图片到 `app/public/img/` 供前端使用
+3. 自动更新 `app/src/data/shijingData.json` 中的图片路径为本地路径
+
+当前共有 **191** 张图片，**15** 个条目暂无图片。
+
 ## 技术栈
 
 - **框架**: React + TypeScript
@@ -98,6 +115,7 @@ python3 process_shijing.py
 - 🌿 按类别筛选：草、木、鸟、兽、虫、鱼
 - 🔍 实时搜索：名称、诗篇、出处
 - 📖 查看诗经全文：点击卡片查看完整诗篇
+- 🖼️ 本地图片：191张草木鸟兽图片已下载到本地
 - 📱 响应式设计：支持移动端访问
 
 ## License
