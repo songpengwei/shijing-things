@@ -7,7 +7,11 @@
     "quote": "参差荇菜，左右流之。",
     "description": "水生睡菜，嫩叶可食",
     "id": 1,
-    "imageUrl": "/img/1_荇菜.jpg"
+    "imageUrl": "/img/1_荇菜.jpg",
+    "modernName": "荇菜、莕菜、水荷叶",
+    "taxonomy": "龙胆科·荇菜属",
+    "symbolism": "象征美好爱情与追求，《关雎》以采荇菜起兴，喻君子对淑女的爱慕与思念。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/荇菜"
   },
   {
     "name": "黍",
@@ -17,7 +21,11 @@
     "quote": "彼黍离离，彼稷之苗。",
     "description": "黄米，五谷之一",
     "id": 2,
-    "imageUrl": "/img/2_黍.jpg"
+    "imageUrl": "/img/2_黍.jpg",
+    "modernName": "黍子、糜子、黄米",
+    "taxonomy": "禾本科·黍属",
+    "symbolism": "象征亡国之痛与故国之思，「黍离之悲」成为后世表达国家衰亡、故园残破的典故。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/黍"
   },
   {
     "name": "稷",
@@ -27,7 +35,11 @@
     "quote": "黍稷重穋，禾麻菽麦。",
     "description": "粟（小米），百谷之长",
     "id": 3,
-    "imageUrl": "/img/3_稷.jpg"
+    "imageUrl": "/img/3_稷.jpg",
+    "modernName": "粟、小米、谷子",
+    "taxonomy": "禾本科·狗尾草属",
+    "symbolism": "五谷之长，古代被视为百谷之神，江山社稷的「稷」即源于此，象征国家根本。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/粟"
   },
   {
     "name": "麦",
@@ -37,7 +49,11 @@
     "quote": "芃芃其麦，控于大邦。",
     "description": "小麦",
     "id": 4,
-    "imageUrl": "/img/4_麦.jpg"
+    "imageUrl": "/img/4_麦.jpg",
+    "modernName": "小麦",
+    "taxonomy": "禾本科·小麦属",
+    "symbolism": "象征丰收与生命延续，是古代北方主要粮食作物，也寄托对故乡的思念。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/小麦"
   },
   {
     "name": "禾",
@@ -47,7 +63,11 @@
     "quote": "十月纳禾稼，黍稷重穋。",
     "description": "谷物总称",
     "id": 5,
-    "imageUrl": "/img/5_禾.jpg"
+    "imageUrl": "/img/5_禾.jpg",
+    "modernName": "禾苗、谷物总称",
+    "taxonomy": "禾本科·禾属",
+    "symbolism": "泛指粮食作物，象征丰收与民生，是古代农业社会的根本。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/禾"
   },
   {
     "name": "粟",
@@ -57,7 +77,11 @@
     "quote": "交交黄鸟，止于粟。",
     "description": "去皮稷",
     "id": 6,
-    "imageUrl": "/img/6_粟.jpg"
+    "imageUrl": "/img/6_粟.jpg",
+    "modernName": "小米、粟米",
+    "taxonomy": "禾本科·狗尾草属",
+    "symbolism": "去皮的稷，古代主要粮食，象征民生根本与简朴生活。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/粟"
   },
   {
     "name": "荑",
@@ -67,7 +91,11 @@
     "quote": "自牧归荑，洵美且异。",
     "description": "初生白茅嫩芽，赠以示爱",
     "id": 7,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "白茅嫩芽",
+    "taxonomy": "禾本科·白茅属",
+    "symbolism": "象征纯真爱情，男子从郊外采来初生的白茅草赠予心上人，表达爱意与思念。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/白茅"
   },
   {
     "name": "蕨",
@@ -77,7 +105,11 @@
     "quote": "言采其蕨，未见君子。",
     "description": "蕨菜嫩芽",
     "id": 8,
-    "imageUrl": "/img/8_蕨.jpg"
+    "imageUrl": "/img/8_蕨.jpg",
+    "modernName": "蕨菜、龙头菜",
+    "taxonomy": "蕨科·蕨属",
+    "symbolism": "象征思念与期待，女子采蕨时思念远方的君子，寄托对爱人的深深眷恋。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蕨"
   },
   {
     "name": "薇",
@@ -87,7 +119,11 @@
     "quote": "采薇采薇，薇亦作止。",
     "description": "野豌豆苗",
     "id": 9,
-    "imageUrl": "/img/9_薇.jpg"
+    "imageUrl": "/img/9_薇.jpg",
+    "modernName": "野豌豆、大巢菜",
+    "taxonomy": "豆科·野豌豆属",
+    "symbolism": "象征戍边之苦与思乡之情，伯夷叔齐采薇而食，亦为守节之志的象征。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/野豌豆属"
   },
   {
     "name": "荠",
@@ -97,7 +133,11 @@
     "quote": "其甘如荠，荼如荠。",
     "description": "荠菜",
     "id": 10,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "荠菜、地菜",
+    "taxonomy": "十字花科·荠菜属",
+    "symbolism": "象征甘甜与美好，「其甘如荠」形容事物甜美，与「荼苦」形成鲜明对比。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/荠菜"
   },
   {
     "name": "卷耳",
@@ -107,7 +147,11 @@
     "quote": "采采卷耳，不盈顷筐。",
     "description": "苍耳",
     "id": 11,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "苍耳、羊负来",
+    "taxonomy": "菊科·苍耳属",
+    "symbolism": "象征怀人之思，妇人采卷耳时思念远行的丈夫，「不盈顷筐」表现心不在焉。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/苍耳"
   },
   {
     "name": "芣苢",
@@ -117,7 +161,11 @@
     "quote": "采采芣苢，薄言采之。",
     "description": "车前子，宜子之草",
     "id": 12,
-    "imageUrl": "/img/12_芣苢.jpg"
+    "imageUrl": "/img/12_芣苢.jpg",
+    "modernName": "车前草、车轮菜",
+    "taxonomy": "车前科·车前属",
+    "symbolism": "象征多子多福，古代认为车前草有益于怀孕生子，采之表达求子愿望。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/车前"
   },
   {
     "name": "荼",
@@ -127,7 +175,11 @@
     "quote": "谁谓荼苦，其甘如荠。",
     "description": "苦菜，非今茶叶",
     "id": 13,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "苦菜、苦苣",
+    "taxonomy": "菊科·苦苣菜属",
+    "symbolism": "象征苦难与磨砺，「荼毒」一词源于此，形容极度的痛苦与煎熬。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/苦苣菜"
   },
   {
     "name": "萧",
@@ -137,7 +189,11 @@
     "quote": "彼采萧兮，一日不见，如三秋兮。",
     "description": "蒿类，祭用",
     "id": 14,
-    "imageUrl": "/img/14_萧.jpg"
+    "imageUrl": "/img/14_萧.jpg",
+    "modernName": "艾蒿、香蒿",
+    "taxonomy": "菊科·蒿属",
+    "symbolism": "象征思念之情，「一日不见，如三秋兮」成为表达相思之情的千古名句。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蒿属"
   },
   {
     "name": "艾",
@@ -147,7 +203,11 @@
     "quote": "彼采艾兮，一日不见，如三岁兮。",
     "description": "艾草，灸用",
     "id": 15,
-    "imageUrl": "/img/15_艾.jpg"
+    "imageUrl": "/img/15_艾.jpg",
+    "modernName": "艾草、艾蒿",
+    "taxonomy": "菊科·蒿属",
+    "symbolism": "象征祛邪避毒、思念之情，端午节悬挂艾草驱邪，亦用于针灸。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/艾蒿"
   },
   {
     "name": "蒲",
@@ -157,7 +217,11 @@
     "quote": "扬之水，不流束蒲。",
     "description": "香蒲，编席",
     "id": 16,
-    "imageUrl": "/img/16_蒲.jpg"
+    "imageUrl": "/img/16_蒲.jpg",
+    "modernName": "香蒲、蒲草",
+    "taxonomy": "香蒲科·香蒲属",
+    "symbolism": "象征柔弱与坚韧并存，蒲草柔韧可编席，亦象征女子的温婉品格。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/香蒲"
   },
   {
     "name": "蓍",
@@ -167,7 +231,11 @@
     "quote": "尔卜尔筮，体无咎言。",
     "description": "筮草",
     "id": 17,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "蓍草、锯齿草",
+    "taxonomy": "菊科·蓍属",
+    "symbolism": "象征占卜与智慧，古代用蓍草占卜吉凶，「蓍龟」并称，代表预测未来。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蓍"
   },
   {
     "name": "蒹葭",
@@ -177,7 +245,11 @@
     "quote": "蒹葭苍苍，白露为霜。",
     "description": "初生芦苇与荻",
     "id": 18,
-    "imageUrl": "/img/18_蒹葭.jpg"
+    "imageUrl": "/img/18_蒹葭.jpg",
+    "modernName": "芦苇、芦花",
+    "taxonomy": "禾本科·芦苇属",
+    "symbolism": "象征可望而不可即的美好追求，「所谓伊人，在水一方」成为朦胧美的经典意象。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/芦苇"
   },
   {
     "name": "荻",
@@ -187,7 +259,11 @@
     "quote": "蒹葭采采，白露未已。",
     "description": "芦类",
     "id": 19,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "荻草、荻芦",
+    "taxonomy": "禾本科·荻属",
+    "symbolism": "与蒹葭并称，象征秋天的萧瑟与离别的哀愁，亦代表坚韧的生命力。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/荻"
   },
   {
     "name": "葛",
@@ -197,7 +273,11 @@
     "quote": "葛之覃兮，施于中谷。",
     "description": "蔓生纤维科植物，皮可织布",
     "id": 20,
-    "imageUrl": "/img/20_葛.png"
+    "imageUrl": "/img/20_葛.png",
+    "modernName": "葛藤、野葛",
+    "taxonomy": "豆科·葛属",
+    "symbolism": "象征女性的勤劳与温柔，采葛织布是古代女子的日常劳作，亦喻思念。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/葛"
   },
   {
     "name": "谖草",
@@ -207,7 +287,11 @@
     "quote": "焉得谖草，言树之背。",
     "description": "忘忧草，萱草",
     "id": 21,
-    "imageUrl": "/img/21_谖草.jpg"
+    "imageUrl": "/img/21_谖草.jpg",
+    "modernName": "萱草、忘忧草、金针菜",
+    "taxonomy": "百合科·萱草属",
+    "symbolism": "象征忘忧与母亲，「萱堂」指母亲居所，表达对远方丈夫的思念与想要忘却忧愁的愿望。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/萱草"
   },
   {
     "name": "飞蓬",
@@ -217,7 +301,11 @@
     "quote": "自伯之东，首如飞蓬。",
     "description": "蓬草，随风飞舞",
     "id": 22,
-    "imageUrl": "/img/22_飞蓬.jpg"
+    "imageUrl": "/img/22_飞蓬.jpg",
+    "modernName": "蓬草、飞蓬",
+    "taxonomy": "菊科·飞蓬属",
+    "symbolism": "象征漂泊无依与思念之苦，女子因思念丈夫而无心梳妆，头发如飞蓬般散乱。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/飞蓬"
   },
   {
     "name": "绿",
@@ -227,7 +315,11 @@
     "quote": "绿兮衣兮，绿衣黄裳。",
     "description": "菉草，即荩草",
     "id": 23,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "荩草、菉草",
+    "taxonomy": "禾本科·荩草属",
+    "symbolism": "象征哀思与悼念，《绿衣》为卫庄公夫人悼念亡夫之作，绿衣黄裳喻阴阳颠倒。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/荩草"
   },
   {
     "name": "葑",
@@ -237,7 +329,11 @@
     "quote": "采葑采菲，无以下体。",
     "description": "蔓菁",
     "id": 24,
-    "imageUrl": "/img/24_葑.jpg"
+    "imageUrl": "/img/24_葑.jpg",
+    "modernName": "蔓菁、芜菁",
+    "taxonomy": "十字花科·芸薹属",
+    "symbolism": "象征不应因小失大，「采葑采菲」喻娶妻不应只看外表，更要注重品德。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蔓菁"
   },
   {
     "name": "菲",
@@ -247,7 +343,11 @@
     "quote": "采葑采菲，无以下体。",
     "description": "萝卜",
     "id": 25,
-    "imageUrl": "/img/25_菲.jpg"
+    "imageUrl": "/img/25_菲.jpg",
+    "modernName": "萝卜、莱菔",
+    "taxonomy": "十字花科·萝卜属",
+    "symbolism": "与葑并称，象征娶妻重德不重貌，根部可食而叶不可食，喻人的内在美。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/萝卜"
   },
   {
     "name": "葽",
@@ -257,7 +357,11 @@
     "quote": "四月秀葽，五月鸣蜩。",
     "description": "远志",
     "id": 26,
-    "imageUrl": "/img/26_葽.jpg"
+    "imageUrl": "/img/26_葽.jpg",
+    "modernName": "远志、小草",
+    "taxonomy": "远志科·远志属",
+    "symbolism": "象征远大志向，「远志」之名即寓意志存高远，四月开花预示夏天的到来。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/远志"
   },
   {
     "name": "蘩",
@@ -267,7 +371,11 @@
     "quote": "于以采蘩，于沼于沚。",
     "description": "白蒿，用于祭祀",
     "id": 27,
-    "imageUrl": "/img/27_蘩.jpg"
+    "imageUrl": "/img/27_蘩.jpg",
+    "modernName": "白蒿、蘩蒿",
+    "taxonomy": "菊科·蒿属",
+    "symbolism": "象征祭祀与恭敬，古代女子采蘩用于公侯祭祀，体现虔诚与责任。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/白蒿"
   },
   {
     "name": "苹",
@@ -277,7 +385,11 @@
     "quote": "于以采苹，南涧之滨。",
     "description": "浮萍",
     "id": 28,
-    "imageUrl": "/img/28_苹.jpg"
+    "imageUrl": "/img/28_苹.jpg",
+    "modernName": "浮萍、青萍",
+    "taxonomy": "浮萍科·浮萍属",
+    "symbolism": "象征漂泊无定，亦用于祭祀，古代女子采苹以奉宗庙，体现孝道。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/浮萍"
   },
   {
     "name": "藻",
@@ -287,7 +399,11 @@
     "quote": "于以采藻，于彼行潦。",
     "description": "水藻",
     "id": 29,
-    "imageUrl": "/img/29_藻.jpg"
+    "imageUrl": "/img/29_藻.jpg",
+    "modernName": "水藻、藻类植物",
+    "taxonomy": "藻类植物",
+    "symbolism": "象征贞洁与柔顺，古代用于祭祀，「苹藻」并称代表女子的德行。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/藻类"
   },
   {
     "name": "茅",
@@ -297,7 +413,11 @@
     "quote": "野有死麕，白茅包之。",
     "description": "白茅",
     "id": 30,
-    "imageUrl": "/img/30_茅.jpg"
+    "imageUrl": "/img/30_茅.jpg",
+    "modernName": "白茅、茅草",
+    "taxonomy": "禾本科·白茅属",
+    "symbolism": "象征纯洁与恭敬，白茅洁白柔软，用于包裹祭品或礼物，表示尊敬。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/白茅"
   },
   {
     "name": "匏",
@@ -307,7 +427,11 @@
     "quote": "匏有苦叶，济有深涉。",
     "description": "葫芦",
     "id": 31,
-    "imageUrl": "/img/31_匏.png"
+    "imageUrl": "/img/31_匏.png",
+    "modernName": "葫芦、匏瓜",
+    "taxonomy": "葫芦科·葫芦属",
+    "symbolism": "象征婚礼与结合，古人结婚要喝合卺酒，用匏瓜剖成两半做酒杯。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/葫芦"
   },
   {
     "name": "苓",
@@ -317,7 +441,11 @@
     "quote": "山有榛，隰有苓。",
     "description": "甘草",
     "id": 32,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "甘草、甜草",
+    "taxonomy": "豆科·甘草属",
+    "symbolism": "象征甘甜与调和，甘草性平味甘，能调和诸药，喻和谐相处。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/甘草"
   },
   {
     "name": "茨",
@@ -327,7 +455,11 @@
     "quote": "墙有茨，不可埽也。",
     "description": "蒺藜",
     "id": 33,
-    "imageUrl": "/img/33_茨.jpg"
+    "imageUrl": "/img/33_茨.jpg",
+    "modernName": "蒺藜、七厘子",
+    "taxonomy": "蒺藜科·蒺藜属",
+    "symbolism": "象征污秽不可去除，「墙有茨」喻宫中丑事，不可外扬亦难以清除。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蒺藜"
   },
   {
     "name": "唐",
@@ -337,7 +469,11 @@
     "quote": "爰采唐矣，沬之乡矣。",
     "description": "菟丝子",
     "id": 34,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "菟丝子、金丝藤",
+    "taxonomy": "旋花科·菟丝子属",
+    "symbolism": "象征依附与缠绵，菟丝子为寄生植物，依附他物生长，喻女子对爱情的依赖。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/菟丝子"
   },
   {
     "name": "芄兰",
@@ -347,7 +483,11 @@
     "quote": "芄兰之支，童子佩觿。",
     "description": "萝藦",
     "id": 35,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "萝藦、羊婆奶",
+    "taxonomy": "萝藦科·萝藦属",
+    "symbolism": "象征童真与成长，芄兰枝蔓卷曲如觿（解结器），喻童子虽佩成人之饰，实则稚气未脱。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/萝藦"
   },
   {
     "name": "茹藘",
@@ -357,7 +497,11 @@
     "quote": "东门之墠，茹藘在阪。",
     "description": "茜草，可染红色",
     "id": 36,
-    "imageUrl": "/img/36_茹藘.jpg"
+    "imageUrl": "/img/36_茹藘.jpg",
+    "modernName": "茜草、血见愁",
+    "taxonomy": "茜草科·茜草属",
+    "symbolism": "象征爱情与美好，茜草可染红色，古代女子用以染衣，「茹藘」亦喻美好的爱情。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/茜草"
   },
   {
     "name": "莠",
@@ -367,7 +511,11 @@
     "quote": "好言自口，莠言自口。",
     "description": "狗尾草",
     "id": 37,
-    "imageUrl": "/img/37_莠.jpg"
+    "imageUrl": "/img/37_莠.jpg",
+    "modernName": "狗尾草、谷莠子",
+    "taxonomy": "禾本科·狗尾草属",
+    "symbolism": "象征奸佞与混乱，「良莠不齐」源于此，莠似禾而非禾，喻伪善之人。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/狗尾草"
   },
   {
     "name": "藚",
@@ -377,7 +525,11 @@
     "quote": "彼汾沮洳，言采其藚。",
     "description": "泽泻",
     "id": 38,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "泽泻、水泽泻",
+    "taxonomy": "泽泻科·泽泻属",
+    "symbolism": "象征高洁与隐逸，生长在水边湿地，诗人采藚以喻隐士的高洁品格。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/泽泻"
   },
   {
     "name": "蔹",
@@ -387,7 +539,11 @@
     "quote": "葛生蒙楚，蔹蔓于野。",
     "description": "葡萄科藤本",
     "id": 39,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "乌蔹莓、五叶藤",
+    "taxonomy": "葡萄科·乌蔹莓属",
+    "symbolism": "象征缠绵与依附，蔹蔓生攀援，喻夫妻恩爱缠绵，亦用于表达悼亡之情。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/乌蔹莓"
   },
   {
     "name": "荍",
@@ -397,7 +553,11 @@
     "quote": "视尔如荍，贻我握椒。",
     "description": "锦葵",
     "id": 40,
-    "imageUrl": "/img/40_荍.jpg"
+    "imageUrl": "/img/40_荍.jpg",
+    "modernName": "锦葵、荆葵",
+    "taxonomy": "锦葵科·锦葵属",
+    "symbolism": "象征美丽与爱情，男子赞美女子貌美如锦葵花，女子赠花椒以示爱意。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/锦葵"
   },
   {
     "name": "菅",
@@ -407,7 +567,11 @@
     "quote": "白华菅兮，白茅束兮。",
     "description": "菅草",
     "id": 41,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "菅草、芒草",
+    "taxonomy": "禾本科·菅属",
+    "symbolism": "象征被弃之妇，《白华》写女子被弃，以白华与菅、茅对比，喻夫妻异心。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/菅"
   },
   {
     "name": "苕",
@@ -417,7 +581,11 @@
     "quote": "苕之华，芸其黄矣。",
     "description": "凌霄花",
     "id": 42,
-    "imageUrl": "/img/42_苕.jpg"
+    "imageUrl": "/img/42_苕.jpg",
+    "modernName": "凌霄花、紫葳",
+    "taxonomy": "紫葳科·凌霄属",
+    "symbolism": "象征荣华易逝，凌霄花虽美但花期短暂，喻人生无常、繁华难久。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/凌霄"
   },
   {
     "name": "稂",
@@ -427,7 +595,11 @@
     "quote": "既坚既好，不稂不莠。",
     "description": "狼尾草",
     "id": 43,
-    "imageUrl": "/img/43_稂.jpg"
+    "imageUrl": "/img/43_稂.jpg",
+    "modernName": "狼尾草、稂草",
+    "taxonomy": "禾本科·狼尾草属",
+    "symbolism": "与莠并称，象征害群之马，稂和莠都是田间杂草，喻混杂其中的坏人。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/狼尾草"
   },
   {
     "name": "萑",
@@ -437,7 +609,11 @@
     "quote": "七月流火，八月萑苇。",
     "description": "荻草",
     "id": 44,
-    "imageUrl": "/img/44_萑.jpg"
+    "imageUrl": "/img/44_萑.jpg",
+    "modernName": "荻草、荻芦",
+    "taxonomy": "禾本科·荻属",
+    "symbolism": "象征秋收与准备，八月收割萑苇编制器物，体现农耕社会的季节节律。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/荻"
   },
   {
     "name": "葵",
@@ -447,7 +623,11 @@
     "quote": "七月亨葵及菽。",
     "description": "冬葵",
     "id": 45,
-    "imageUrl": "/img/45_葵.jpg"
+    "imageUrl": "/img/45_葵.jpg",
+    "modernName": "冬葵、葵菜",
+    "taxonomy": "锦葵科·锦葵属",
+    "symbolism": "象征日常饮食与农耕生活，「葵」为古代主要蔬菜，「采葵」成为日常劳作的代表。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/冬葵"
   },
   {
     "name": "壶",
@@ -457,7 +637,11 @@
     "quote": "八月断壶，九月叔苴。",
     "description": "葫芦",
     "id": 46,
-    "imageUrl": "/img/46_壶.png"
+    "imageUrl": "/img/46_壶.png",
+    "modernName": "葫芦、瓠瓜",
+    "taxonomy": "葫芦科·葫芦属",
+    "symbolism": "象征丰收与储存，八月葫芦成熟可采摘，用作容器或食材。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/葫芦"
   },
   {
     "name": "苴",
@@ -467,7 +651,11 @@
     "quote": "九月叔苴，采荼薪樗。",
     "description": "大麻子",
     "id": 47,
-    "imageUrl": "/img/47_苴.png"
+    "imageUrl": "/img/47_苴.png",
+    "modernName": "大麻子、麻籽",
+    "taxonomy": "大麻科·大麻属",
+    "symbolism": "象征秋收与贫苦生活，麻子是贫苦人的食物，体现农夫的艰辛。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/大麻"
   },
   {
     "name": "樗",
@@ -477,7 +665,11 @@
     "quote": "采荼薪樗，食我农夫。",
     "description": "臭椿",
     "id": 48,
-    "imageUrl": "/img/48_樗.jpg"
+    "imageUrl": "/img/48_樗.jpg",
+    "modernName": "臭椿、樗树",
+    "taxonomy": "苦木科·臭椿属",
+    "symbolism": "象征无用之材，樗树木质不佳，只能当柴烧，喻平凡无用之人。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/臭椿"
   },
   {
     "name": "韭",
@@ -487,7 +679,11 @@
     "quote": "四之日其蚤，献羔祭韭。",
     "description": "韭菜",
     "id": 49,
-    "imageUrl": "/img/49_韭.jpg"
+    "imageUrl": "/img/49_韭.jpg",
+    "modernName": "韭菜、起阳草",
+    "taxonomy": "石蒜科·葱属",
+    "symbolism": "象征祭祀与吉祥，韭菜是古代重要的祭祀用品，与羔羊一起献祭。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/韭菜"
   },
   {
     "name": "瓜",
@@ -497,7 +693,11 @@
     "quote": "七月食瓜，八月断壶。",
     "description": "瓜果",
     "id": 50,
-    "imageUrl": "/img/50_瓜.png"
+    "imageUrl": "/img/50_瓜.png",
+    "modernName": "甜瓜、菜瓜",
+    "taxonomy": "葫芦科·黄瓜属",
+    "symbolism": "象征消暑与夏日美食，七月吃瓜解暑，体现农耕生活的时令节律。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/甜瓜"
   },
   {
     "name": "蒿",
@@ -507,7 +707,11 @@
     "quote": "呦呦鹿鸣，食野之蒿。",
     "description": "青蒿",
     "id": 51,
-    "imageUrl": "/img/51_蒿.jpg"
+    "imageUrl": "/img/51_蒿.jpg",
+    "modernName": "青蒿、黄花蒿",
+    "taxonomy": "菊科·蒿属",
+    "symbolism": "象征宴饮与和谐，鹿食蒿草而鸣，喻君臣宴饮、宾客和谐的景象。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/黄花蒿"
   },
   {
     "name": "芩",
@@ -517,7 +721,11 @@
     "quote": "呦呦鹿鸣，食野之芩。",
     "description": "蒿类植物",
     "id": 52,
-    "imageUrl": "/img/52_芩.jpg"
+    "imageUrl": "/img/52_芩.jpg",
+    "modernName": "蒿类、青蒿",
+    "taxonomy": "菊科·蒿属",
+    "symbolism": "与蒿并称，象征和谐与欢乐，鹿食芩草，喻嘉宾欢宴、君臣相得的和谐景象。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蒿属"
   },
   {
     "name": "莱",
@@ -527,7 +735,11 @@
     "quote": "南山有台，北山有莱。",
     "description": "藜草",
     "id": 53,
-    "imageUrl": "/img/53_莱.jpg"
+    "imageUrl": "/img/53_莱.jpg",
+    "modernName": "藜草、灰菜",
+    "taxonomy": "苋科·藜属",
+    "symbolism": "象征安乐与长寿，「南山有台，北山有莱」喻君子有德，能使国家安宁。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/藜"
   },
   {
     "name": "莪",
@@ -537,7 +749,11 @@
     "quote": "蓼蓼者莪，匪莪伊蒿。",
     "description": "莪蒿",
     "id": 54,
-    "imageUrl": "/img/54_莪.jpg"
+    "imageUrl": "/img/54_莪.jpg",
+    "modernName": "莪蒿、抱娘蒿",
+    "taxonomy": "菊科·蒿属",
+    "symbolism": "象征父母养育之恩，《蓼莪》为孝子思念父母之作，「哀哀父母，生我劬劳」。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/抱娘蒿"
   },
   {
     "name": "芑",
@@ -547,7 +763,11 @@
     "quote": "薄言采芑，于彼新田。",
     "description": "白粱粟",
     "id": 55,
-    "imageUrl": "/img/55_芑.jpg"
+    "imageUrl": "/img/55_芑.jpg",
+    "modernName": "白粱粟、粱",
+    "taxonomy": "禾本科·粟属",
+    "symbolism": "象征丰收与军粮，采芑于新田，喻出师征伐前的准备与粮食充足。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/粟"
   },
   {
     "name": "葍",
@@ -557,7 +777,11 @@
     "quote": "言采其葍，不思旧姻。",
     "description": "旋花",
     "id": 56,
-    "imageUrl": "/img/56_葍.jpg"
+    "imageUrl": "/img/56_葍.jpg",
+    "modernName": "旋花、打碗花",
+    "taxonomy": "旋花科·打碗花属",
+    "symbolism": "象征背弃与忘恩，采葍之人不思旧姻，喻人忘恩负义、背弃旧情。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/打碗花"
   },
   {
     "name": "莞",
@@ -567,7 +791,11 @@
     "quote": "下莞上簟，乃安斯寝。",
     "description": "蒲草",
     "id": 57,
-    "imageUrl": "/img/57_莞.jpg"
+    "imageUrl": "/img/57_莞.jpg",
+    "modernName": "水葱、莞草",
+    "taxonomy": "莎草科·藨草属",
+    "symbolism": "象征安居与舒适，莞席为卧具，「下莞上簟」形容居室的舒适与安宁。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/水葱"
   },
   {
     "name": "蔚",
@@ -577,7 +805,11 @@
     "quote": "蓼蓼者莪，匪莪伊蔚。",
     "description": "牡蒿",
     "id": 58,
-    "imageUrl": "/img/58_蔚.jpg"
+    "imageUrl": "/img/58_蔚.jpg",
+    "modernName": "牡蒿、青蒿",
+    "taxonomy": "菊科·蒿属",
+    "symbolism": "与莪对比，象征认错与悔恨，诗人见蔚而误以为是莪，喻思念父母的深切。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/牡蒿"
   },
   {
     "name": "芹",
@@ -587,7 +819,11 @@
     "quote": "觱沸槛泉，言采其芹。",
     "description": "水芹",
     "id": 59,
-    "imageUrl": "/img/59_芹.jpg"
+    "imageUrl": "/img/59_芹.jpg",
+    "modernName": "水芹、河芹",
+    "taxonomy": "伞形科·水芹属",
+    "symbolism": "象征诸侯来朝，采芹是迎接诸侯的礼仪，喻天子对诸侯的礼遇。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/水芹"
   },
   {
     "name": "蓝",
@@ -597,7 +833,11 @@
     "quote": "终朝采蓝，不盈一襜。",
     "description": "蓼蓝，可染青色",
     "id": 60,
-    "imageUrl": "/img/60_蓝.jpg"
+    "imageUrl": "/img/60_蓝.jpg",
+    "modernName": "蓼蓝、蓝草",
+    "taxonomy": "蓼科·蓼属",
+    "symbolism": "象征思念与忧伤，采蓝女子终朝不盈一襜，因思念远人而心不在焉。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蓼蓝"
   },
   {
     "name": "堇",
@@ -607,7 +847,11 @@
     "quote": "周原膴膴，堇荼如饴。",
     "description": "苦菜",
     "id": 61,
-    "imageUrl": "/img/61_堇.jpg"
+    "imageUrl": "/img/61_堇.jpg",
+    "modernName": "堇菜、苦堇",
+    "taxonomy": "堇菜科·堇菜属",
+    "symbolism": "象征土地肥沃与周人兴起，周原土地肥沃，堇荼这样的苦菜也甜如饴糖。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/堇菜"
   },
   {
     "name": "茆",
@@ -617,7 +861,11 @@
     "quote": "薄采其茆，薄言采之。",
     "description": "莼菜",
     "id": 62,
-    "imageUrl": "/img/62_茆.jpg"
+    "imageUrl": "/img/62_茆.jpg",
+    "modernName": "莼菜、水葵",
+    "taxonomy": "睡莲科·莼属",
+    "symbolism": "象征鲁僖公的德政，采茆于泮水，喻鲁侯能修明政事、兴办教育。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/莼菜"
   },
   {
     "name": "桃",
@@ -627,7 +875,11 @@
     "quote": "桃之夭夭，灼灼其华。",
     "description": "嫁娶象征",
     "id": 63,
-    "imageUrl": "/img/63_桃.jpg"
+    "imageUrl": "/img/63_桃.jpg",
+    "modernName": "桃树、桃花",
+    "taxonomy": "蔷薇科·桃属",
+    "symbolism": "象征婚姻美满与女子美貌，「桃之夭夭，灼灼其华」是祝贺新娘的经典诗句。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/桃"
   },
   {
     "name": "梅",
@@ -637,7 +889,11 @@
     "quote": "摽有梅，其实七兮。",
     "description": "抛梅求婚",
     "id": 64,
-    "imageUrl": "/img/64_梅.jpg"
+    "imageUrl": "/img/64_梅.jpg",
+    "modernName": "梅树、梅子",
+    "taxonomy": "蔷薇科·李属",
+    "symbolism": "象征青春易逝与求偶心切，女子抛梅示意，希望及时找到归宿。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/梅"
   },
   {
     "name": "李",
@@ -647,7 +903,11 @@
     "quote": "丘中有李，彼留之子。",
     "description": "果树",
     "id": 65,
-    "imageUrl": "/img/65_李.jpg"
+    "imageUrl": "/img/65_李.jpg",
+    "modernName": "李子树",
+    "taxonomy": "蔷薇科·李属",
+    "symbolism": "象征思慕与等待，丘中有李，喻隐士或情人在林中等待。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/李"
   },
   {
     "name": "木瓜",
@@ -657,7 +917,11 @@
     "quote": "投我以木瓜，报之以琼琚。",
     "description": "蔷薇科灌木果实",
     "id": 66,
-    "imageUrl": "/img/66_木瓜.png"
+    "imageUrl": "/img/66_木瓜.png",
+    "modernName": "木瓜、楙",
+    "taxonomy": "蔷薇科·木瓜属",
+    "symbolism": "象征礼尚往来与美好情谊，「投桃报李」的典范，体现古人重礼尚往来。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/木瓜"
   },
   {
     "name": "木桃",
@@ -667,7 +931,11 @@
     "quote": "投我以木桃，报之以琼瑶。",
     "description": "楂子",
     "id": 67,
-    "imageUrl": "/img/67_木桃.png"
+    "imageUrl": "/img/67_木桃.png",
+    "modernName": "楂子、木桃",
+    "taxonomy": "蔷薇科·山楂属",
+    "symbolism": "象征友情与回报，以木桃相赠，报以美玉，喻情谊深厚、礼重情更重。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/山楂"
   },
   {
     "name": "木李",
@@ -677,7 +945,11 @@
     "quote": "投我以木李，报之以琼玖。",
     "description": "榠楂",
     "id": 68,
-    "imageUrl": "/img/68_木李.png"
+    "imageUrl": "/img/68_木李.png",
+    "modernName": "榠楂、光皮木瓜",
+    "taxonomy": "蔷薇科·木瓜属",
+    "symbolism": "象征深情厚谊，以木李相赠，报以琼玖，体现古人「滴水之恩，涌泉相报」的美德。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/木瓜属"
   },
   {
     "name": "芍药",
@@ -687,7 +959,11 @@
     "quote": "维士与女，伊其相谑，赠之以勺药。",
     "description": "香草，结别赠礼",
     "id": 69,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "芍药、将离",
+    "taxonomy": "芍药科·芍药属",
+    "symbolism": "象征爱情与离别，男女相赠芍药表达爱慕，「将离」之名寓离别之情。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/芍药"
   },
   {
     "name": "舜",
@@ -697,7 +973,11 @@
     "quote": "有女同车，颜如舜华。",
     "description": "木槿，朝开暮落花",
     "id": 70,
-    "imageUrl": "/img/70_舜.jpg"
+    "imageUrl": "/img/70_舜.jpg",
+    "modernName": "木槿、舜华",
+    "taxonomy": "锦葵科·木槿属",
+    "symbolism": "象征美丽与短暂，木槿朝开暮落，喻女子容颜虽美却易逝，「舜华」即木槿花。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/木槿"
   },
   {
     "name": "荷华",
@@ -707,7 +987,11 @@
     "quote": "山有扶苏，隰有荷华。",
     "description": "荷花",
     "id": 71,
-    "imageUrl": "/img/71_荷华.jpg"
+    "imageUrl": "/img/71_荷华.jpg",
+    "modernName": "荷花、莲花",
+    "taxonomy": "莲科·莲属",
+    "symbolism": "象征高洁与美好，「出淤泥而不染」，喻君子品格高洁，与美人相配。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/莲"
   },
   {
     "name": "蕑",
@@ -717,7 +1001,11 @@
     "quote": "士与女方秉蕑兮。",
     "description": "兰草，祓除不祥",
     "id": 72,
-    "imageUrl": "/img/72_蕑.jpg"
+    "imageUrl": "/img/72_蕑.jpg",
+    "modernName": "兰草、泽兰",
+    "taxonomy": "菊科·泽兰属",
+    "symbolism": "象征吉祥与祓禊，古人秉兰草以除不祥，上巳节水边祓禊的重要植物。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/泽兰属"
   },
   {
     "name": "桑",
@@ -727,7 +1015,11 @@
     "quote": "期我乎桑中，要我乎上宫。",
     "description": "养蚕",
     "id": 73,
-    "imageUrl": "/img/73_桑.jpg"
+    "imageUrl": "/img/73_桑.jpg",
+    "modernName": "桑树",
+    "taxonomy": "桑科·桑属",
+    "symbolism": "象征爱情与农耕，桑林是男女约会之地，「桑间濮上」成为爱情幽会的代称。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/桑"
   },
   {
     "name": "梓",
@@ -737,7 +1029,11 @@
     "quote": "维桑与梓，必恭敬止。",
     "description": "良木，父母所植",
     "id": 74,
-    "imageUrl": "/img/74_梓.jpg"
+    "imageUrl": "/img/74_梓.jpg",
+    "modernName": "梓树",
+    "taxonomy": "紫葳科·梓属",
+    "symbolism": "象征故乡与父母，古人宅旁常植桑梓，「桑梓」成为故乡的代称。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/梓"
   },
   {
     "name": "柏",
@@ -747,7 +1043,11 @@
     "quote": "泛彼柏舟，亦泛其流。",
     "description": "柏木舟",
     "id": 75,
-    "imageUrl": "/img/75_柏.jpg"
+    "imageUrl": "/img/75_柏.jpg",
+    "modernName": "柏树、侧柏",
+    "taxonomy": "柏科·侧柏属",
+    "symbolism": "象征坚贞与忠诚，柏舟坚固，喻女子的坚贞不屈，「柏舟之誓」成为守节典故。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/侧柏"
   },
   {
     "name": "松",
@@ -757,7 +1057,11 @@
     "quote": "如松茂矣，如竹苞矣。",
     "description": "松树",
     "id": 76,
-    "imageUrl": "/img/76_松.jpg"
+    "imageUrl": "/img/76_松.jpg",
+    "modernName": "松树、青松",
+    "taxonomy": "松科·松属",
+    "symbolism": "象征长寿与坚贞，松柏常青，喻君子品德坚贞、家族兴旺发达。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/松"
   },
   {
     "name": "檀",
@@ -767,7 +1071,11 @@
     "quote": "坎坎伐檀兮，置之河之干兮。",
     "description": "青檀，造车",
     "id": 77,
-    "imageUrl": "/img/77_檀.jpg"
+    "imageUrl": "/img/77_檀.jpg",
+    "modernName": "青檀、檀树",
+    "taxonomy": "榆科·青檀属",
+    "symbolism": "象征劳动与剥削，《伐檀》讽刺不劳而获的剥削者，表达劳动者的不满。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/青檀"
   },
   {
     "name": "枢",
@@ -777,7 +1085,11 @@
     "quote": "山有枢，隰有榆。",
     "description": "刺榆",
     "id": 78,
-    "imageUrl": "/img/78_枢.jpg"
+    "imageUrl": "/img/78_枢.jpg",
+    "modernName": "刺榆、枢树",
+    "taxonomy": "榆科·刺榆属",
+    "symbolism": "象征及时行乐，山有枢隰有榆，喻人生应及时享乐，不要吝啬财物。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/刺榆"
   },
   {
     "name": "榆",
@@ -787,7 +1099,11 @@
     "quote": "山有枢，隰有榆。",
     "description": "榆树",
     "id": 79,
-    "imageUrl": "/img/79_榆.jpg"
+    "imageUrl": "/img/79_榆.jpg",
+    "modernName": "榆树、白榆",
+    "taxonomy": "榆科·榆属",
+    "symbolism": "象征财富与享用，古人认为榆树可食可用，喻应及时享用自然资源。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/榆"
   },
   {
     "name": "柳",
@@ -797,7 +1113,11 @@
     "quote": "昔我往矣，杨柳依依。",
     "description": "柳树",
     "id": 80,
-    "imageUrl": "/img/80_柳.jpg"
+    "imageUrl": "/img/80_柳.jpg",
+    "modernName": "柳树、垂柳",
+    "taxonomy": "杨柳科·柳属",
+    "symbolism": "象征离别与思念，「柳」与「留」谐音，折柳送别成为千古传统。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/柳"
   },
   {
     "name": "杜",
@@ -807,7 +1127,11 @@
     "quote": "有杕之杜，其叶湑湑。",
     "description": "甘棠树",
     "id": 81,
-    "imageUrl": "/img/81_杜.jpg"
+    "imageUrl": "/img/81_杜.jpg",
+    "modernName": "杜梨、棠梨",
+    "taxonomy": "蔷薇科·梨属",
+    "symbolism": "象征孤独与思念，孤生的杜梨，喻征夫独行在外，妻子孤独思念。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/杜梨"
   },
   {
     "name": "榛",
@@ -817,7 +1141,11 @@
     "quote": "山有榛，隰有苓。",
     "description": "榛树",
     "id": 82,
-    "imageUrl": "/img/82_榛.jpg"
+    "imageUrl": "/img/82_榛.jpg",
+    "modernName": "榛子树、榛",
+    "taxonomy": "桦木科·榛属",
+    "symbolism": "象征爱情与和谐，山有榛隰有苓，高下各得其所，喻男女相得、各得其所。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/榛"
   },
   {
     "name": "栗",
@@ -827,7 +1155,11 @@
     "quote": "树之榛栗，椅桐梓漆。",
     "description": "栗子树",
     "id": 83,
-    "imageUrl": "/img/83_栗.jpg"
+    "imageUrl": "/img/83_栗.jpg",
+    "modernName": "栗树、板栗",
+    "taxonomy": "壳斗科·栗属",
+    "symbolism": "象征立身之本与有用之材，栗树果实可食，木材可用，喻培养有用之才。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/栗"
   },
   {
     "name": "桐",
@@ -837,7 +1169,11 @@
     "quote": "树之榛栗，椅桐梓漆。",
     "description": "梧桐",
     "id": 84,
-    "imageUrl": "/img/84_桐.jpg"
+    "imageUrl": "/img/84_桐.jpg",
+    "modernName": "梧桐、青桐",
+    "taxonomy": "锦葵科·梧桐属",
+    "symbolism": "象征高洁与吉祥，凤凰非梧桐不栖，喻贤才择主而事、君子品格高洁。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/梧桐"
   },
   {
     "name": "漆",
@@ -847,7 +1183,11 @@
     "quote": "树之榛栗，椅桐梓漆。",
     "description": "漆树",
     "id": 85,
-    "imageUrl": "/img/85_漆.jpg"
+    "imageUrl": "/img/85_漆.jpg",
+    "modernName": "漆树、大木漆",
+    "taxonomy": "漆树科·漆树属",
+    "symbolism": "象征实用与财富，漆树可产漆，是重要的经济林木，喻富国之材。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/漆"
   },
   {
     "name": "椅",
@@ -857,7 +1197,11 @@
     "quote": "树之榛栗，椅桐梓漆。",
     "description": "山桐子",
     "id": 86,
-    "imageUrl": "/img/86_椅.jpg"
+    "imageUrl": "/img/86_椅.jpg",
+    "modernName": "山桐子、椅树",
+    "taxonomy": "大风子科·山桐子属",
+    "symbolism": "象征有用之材，与榛栗桐梓漆并列，喻国家应培养各类有用之材。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/山桐子"
   },
   {
     "name": "棘",
@@ -867,7 +1211,11 @@
     "quote": "凯风自南，吹彼棘心。",
     "description": "酸枣树",
     "id": 87,
-    "imageUrl": "/img/87_棘.jpg"
+    "imageUrl": "/img/87_棘.jpg",
+    "modernName": "酸枣、棘树",
+    "taxonomy": "鼠李科·枣属",
+    "symbolism": "象征母亲的辛劳与子女的成长，「棘心夭夭，母氏劬劳」喻母亲的辛勤养育。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/枣"
   },
   {
     "name": "条",
@@ -877,7 +1225,11 @@
     "quote": "终南何有？有条有梅。",
     "description": "山楸",
     "id": 88,
-    "imageUrl": "/img/88_条.jpg"
+    "imageUrl": "/img/88_条.jpg",
+    "modernName": "山楸、楸树",
+    "taxonomy": "紫葳科·楸属",
+    "symbolism": "象征劝诫与警戒，《终南》劝诫秦君不可骄傲自满，应如终南有条有梅般充实。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/楸"
   },
   {
     "name": "梅",
@@ -887,7 +1239,11 @@
     "quote": "终南何有？有条有梅。",
     "description": "楠木",
     "id": 89,
-    "imageUrl": "/img/89_梅.jpg"
+    "imageUrl": "/img/89_梅.jpg",
+    "modernName": "梅树、梅子",
+    "taxonomy": "蔷薇科·李属",
+    "symbolism": "象征青春易逝与求偶心切，女子抛梅示意，希望及时找到归宿。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/梅"
   },
   {
     "name": "楚",
@@ -897,7 +1253,11 @@
     "quote": "翘翘错薪，言刈其楚。",
     "description": "荆条",
     "id": 90,
-    "imageUrl": "/img/90_楚.jpg"
+    "imageUrl": "/img/90_楚.jpg",
+    "modernName": "黄荆、荆条",
+    "taxonomy": "马鞭草科·牡荆属",
+    "symbolism": "象征纯洁与选择，刈楚以为薪，取其高而直者，喻选择贤淑女子。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/黄荆"
   },
   {
     "name": "栲",
@@ -907,7 +1267,11 @@
     "quote": "山有栲，隰有杻。",
     "description": "山樗",
     "id": 91,
-    "imageUrl": "/img/91_栲.jpg"
+    "imageUrl": "/img/91_栲.jpg",
+    "modernName": "山樗、臭椿",
+    "taxonomy": "苦木科·臭椿属",
+    "symbolism": "象征及时行乐，山有栲隰有杻，喻人生应及时享乐，不要等到死后空留财物。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/臭椿"
   },
   {
     "name": "杻",
@@ -917,7 +1281,11 @@
     "quote": "山有栲，隰有杻。",
     "description": "檍树",
     "id": 92,
-    "imageUrl": "/img/92_杻.jpg"
+    "imageUrl": "/img/92_杻.jpg",
+    "modernName": "檍树、梓树",
+    "taxonomy": "紫葳科·梓属",
+    "symbolism": "象征财富与享用，檍树木材可制器具，喻人生应及时享用，不要守财不化。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/梓"
   },
   {
     "name": "竹",
@@ -927,7 +1295,11 @@
     "quote": "瞻彼淇奥，绿竹猗猗。",
     "description": "竹子",
     "id": 93,
-    "imageUrl": "/img/93_竹.jpg"
+    "imageUrl": "/img/93_竹.jpg",
+    "modernName": "竹子、毛竹",
+    "taxonomy": "禾本科·竹亚科",
+    "symbolism": "象征君子品格，竹有节、虚心、坚韧，成为君子「四君子」之一。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/竹"
   },
   {
     "name": "瓠",
@@ -937,7 +1309,11 @@
     "quote": "匏有苦叶，济有深涉。",
     "description": "葫芦",
     "id": 94,
-    "imageUrl": "/img/94_瓠.png"
+    "imageUrl": "/img/94_瓠.png",
+    "modernName": "瓠瓜、葫芦",
+    "taxonomy": "葫芦科·葫芦属",
+    "symbolism": "象征婚姻与结合，与「匏」同为葫芦类，古人结婚用合卺酒器。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/瓠瓜"
   },
   {
     "name": "苦",
@@ -947,7 +1323,11 @@
     "quote": "采苦采苦，首阳之下。",
     "description": "苦菜",
     "id": 95,
-    "imageUrl": "/img/95_苦.jpg"
+    "imageUrl": "/img/95_苦.jpg",
+    "modernName": "苦菜、苦苣",
+    "taxonomy": "菊科·苦苣菜属",
+    "symbolism": "象征警惕谗言，《采苓》劝诫人们不要相信谗言，如同苦菜不可常食。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/苦苣菜"
   },
   {
     "name": "樛木",
@@ -957,7 +1337,11 @@
     "quote": "南有樛木，葛藟累之。",
     "description": "弯曲的树",
     "id": 96,
-    "imageUrl": "/img/96_樛木.jpg"
+    "imageUrl": "/img/96_樛木.jpg",
+    "modernName": "弯曲下垂的树",
+    "taxonomy": "泛指枝条弯曲下垂的树木",
+    "symbolism": "象征君子能福泽后人，樛木下垂，葛藟攀援而上，喻君子能庇护他人。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/樛木"
   },
   {
     "name": "甘棠",
@@ -967,7 +1351,11 @@
     "quote": "蔽芾甘棠，勿翦勿伐。",
     "description": "杜梨树",
     "id": 97,
-    "imageUrl": "/img/97_甘棠.jpg"
+    "imageUrl": "/img/97_甘棠.jpg",
+    "modernName": "杜梨、棠梨",
+    "taxonomy": "蔷薇科·梨属",
+    "symbolism": "象征召伯之德与念旧，《甘棠》写召伯听政于甘棠树下，后人思其德而爱其树。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/杜梨"
   },
   {
     "name": "唐棣",
@@ -977,7 +1365,11 @@
     "quote": "何彼襛矣，唐棣之华。",
     "description": "棠棣",
     "id": 98,
-    "imageUrl": "/img/98_唐棣.jpg"
+    "imageUrl": "/img/98_唐棣.jpg",
+    "modernName": "唐棣、扶栘",
+    "taxonomy": "蔷薇科·唐棣属",
+    "symbolism": "象征王姬之美与华贵，唐棣花繁盛艳丽，喻王姬出嫁时的盛装美貌。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/唐棣"
   },
   {
     "name": "常棣",
@@ -987,7 +1379,11 @@
     "quote": "常棣之华，鄂不韡韡。",
     "description": "棠棣",
     "id": 99,
-    "imageUrl": "/img/99_常棣.jpg"
+    "imageUrl": "/img/99_常棣.jpg",
+    "modernName": "棠棣、郁李",
+    "taxonomy": "蔷薇科·樱属",
+    "symbolism": "象征兄弟和睦，常棣花萼相依，喻兄弟相互扶持，「常棣之华」喻兄弟情谊。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/郁李"
   },
   {
     "name": "枣",
@@ -997,7 +1393,11 @@
     "quote": "八月剥枣，十月获稻。",
     "description": "枣树",
     "id": 100,
-    "imageUrl": "/img/100_枣.jpg"
+    "imageUrl": "/img/100_枣.jpg",
+    "modernName": "枣树、红枣",
+    "taxonomy": "鼠李科·枣属",
+    "symbolism": "象征丰收与甜美，八月打枣，是秋季丰收的象征，也是重要的食物来源。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/枣"
   },
   {
     "name": "郁",
@@ -1007,7 +1407,11 @@
     "quote": "六月食郁及薁。",
     "description": "郁李",
     "id": 101,
-    "imageUrl": "/img/101_郁.jpg"
+    "imageUrl": "/img/101_郁.jpg",
+    "modernName": "郁李、山李子",
+    "taxonomy": "蔷薇科·樱属",
+    "symbolism": "象征时令美食，郁李是夏季的时令果实，体现农耕生活的季节规律。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/郁李"
   },
   {
     "name": "薁",
@@ -1017,7 +1421,11 @@
     "quote": "六月食郁及薁。",
     "description": "野葡萄",
     "id": 102,
-    "imageUrl": "/img/102_薁.jpg"
+    "imageUrl": "/img/102_薁.jpg",
+    "modernName": "蘡薁、野葡萄",
+    "taxonomy": "葡萄科·葡萄属",
+    "symbolism": "象征夏日美食，与郁并称，是六月可食的野果，体现自然馈赠。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蘡薁"
   },
   {
     "name": "椒",
@@ -1027,7 +1435,11 @@
     "quote": "视尔如荍，贻我握椒。",
     "description": "花椒",
     "id": 103,
-    "imageUrl": "/img/103_椒.jpg"
+    "imageUrl": "/img/103_椒.jpg",
+    "modernName": "花椒、蜀椒",
+    "taxonomy": "芸香科·花椒属",
+    "symbolism": "象征多子与爱情，花椒多子，喻子孙繁衍，女子赠花椒表达爱意。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/花椒"
   },
   {
     "name": "梧",
@@ -1037,7 +1449,11 @@
     "quote": "凤凰鸣矣，于彼高冈。梧桐生矣，于彼朝阳。",
     "description": "梧桐",
     "id": 104,
-    "imageUrl": "/img/104_梧.jpg"
+    "imageUrl": "/img/104_梧.jpg",
+    "modernName": "梧桐、青桐",
+    "taxonomy": "锦葵科·梧桐属",
+    "symbolism": "象征高洁与吉祥，凤凰非梧桐不栖，喻贤君在位，天下太平。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/梧桐"
   },
   {
     "name": "柞",
@@ -1047,7 +1463,11 @@
     "quote": "柞棫拔矣，行道兑矣。",
     "description": "栎树",
     "id": 105,
-    "imageUrl": "/img/105_柞.jpg"
+    "imageUrl": "/img/105_柞.jpg",
+    "modernName": "栎树、橡树",
+    "taxonomy": "壳斗科·栎属",
+    "symbolism": "象征道路开通与国家兴盛，柞棫拔除，道路畅通，喻周人发展壮大。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/栎"
   },
   {
     "name": "棫",
@@ -1057,7 +1477,11 @@
     "quote": "柞棫拔矣，行道兑矣。",
     "description": "白桵",
     "id": 106,
-    "imageUrl": "/img/106_棫.jpg"
+    "imageUrl": "/img/106_棫.jpg",
+    "modernName": "白桵、棫树",
+    "taxonomy": "蔷薇科·白鹃梅属",
+    "symbolism": "象征道路开通，与柞并称，拔除棫树以开通道路，喻国家发展。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/白鹃梅"
   },
   {
     "name": "槐",
@@ -1067,7 +1491,11 @@
     "quote": "枝叶未有害，本实先拨。",
     "description": "槐树",
     "id": 107,
-    "imageUrl": "/img/107_槐.jpg"
+    "imageUrl": "/img/107_槐.jpg",
+    "modernName": "槐树、国槐",
+    "taxonomy": "豆科·槐属",
+    "symbolism": "象征三公与高官，古代宫廷外种三槐，喻三公之位，后「槐」成为高官代称。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/槐"
   },
   {
     "name": "雎鸠",
@@ -1077,7 +1505,11 @@
     "quote": "关关雎鸠，在河之洲。",
     "description": "鱼鹰或鹗，求偶和鸣",
     "id": 108,
-    "imageUrl": "/img/108_雎鸠.jpg"
+    "imageUrl": "/img/108_雎鸠.jpg",
+    "modernName": "鱼鹰、鹗",
+    "taxonomy": "鹰形目·鹗科",
+    "symbolism": "象征美好爱情与和谐婚姻，雎鸠和鸣，喻君子与淑女的理想结合。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鹗"
   },
   {
     "name": "鸠",
@@ -1087,7 +1519,11 @@
     "quote": "于嗟鸠兮，无食桑葚。",
     "description": "斑鸠，食桑葚醉",
     "id": 109,
-    "imageUrl": "/img/109_鸠.jpg"
+    "imageUrl": "/img/109_鸠.jpg",
+    "modernName": "斑鸠",
+    "taxonomy": "鸽形目·鸠鸽科",
+    "symbolism": "象征沉迷与告诫，「无食桑葚」喻女子不要沉迷爱情，以免后悔。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/斑鸠"
   },
   {
     "name": "黄鸟",
@@ -1097,7 +1533,11 @@
     "quote": "黄鸟于飞，集于灌木。",
     "description": "黄雀或黄鹂",
     "id": 110,
-    "imageUrl": "/img/110_黄鸟.jpg"
+    "imageUrl": "/img/110_黄鸟.jpg",
+    "modernName": "黄雀、黄鹂",
+    "taxonomy": "雀形目·鹟科/鹂科",
+    "symbolism": "象征欢乐与归聚，黄鸟集于灌木，喻女子归宁娘家与家人团聚。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/黄鹂"
   },
   {
     "name": "仓庚",
@@ -1107,7 +1547,11 @@
     "quote": "春日载阳，有鸣仓庚。",
     "description": "黄莺",
     "id": 111,
-    "imageUrl": "/img/111_仓庚.jpg"
+    "imageUrl": "/img/111_仓庚.jpg",
+    "modernName": "黄莺、黄鹂",
+    "taxonomy": "雀形目·鹂科",
+    "symbolism": "象征春天的到来与生机，仓庚鸣叫预示春暖花开，万物复苏。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/黑枕黄鹂"
   },
   {
     "name": "燕",
@@ -1117,7 +1561,11 @@
     "quote": "燕燕于飞，差池其羽。",
     "description": "燕子，送别意象",
     "id": 112,
-    "imageUrl": "/img/112_燕.jpg"
+    "imageUrl": "/img/112_燕.jpg",
+    "modernName": "燕子、家燕",
+    "taxonomy": "雀形目·燕科",
+    "symbolism": "象征离别与不舍，「燕燕于飞」是送别诗的开山之作，表达深切离情。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/家燕"
   },
   {
     "name": "雁",
@@ -1127,7 +1575,11 @@
     "quote": "鸿雁于飞，肃肃其羽。",
     "description": "大雁，迁徙",
     "id": 113,
-    "imageUrl": "/img/113_雁.jpg"
+    "imageUrl": "/img/113_雁.jpg",
+    "modernName": "大雁、鸿雁",
+    "taxonomy": "雁形目·鸭科",
+    "symbolism": "象征流离与思乡，鸿雁南飞，喻征夫流离在外，思念故土。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/大雁"
   },
   {
     "name": "鹤",
@@ -1137,7 +1589,11 @@
     "quote": "鹤鸣于九皋，声闻于天。",
     "description": "隐士之喻",
     "id": 114,
-    "imageUrl": "/img/114_鹤.jpg"
+    "imageUrl": "/img/114_鹤.jpg",
+    "modernName": "白鹤、仙鹤",
+    "taxonomy": "鹤形目·鹤科",
+    "symbolism": "象征隐士与高洁，鹤鸣于深泽而声闻于天，喻贤者隐居而德名远播。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鹤"
   },
   {
     "name": "鹑",
@@ -1147,7 +1603,11 @@
     "quote": "不狩不猎，胡瞻尔庭有县鹑兮。",
     "description": "鹌鹑",
     "id": 115,
-    "imageUrl": "/img/115_鹑.jpg"
+    "imageUrl": "/img/115_鹑.jpg",
+    "modernName": "鹌鹑",
+    "taxonomy": "鸡形目·雉科",
+    "symbolism": "象征剥削与不平，「不狩不猎」却悬鹑于庭，讽刺剥削者的不劳而获。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鹌鹑"
   },
   {
     "name": "鸳鸯",
@@ -1157,7 +1617,11 @@
     "quote": "鸳鸯于飞，毕之罗之。",
     "description": "匹鸟，婚配象征",
     "id": 116,
-    "imageUrl": "/img/116_鸳鸯.jpg"
+    "imageUrl": "/img/116_鸳鸯.jpg",
+    "modernName": "鸳鸯",
+    "taxonomy": "雁形目·鸭科",
+    "symbolism": "象征夫妻恩爱与美满婚姻，鸳鸯成对，生死相随，是爱情的象征。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鸳鸯"
   },
   {
     "name": "鹡鸰",
@@ -1167,7 +1631,11 @@
     "quote": "脊令在原，兄弟急难。",
     "description": "鹡鸰鸟，急难相求",
     "id": 117,
-    "imageUrl": "/img/117_鹡鸰.jpg"
+    "imageUrl": "/img/117_鹡鸰.jpg",
+    "modernName": "鹡鸰、白鹡鸰",
+    "taxonomy": "雀形目·鹡鸰科",
+    "symbolism": "象征兄弟急难相救，鹡鸰困于陆地，兄弟相救，喻兄弟应互相帮助。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/白鹡鸰"
   },
   {
     "name": "鸢",
@@ -1177,7 +1645,11 @@
     "quote": "匪鹑匪鸢，翰飞戾天。",
     "description": "老鹰",
     "id": 118,
-    "imageUrl": "/img/118_鸢.jpg"
+    "imageUrl": "/img/118_鸢.jpg",
+    "modernName": "老鹰、鸢",
+    "taxonomy": "鹰形目·鹰科",
+    "symbolism": "象征高飞与自由，鸢飞戾天，喻人虽处困境，心犹向往自由。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鸢"
   },
   {
     "name": "隼",
@@ -1187,7 +1659,11 @@
     "quote": "鴥彼飞隼，其飞戾天。",
     "description": "鹞鹰",
     "id": 119,
-    "imageUrl": "/img/119_隼.jpg"
+    "imageUrl": "/img/119_隼.jpg",
+    "modernName": "游隼、鹞鹰",
+    "taxonomy": "隼形目·隼科",
+    "symbolism": "象征勇猛与神速，隼飞迅速，喻方叔率领的军队勇猛迅捷。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/游隼"
   },
   {
     "name": "雉",
@@ -1197,7 +1673,11 @@
     "quote": "雄雉于飞，泄泄其羽。",
     "description": "野鸡",
     "id": 120,
-    "imageUrl": "/img/120_雉.jpg"
+    "imageUrl": "/img/120_雉.jpg",
+    "modernName": "雉鸡、野鸡",
+    "taxonomy": "鸡形目·雉科",
+    "symbolism": "象征君子的德行，雉飞有文采，喻君子有文采而不自夸。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/雉鸡"
   },
   {
     "name": "鷮",
@@ -1207,7 +1687,11 @@
     "quote": "徒御不惊，大庖不盈。",
     "description": "雉类，长尾",
     "id": 121,
-    "imageUrl": "/img/121_鷮.jpg"
+    "imageUrl": "/img/121_鷮.jpg",
+    "modernName": "长尾雉、鷮雉",
+    "taxonomy": "鸡形目·雉科",
+    "symbolism": "象征田猎与武功，鷮是田猎的对象，喻天子田猎以练武功。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/长尾雉"
   },
   {
     "name": "鹊",
@@ -1217,7 +1701,11 @@
     "quote": "鹑之奔奔，鹊之彊彊。",
     "description": "喜鹊",
     "id": 122,
-    "imageUrl": "/img/122_鹊.jpg"
+    "imageUrl": "/img/122_鹊.jpg",
+    "modernName": "喜鹊",
+    "taxonomy": "雀形目·鸦科",
+    "symbolism": "象征吉祥与喜庆，喜鹊报喜，鹊桥相会，是吉祥的象征。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/喜鹊"
   },
   {
     "name": "雀",
@@ -1227,7 +1715,11 @@
     "quote": "谁谓雀无角，何以穿我屋。",
     "description": "麻雀",
     "id": 123,
-    "imageUrl": "/img/123_雀.jpg"
+    "imageUrl": "/img/123_雀.jpg",
+    "modernName": "麻雀",
+    "taxonomy": "雀形目·雀科",
+    "symbolism": "象征弱小与诬陷，「谁谓雀无角」反讽强权者横行霸道。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/麻雀"
   },
   {
     "name": "流离",
@@ -1237,7 +1729,11 @@
     "quote": "琐兮尾兮，流离之子。",
     "description": "枭类，即枭阳",
     "id": 124,
-    "imageUrl": "/img/124_流离.jpg"
+    "imageUrl": "/img/124_流离.jpg",
+    "modernName": "枭、猫头鹰",
+    "taxonomy": "鸮形目·鸱鸮科",
+    "symbolism": "象征流离失所与可怜，流离之子，喻流亡在外、孤苦无依的人。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鸮"
   },
   {
     "name": "翟",
@@ -1247,7 +1743,11 @@
     "quote": "右手秉翟，赫如渥赭。",
     "description": "雉羽，装饰用",
     "id": 125,
-    "imageUrl": "/img/125_翟.jpg"
+    "imageUrl": "/img/125_翟.jpg",
+    "modernName": "雉羽、野鸡尾羽",
+    "taxonomy": "鸡形目·雉科",
+    "symbolism": "象征舞蹈与礼仪，翟羽用于舞蹈装饰，体现古代乐舞的庄重华美。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/翟"
   },
   {
     "name": "乌",
@@ -1257,7 +1757,11 @@
     "quote": "瞻乌爰止，于谁之屋。",
     "description": "乌鸦",
     "id": 126,
-    "imageUrl": "/img/126_乌.jpg"
+    "imageUrl": "/img/126_乌.jpg",
+    "modernName": "乌鸦、寒鸦",
+    "taxonomy": "雀形目·鸦科",
+    "symbolism": "象征不祥与流离，「瞻乌爰止」喻百姓流离失所，不知归宿。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/乌鸦"
   },
   {
     "name": "鸿",
@@ -1267,7 +1771,11 @@
     "quote": "鸿雁于飞，哀鸣嗷嗷。",
     "description": "大雁",
     "id": 127,
-    "imageUrl": "/img/127_鸿.jpg"
+    "imageUrl": "/img/127_鸿.jpg",
+    "modernName": "鸿雁、大雁",
+    "taxonomy": "雁形目·鸭科",
+    "symbolism": "象征流离与哀愁，鸿雁哀鸣，喻征夫辛苦流离，无家可归。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鸿雁"
   },
   {
     "name": "鸡",
@@ -1277,7 +1785,11 @@
     "quote": "鸡既鸣矣，朝既盈矣。",
     "description": "公鸡",
     "id": 128,
-    "imageUrl": "/img/128_鸡.jpg"
+    "imageUrl": "/img/128_鸡.jpg",
+    "modernName": "公鸡、家鸡",
+    "taxonomy": "鸡形目·雉科",
+    "symbolism": "象征勤勉与守时，鸡鸣报晓，提醒人起床办事，喻贤妻劝夫早朝。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鸡"
   },
   {
     "name": "凫",
@@ -1287,7 +1799,11 @@
     "quote": "将翱将翔，弋凫与雁。",
     "description": "野鸭",
     "id": 129,
-    "imageUrl": "/img/129_凫.jpg"
+    "imageUrl": "/img/129_凫.jpg",
+    "modernName": "野鸭、绿头鸭",
+    "taxonomy": "雁形目·鸭科",
+    "symbolism": "象征恩爱与相伴，凫与雁都是水鸟，弋射以作美食，喻夫妻生活美满。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/绿头鸭"
   },
   {
     "name": "正",
@@ -1297,7 +1813,11 @@
     "quote": "公曰左之，舍拔则获。",
     "description": "鸟名",
     "id": 130,
-    "imageUrl": ""
+    "imageUrl": "",
+    "modernName": "兽名或鸟名",
+    "taxonomy": "不详",
+    "symbolism": "象征田猎，具体鸟兽种类不详，为田猎所得之物。",
+    "wikiLink": ""
   },
   {
     "name": "鴥",
@@ -1307,7 +1827,11 @@
     "quote": "鴥彼晨风，郁彼北林。",
     "description": "鹯鸟，似鹰而小",
     "id": 131,
-    "imageUrl": "/img/131_鴥.jpg"
+    "imageUrl": "/img/131_鴥.jpg",
+    "modernName": "鹯鸟、晨风",
+    "taxonomy": "鹰形目·鹰科",
+    "symbolism": "象征思念与期盼，「鴥彼晨风」喻君子远行，女子思念而望其归。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鹞"
   },
   {
     "name": "鹭",
@@ -1317,7 +1841,11 @@
     "quote": "振鹭于飞，于彼西雍。",
     "description": "白鹭",
     "id": 132,
-    "imageUrl": "/img/132_鹭.jpg"
+    "imageUrl": "/img/132_鹭.jpg",
+    "modernName": "白鹭",
+    "taxonomy": "鹈形目·鹭科",
+    "symbolism": "象征高洁与来宾，白鹭洁白，喻来朝的宾客品德高洁。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/白鹭"
   },
   {
     "name": "鸮",
@@ -1327,7 +1855,11 @@
     "quote": "鸱鸮鸱鸮，既取我子。",
     "description": "猫头鹰",
     "id": 133,
-    "imageUrl": "/img/133_鸮.jpg"
+    "imageUrl": "/img/133_鸮.jpg",
+    "modernName": "猫头鹰、鸱鸮",
+    "taxonomy": "鸮形目·鸱鸮科",
+    "symbolism": "象征恶人与破坏，鸱鸮取子，喻坏人残害百姓，周公以此诗述说自己的艰难处境。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鸱鸮"
   },
   {
     "name": "鹈",
@@ -1337,7 +1869,11 @@
     "quote": "维鹈在梁，不濡其翼。",
     "description": "鹈鹕",
     "id": 134,
-    "imageUrl": "/img/134_鹈.jpg"
+    "imageUrl": "/img/134_鹈.jpg",
+    "modernName": "鹈鹕、塘鹅",
+    "taxonomy": "鹈形目·鹈鹕科",
+    "symbolism": "象征尸位素餐，鹈鹕在梁上捕鱼不湿翅膀，喻小人居高位却不做事。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鹈鹕"
   },
   {
     "name": "鵙",
@@ -1347,7 +1883,11 @@
     "quote": "七月鸣鵙，八月载绩。",
     "description": "伯劳",
     "id": 135,
-    "imageUrl": "/img/135_鵙.jpg"
+    "imageUrl": "/img/135_鵙.jpg",
+    "modernName": "伯劳、鵙鸟",
+    "taxonomy": "雀形目·伯劳科",
+    "symbolism": "象征季节更替与农时，伯劳七月鸣叫，预示夏去秋来，纺织季节开始。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/伯劳"
   },
   {
     "name": "鹳",
@@ -1357,7 +1897,11 @@
     "quote": "鹳鸣于垤，妇叹于室。",
     "description": "鹳鸟",
     "id": 136,
-    "imageUrl": "/img/136_鹳.jpg"
+    "imageUrl": "/img/136_鹳.jpg",
+    "modernName": "白鹳、鹳鸟",
+    "taxonomy": "鹳形目·鹳科",
+    "symbolism": "象征离别与思念，鹳鸣于丘，妇叹于室，喻夫妻分离、女子思念丈夫。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鹳"
   },
   {
     "name": "晨风",
@@ -1367,7 +1911,11 @@
     "quote": "鴥彼晨风，郁彼北林。",
     "description": "鹯类猛禽",
     "id": 137,
-    "imageUrl": "/img/137_晨风.jpg"
+    "imageUrl": "/img/137_晨风.jpg",
+    "modernName": "晨风、鹯鸟",
+    "taxonomy": "鹰形目·鹰科",
+    "symbolism": "象征思念与归期，晨风北林，喻女子思念未见君子，不知归期。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鹞"
   },
   {
     "name": "桑扈",
@@ -1377,7 +1925,11 @@
     "quote": "交交桑扈，有莺其羽。",
     "description": "青雀",
     "id": 138,
-    "imageUrl": "/img/138_桑扈.jpg"
+    "imageUrl": "/img/138_桑扈.jpg",
+    "modernName": "青雀、桑扈",
+    "taxonomy": "雀形目·燕雀科",
+    "symbolism": "象征诸侯与朝见，桑扈青雀，喻来朝的诸侯，其羽有文采，喻有德行。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/青雀"
   },
   {
     "name": "鸳鸯",
@@ -1387,7 +1939,11 @@
     "quote": "鸳鸯在梁，戢其左翼。",
     "description": "水鸟，雌雄相伴",
     "id": 139,
-    "imageUrl": "/img/139_鸳鸯.jpg"
+    "imageUrl": "/img/139_鸳鸯.jpg",
+    "modernName": "鸳鸯",
+    "taxonomy": "雁形目·鸭科",
+    "symbolism": "象征夫妻恩爱与美满婚姻，鸳鸯成对，生死相随，是爱情的象征。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鸳鸯"
   },
   {
     "name": "鹰",
@@ -1397,7 +1953,11 @@
     "quote": "维师尚父，时维鹰扬。",
     "description": "老鹰",
     "id": 140,
-    "imageUrl": "/img/140_鹰.jpg"
+    "imageUrl": "/img/140_鹰.jpg",
+    "modernName": "老鹰、苍鹰",
+    "taxonomy": "鹰形目·鹰科",
+    "symbolism": "象征威武与奋发，「鹰扬」喻太公望辅佐武王伐纣，如雄鹰展翅高飞。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鹰"
   },
   {
     "name": "凤凰",
@@ -1407,7 +1967,11 @@
     "quote": "凤凰于飞，翙翙其羽。",
     "description": "神鸟，祥瑞",
     "id": 141,
-    "imageUrl": "/img/141_凤凰.jpg"
+    "imageUrl": "/img/141_凤凰.jpg",
+    "modernName": "凤凰、凤皇",
+    "taxonomy": "神话传说中的鸟类",
+    "symbolism": "象征太平盛世与明君在位，凤凰出现是天下太平的吉兆，喻周王德政。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/凤凰"
   },
   {
     "name": "枭",
@@ -1417,7 +1981,11 @@
     "quote": "墓门有梅，有鸮萃止。",
     "description": "猫头鹰",
     "id": 142,
-    "imageUrl": "/img/142_枭.jpg"
+    "imageUrl": "/img/142_枭.jpg",
+    "modernName": "猫头鹰、枭鸟",
+    "taxonomy": "鸮形目·鸱鸮科",
+    "symbolism": "象征不祥与恶声，枭鸣于墓门，喻坏人聚集在不好的地方。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鸱鸮"
   },
   {
     "name": "桃虫",
@@ -1427,7 +1995,11 @@
     "quote": "肇允彼桃虫，拚飞维鸟。",
     "description": "鹪鹩，小鸟",
     "id": 143,
-    "imageUrl": "/img/143_桃虫.jpg"
+    "imageUrl": "/img/143_桃虫.jpg",
+    "modernName": "鹪鹩、桃虫",
+    "taxonomy": "雀形目·鹪鹩科",
+    "symbolism": "象征小事酿成大患，桃虫虽小，却能拚飞成大鸟，喻小患可酿成大祸。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鹪鹩"
   },
   {
     "name": "鹿",
@@ -1437,7 +2009,11 @@
     "quote": "呦呦鹿鸣，食野之苹。",
     "description": "食野之苹，宴饮和谐",
     "id": 144,
-    "imageUrl": "/img/144_鹿.jpg"
+    "imageUrl": "/img/144_鹿.jpg",
+    "modernName": "梅花鹿",
+    "taxonomy": "偶蹄目·鹿科",
+    "symbolism": "象征宴饮与和谐，鹿鸣食苹，喻君臣宴饮、宾客和谐的景象。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/梅花鹿"
   },
   {
     "name": "麕",
@@ -1447,7 +2023,11 @@
     "quote": "野有死麕，白茅包之。",
     "description": "獐子，赠礼",
     "id": 145,
-    "imageUrl": "/img/145_麕.jpg"
+    "imageUrl": "/img/145_麕.jpg",
+    "modernName": "獐子、河麂",
+    "taxonomy": "偶蹄目·鹿科",
+    "symbolism": "象征爱情与赠礼，野有死麕，白茅包之，喻男子以猎物赠予心仪女子。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/獐"
   },
   {
     "name": "麟",
@@ -1457,7 +2037,11 @@
     "quote": "麟之趾，振振公子。",
     "description": "麒麟，仁兽，喻公子",
     "id": 146,
-    "imageUrl": "/img/146_麟.jpg"
+    "imageUrl": "/img/146_麟.jpg",
+    "modernName": "麒麟",
+    "taxonomy": "神话传说中的神兽",
+    "symbolism": "象征仁德与公子，麟为仁兽，「麟之趾」喻公子仁厚，有圣人之德。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/麒麟"
   },
   {
     "name": "虎",
@@ -1467,7 +2051,11 @@
     "quote": "匪兕匪虎，率彼旷野。",
     "description": "猛兽",
     "id": 147,
-    "imageUrl": "/img/147_虎.jpg"
+    "imageUrl": "/img/147_虎.jpg",
+    "modernName": "老虎",
+    "taxonomy": "食肉目·猫科",
+    "symbolism": "象征猛兽与征夫，「匪兕匪虎」喻征夫辛苦奔波，如野兽在旷野。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/虎"
   },
   {
     "name": "兕",
@@ -1477,7 +2065,11 @@
     "quote": "匪兕匪虎，率彼旷野。",
     "description": "野牛或犀牛",
     "id": 148,
-    "imageUrl": "/img/148_兕.jpg"
+    "imageUrl": "/img/148_兕.jpg",
+    "modernName": "犀牛",
+    "taxonomy": "奇蹄目·犀科",
+    "symbolism": "象征危险与征夫，兕为凶猛野兽，喻征夫在外奔波，处境危险。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/犀牛"
   },
   {
     "name": "狐",
@@ -1487,7 +2079,11 @@
     "quote": "有狐绥绥，在彼淇梁。",
     "description": "狐裘象征，亦喻忧思",
     "id": 149,
-    "imageUrl": "/img/149_狐.jpg"
+    "imageUrl": "/img/149_狐.jpg",
+    "modernName": "狐狸",
+    "taxonomy": "食肉目·犬科",
+    "symbolism": "象征狡猾与忧思，狐裘象征富贵，亦喻心中忧思难解。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/狐"
   },
   {
     "name": "兔",
@@ -1497,7 +2093,11 @@
     "quote": "有兔爰爰，雉离于罗。",
     "description": "逍遥",
     "id": 150,
-    "imageUrl": "/img/150_兔.png"
+    "imageUrl": "/img/150_兔.png",
+    "modernName": "野兔",
+    "taxonomy": "兔形目·兔科",
+    "symbolism": "象征逍遥与自由，「有兔爰爰」喻兔子逍遥自在，反衬人生多难。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/兔"
   },
   {
     "name": "鼠",
@@ -1507,7 +2107,11 @@
     "quote": "硕鼠硕鼠，无食我黍。",
     "description": "贪官之喻",
     "id": 151,
-    "imageUrl": "/img/151_鼠.webp"
+    "imageUrl": "/img/151_鼠.webp",
+    "modernName": "田鼠、硕鼠",
+    "taxonomy": "啮齿目·鼠科",
+    "symbolism": "象征贪官与剥削，「硕鼠硕鼠」喻贪官污吏剥削百姓，不劳而获。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鼠"
   },
   {
     "name": "貉",
@@ -1517,7 +2121,11 @@
     "quote": "取彼狐狸，为公子裘。",
     "description": "犬科动物",
     "id": 152,
-    "imageUrl": "/img/152_貉.jpg"
+    "imageUrl": "/img/152_貉.jpg",
+    "modernName": "貉子",
+    "taxonomy": "食肉目·犬科",
+    "symbolism": "象征皮毛与富贵，取彼狐狸为公子裘，喻贵族的奢华生活。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/貉"
   },
   {
     "name": "牛",
@@ -1527,7 +2135,11 @@
     "quote": "谁谓尔无牛，九十其犉。",
     "description": "黄牛",
     "id": 153,
-    "imageUrl": "/img/153_牛.jpg"
+    "imageUrl": "/img/153_牛.jpg",
+    "modernName": "黄牛",
+    "taxonomy": "偶蹄目·牛科",
+    "symbolism": "象征富足与畜牧，「谁谓尔无牛，九十其犉」形容牛羊成群，家道殷实。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/牛"
   },
   {
     "name": "羊",
@@ -1537,7 +2149,11 @@
     "quote": "谁谓尔无羊，三百维群。",
     "description": "绵羊",
     "id": 154,
-    "imageUrl": "/img/154_羊.jpg"
+    "imageUrl": "/img/154_羊.jpg",
+    "modernName": "绵羊",
+    "taxonomy": "偶蹄目·牛科",
+    "symbolism": "象征吉祥与群聚，「三百维群」形容羊群众多，喻家族兴旺。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/羊"
   },
   {
     "name": "豕",
@@ -1547,7 +2163,11 @@
     "quote": "有豕白蹢，烝涉波矣。",
     "description": "猪",
     "id": 155,
-    "imageUrl": "/img/155_豕.jpg"
+    "imageUrl": "/img/155_豕.jpg",
+    "modernName": "猪",
+    "taxonomy": "偶蹄目·猪科",
+    "symbolism": "象征家畜与祭祀，豕为古代重要家畜，用于祭祀和食用。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/猪"
   },
   {
     "name": "狼",
@@ -1557,7 +2177,11 @@
     "quote": "狼跋其胡，载疐其尾。",
     "description": "狼",
     "id": 156,
-    "imageUrl": "/img/156_狼.jpg"
+    "imageUrl": "/img/156_狼.jpg",
+    "modernName": "狼",
+    "taxonomy": "食肉目·犬科",
+    "symbolism": "象征贪婪与狼狈，「狼跋其胡」喻老狼贪食而进退两难。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/狼"
   },
   {
     "name": "豹",
@@ -1567,7 +2191,11 @@
     "quote": "羔裘豹饰，孔武有力。",
     "description": "豹",
     "id": 157,
-    "imageUrl": "/img/157_豹.jpg"
+    "imageUrl": "/img/157_豹.jpg",
+    "modernName": "豹子",
+    "taxonomy": "食肉目·猫科",
+    "symbolism": "象征勇武与华贵，「羔裘豹饰」形容大夫服饰华美，孔武有力。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/豹"
   },
   {
     "name": "熊",
@@ -1577,7 +2205,11 @@
     "quote": "维熊维罴，男子之祥。",
     "description": "熊",
     "id": 158,
-    "imageUrl": "/img/158_熊.jpg"
+    "imageUrl": "/img/158_熊.jpg",
+    "modernName": "黑熊",
+    "taxonomy": "食肉目·熊科",
+    "symbolism": "象征男子与祥瑞，「维熊维罴，男子之祥」梦见熊罴是生男子的吉兆。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/熊"
   },
   {
     "name": "罴",
@@ -1587,7 +2219,11 @@
     "quote": "维熊维罴，男子之祥。",
     "description": "棕熊",
     "id": 159,
-    "imageUrl": "/img/159_罴.jpg"
+    "imageUrl": "/img/159_罴.jpg",
+    "modernName": "棕熊",
+    "taxonomy": "食肉目·熊科",
+    "symbolism": "象征男子与力量，与熊并称，同为生男子的祥瑞之兆。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/棕熊"
   },
   {
     "name": "猫",
@@ -1597,7 +2233,11 @@
     "quote": "有熊有罴，有猫有虎。",
     "description": "山猫",
     "id": 160,
-    "imageUrl": "/img/160_猫.jpg"
+    "imageUrl": "/img/160_猫.jpg",
+    "modernName": "山猫、野猫",
+    "taxonomy": "食肉目·猫科",
+    "symbolism": "象征山林与野兽，与熊罴虎并称，喻韩国物产丰富。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/猫"
   },
   {
     "name": "貔",
@@ -1607,7 +2247,11 @@
     "quote": "献其貔皮，赤豹黄罴。",
     "description": "豹类猛兽",
     "id": 161,
-    "imageUrl": "/img/161_貔.jpg"
+    "imageUrl": "/img/161_貔.jpg",
+    "modernName": "貔虎、猛兽",
+    "taxonomy": "食肉目·猫科",
+    "symbolism": "象征勇猛与贡品，貔皮为珍贵贡品，喻诸侯朝见天子的诚意。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/貔"
   },
   {
     "name": "象",
@@ -1617,7 +2261,11 @@
     "quote": "凤皇于飞，翙翙其羽。",
     "description": "大象",
     "id": 162,
-    "imageUrl": "/img/162_象.jpg"
+    "imageUrl": "/img/162_象.jpg",
+    "modernName": "亚洲象",
+    "taxonomy": "长鼻目·象科",
+    "symbolism": "象征太平与祥瑞，卷阿诗中凤皇与梧桐并提，象亦为盛世之瑞兽。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/象"
   },
   {
     "name": "犬",
@@ -1627,7 +2275,11 @@
     "quote": "无感我帨兮，无使尨也吠。",
     "description": "狗",
     "id": 163,
-    "imageUrl": "/img/163_犬.jpg"
+    "imageUrl": "/img/163_犬.jpg",
+    "modernName": "狗",
+    "taxonomy": "食肉目·犬科",
+    "symbolism": "象征守家与忠诚，无使尨也吠，喻不要惊动守门的狗。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/犬"
   },
   {
     "name": "驺虞",
@@ -1637,7 +2289,11 @@
     "quote": "彼茁者葭，壹发五豝。",
     "description": "义兽，白虎黑文",
     "id": 164,
-    "imageUrl": "/img/164_驺虞.jpg"
+    "imageUrl": "/img/164_驺虞.jpg",
+    "modernName": "驺虞、白虎",
+    "taxonomy": "神话传说中的仁兽",
+    "symbolism": "象征仁德与义兽，驺虞不食生物，喻仁君之德，不杀无辜。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/驺虞"
   },
   {
     "name": "羔",
@@ -1647,7 +2303,11 @@
     "quote": "羔羊之皮，素丝五紽。",
     "description": "小羊",
     "id": 165,
-    "imageUrl": "/img/165_羔.jpg"
+    "imageUrl": "/img/165_羔.jpg",
+    "modernName": "小羊",
+    "taxonomy": "偶蹄目·牛科",
+    "symbolism": "象征纯洁与大夫，「羔羊之皮」形容大夫服饰整洁，品德如羔羊般纯洁。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/羊"
   },
   {
     "name": "豝",
@@ -1657,7 +2317,11 @@
     "quote": "壹发五豝，于嗟乎驺虞。",
     "description": "母猪",
     "id": 166,
-    "imageUrl": "/img/166_豝.jpg"
+    "imageUrl": "/img/166_豝.jpg",
+    "modernName": "母猪",
+    "taxonomy": "偶蹄目·猪科",
+    "symbolism": "象征狩猎与丰获，壹发五豝，形容射猎技艺高超，一箭射中五头猪。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/猪"
   },
   {
     "name": "貆",
@@ -1667,7 +2331,11 @@
     "quote": "不狩不猎，胡瞻尔庭有县貆兮。",
     "description": "幼貉",
     "id": 167,
-    "imageUrl": "/img/167_貆.jpg"
+    "imageUrl": "/img/167_貆.jpg",
+    "modernName": "幼貉",
+    "taxonomy": "食肉目·犬科",
+    "symbolism": "象征狩猎与剥削，「胡瞻尔庭有县貆兮」讽刺统治者不狩不猎却悬满猎物。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/貉"
   },
   {
     "name": "貍",
@@ -1677,7 +2345,11 @@
     "quote": "取彼狐狸，为公子裘。",
     "description": "狸猫",
     "id": 168,
-    "imageUrl": "/img/168_貍.jpg"
+    "imageUrl": "/img/168_貍.jpg",
+    "modernName": "狸猫",
+    "taxonomy": "食肉目·猫科",
+    "symbolism": "象征皮毛与奢华，取彼狐狸为公子裘，喻贵族的奢华生活。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/貉"
   },
   {
     "name": "豺",
@@ -1687,7 +2359,11 @@
     "quote": "取彼谮人，投畀豺虎。",
     "description": "豺狼",
     "id": 169,
-    "imageUrl": "/img/169_豺.jpg"
+    "imageUrl": "/img/169_豺.jpg",
+    "modernName": "豺狼",
+    "taxonomy": "食肉目·犬科",
+    "symbolism": "象征凶残与惩罚，「投畀豺虎」喻将谗人投给豺虎吃掉，表达痛恨之情。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/豺"
   },
   {
     "name": "猱",
@@ -1697,7 +2373,11 @@
     "quote": "毋教猱升木，如涂涂附。",
     "description": "猿猴",
     "id": 170,
-    "imageUrl": "/img/170_猱.jpg"
+    "imageUrl": "/img/170_猱.jpg",
+    "modernName": "猿猴、猕猴",
+    "taxonomy": "灵长目·猴科",
+    "symbolism": "象征攀爬与依附，「毋教猱升木」喻人本性难移，如猿猴善爬树。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/猕猴"
   },
   {
     "name": "螽斯",
@@ -1707,7 +2387,11 @@
     "quote": "螽斯羽，诜诜兮。",
     "description": "蝗虫类，喻多子",
     "id": 171,
-    "imageUrl": "/img/171_螽斯.jpg"
+    "imageUrl": "/img/171_螽斯.jpg",
+    "modernName": "蝗虫、螽斯",
+    "taxonomy": "直翅目·螽斯科",
+    "symbolism": "象征多子多福，「螽斯羽，诜诜兮」喻子孙众多，家族兴旺。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/螽斯科"
   },
   {
     "name": "草虫",
@@ -1717,7 +2401,11 @@
     "quote": "喓喓草虫，趯趯阜螽。",
     "description": "蝈蝈或纺织娘",
     "id": 172,
-    "imageUrl": "/img/172_草虫.jpg"
+    "imageUrl": "/img/172_草虫.jpg",
+    "modernName": "蝈蝈、纺织娘",
+    "taxonomy": "直翅目·螽斯科",
+    "symbolism": "象征思念与相见，草虫鸣叫，阜螽跳跃，喻未见君子时的忧思。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/螽斯科"
   },
   {
     "name": "蜉蝣",
@@ -1727,7 +2415,11 @@
     "quote": "蜉蝣之羽，衣裳楚楚。",
     "description": "朝生暮死，生命短暂",
     "id": 173,
-    "imageUrl": "/img/173_蜉蝣.jpg"
+    "imageUrl": "/img/173_蜉蝣.jpg",
+    "modernName": "蜉蝣",
+    "taxonomy": "蜉蝣目·蜉蝣科",
+    "symbolism": "象征生命短暂与无常，蜉蝣朝生暮死，喻人生短暂，应及时行乐。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蜉蝣"
   },
   {
     "name": "蟋蟀",
@@ -1737,7 +2429,11 @@
     "quote": "十月蟋蟀，入我床下。",
     "description": "秋声",
     "id": 174,
-    "imageUrl": "/img/174_蟋蟀.jpg"
+    "imageUrl": "/img/174_蟋蟀.jpg",
+    "modernName": "蟋蟀、促织",
+    "taxonomy": "直翅目·蟋蟀科",
+    "symbolism": "象征秋声与岁暮，「十月蟋蟀，入我床下」预示寒冬将至，催人准备冬衣。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蟋蟀"
   },
   {
     "name": "蚕",
@@ -1747,7 +2443,11 @@
     "quote": "蚕月条桑，取彼斧斨。",
     "description": "养蚕缫丝",
     "id": 175,
-    "imageUrl": "/img/175_蚕.jpg"
+    "imageUrl": "/img/175_蚕.jpg",
+    "modernName": "家蚕、桑蚕",
+    "taxonomy": "鳞翅目·蚕蛾科",
+    "symbolism": "象征勤劳与纺织，「蚕月条桑」描写养蚕缫丝的农事活动。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蚕"
   },
   {
     "name": "蛾",
@@ -1757,7 +2457,11 @@
     "quote": "如蜩如螗，如沸如羹。",
     "description": "蚕蛾",
     "id": 176,
-    "imageUrl": "/img/176_蛾.png"
+    "imageUrl": "/img/176_蛾.png",
+    "modernName": "蚕蛾",
+    "taxonomy": "鳞翅目·蚕蛾科",
+    "symbolism": "象征纷乱与喧闹，「如蜩如螗，如沸如羹」形容人声喧闹如蛾飞。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蚕蛾"
   },
   {
     "name": "蜩",
@@ -1767,7 +2471,11 @@
     "quote": "五月鸣蜩，六月莎鸡振羽。",
     "description": "知了",
     "id": 177,
-    "imageUrl": "/img/177_蜩.jpg"
+    "imageUrl": "/img/177_蜩.jpg",
+    "modernName": "知了、蝉",
+    "taxonomy": "半翅目·蝉科",
+    "symbolism": "象征夏天与时光，「五月鸣蜩」蝉声预示夏天的到来，提醒农时。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蝉"
   },
   {
     "name": "斯螽",
@@ -1777,7 +2485,11 @@
     "quote": "五月斯螽动股，六月莎鸡振羽。",
     "description": "蝗虫类",
     "id": 178,
-    "imageUrl": "/img/178_斯螽.jpg"
+    "imageUrl": "/img/178_斯螽.jpg",
+    "modernName": "蝗虫、螽斯",
+    "taxonomy": "直翅目·螽斯科",
+    "symbolism": "象征季节与农时，「五月斯螽动股」描写螽斯摩擦大腿发声，预示夏季。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/螽斯"
   },
   {
     "name": "莎鸡",
@@ -1787,7 +2499,11 @@
     "quote": "六月莎鸡振羽，七月在野。",
     "description": "纺织娘",
     "id": 179,
-    "imageUrl": "/img/179_莎鸡.jpg"
+    "imageUrl": "/img/179_莎鸡.jpg",
+    "modernName": "纺织娘",
+    "taxonomy": "直翅目·螽斯科",
+    "symbolism": "象征秋声与纺织，「六月莎鸡振羽」其声如纺织，催人准备冬衣。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/纺织娘"
   },
   {
     "name": "蠋",
@@ -1797,7 +2513,11 @@
     "quote": "蜎蜎者蠋，烝在桑野。",
     "description": "野蚕",
     "id": 180,
-    "imageUrl": "/img/180_蠋.jpg"
+    "imageUrl": "/img/180_蠋.jpg",
+    "modernName": "野蚕、桑蠋",
+    "taxonomy": "鳞翅目·蚕蛾科",
+    "symbolism": "象征孤独与远征，「蜎蜎者蠋」形容蠋在桑野蜷曲独处，喻征夫孤独。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/野蚕"
   },
   {
     "name": "伊威",
@@ -1807,7 +2527,11 @@
     "quote": "伊威在室，蟏蛸在户。",
     "description": "鼠妇",
     "id": 181,
-    "imageUrl": "/img/181_伊威.jpg"
+    "imageUrl": "/img/181_伊威.jpg",
+    "modernName": "鼠妇、潮虫",
+    "taxonomy": "等足目·潮虫科",
+    "symbolism": "象征久别与荒凉，伊威在室，形容室内潮湿荒凉，久无人居。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鼠妇"
   },
   {
     "name": "蟏蛸",
@@ -1817,7 +2541,11 @@
     "quote": "伊威在室，蟏蛸在户。",
     "description": "长脚蜘蛛",
     "id": 182,
-    "imageUrl": "/img/182_蟏蛸.jpg"
+    "imageUrl": "/img/182_蟏蛸.jpg",
+    "modernName": "长脚蜘蛛、喜子",
+    "taxonomy": "蛛形目·幽灵蛛科",
+    "symbolism": "象征久别与荒凉，蟏蛸在户，形容门口结满蛛网，久无人迹。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/长脚蛛"
   },
   {
     "name": "熠燿",
@@ -1827,7 +2555,11 @@
     "quote": "町畽鹿场，熠燿宵行。",
     "description": "萤火虫",
     "id": 183,
-    "imageUrl": "/img/183_熠燿.jpg"
+    "imageUrl": "/img/183_熠燿.jpg",
+    "modernName": "萤火虫、夜光",
+    "taxonomy": "鞘翅目·萤科",
+    "symbolism": "象征夜晚与磷火，「熠燿宵行」形容萤火虫在夜间飞行发光，亦指鬼火。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/萤火虫"
   },
   {
     "name": "虺",
@@ -1837,7 +2569,11 @@
     "quote": "维虺维蛇，女子之祥。",
     "description": "毒蛇",
     "id": 184,
-    "imageUrl": "/img/184_虺.jpg"
+    "imageUrl": "/img/184_虺.jpg",
+    "modernName": "蝮蛇、毒蛇",
+    "taxonomy": "有鳞目·蝰科",
+    "symbolism": "象征女子与祥瑞，「维虺维蛇，女子之祥」梦见虺蛇是生女子的吉兆。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蝮亚科"
   },
   {
     "name": "蛇",
@@ -1847,7 +2583,11 @@
     "quote": "维虺维蛇，女子之祥。",
     "description": "蛇",
     "id": 185,
-    "imageUrl": "/img/185_蛇.jpg"
+    "imageUrl": "/img/185_蛇.jpg",
+    "modernName": "蛇",
+    "taxonomy": "有鳞目·蛇亚目",
+    "symbolism": "象征女子与祥瑞，与虺并称，同为生女子的吉兆之兆。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蛇"
   },
   {
     "name": "蜴",
@@ -1857,7 +2597,11 @@
     "quote": "哀今之人，胡为虺蜴。",
     "description": "蜥蜴",
     "id": 186,
-    "imageUrl": "/img/186_蜴.jpg"
+    "imageUrl": "/img/186_蜴.jpg",
+    "modernName": "蜥蜴、四脚蛇",
+    "taxonomy": "有鳞目·蜥蜴亚目",
+    "symbolism": "象征毒蛇与恶人，「胡为虺蜴」喻人如毒蛇蜥蜴般恶毒。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蜥蜴"
   },
   {
     "name": "螟蛉",
@@ -1867,7 +2611,11 @@
     "quote": "螟蛉有子，蜾蠃负之。",
     "description": "螟蛾幼虫",
     "id": 187,
-    "imageUrl": "/img/187_螟蛉.jpg"
+    "imageUrl": "/img/187_螟蛉.jpg",
+    "modernName": "螟蛾幼虫",
+    "taxonomy": "鳞翅目·螟蛾科",
+    "symbolism": "象征义子与收养，「螟蛉有子，蜾蠃负之」古人误以为蜾蠃养螟蛉为子，后称义子为螟蛉。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/螟蛾"
   },
   {
     "name": "果裸",
@@ -1877,7 +2625,11 @@
     "quote": "果裸之实，亦施于宇。",
     "description": "栝楼，此处指虫",
     "id": 188,
-    "imageUrl": "/img/188_果裸.png"
+    "imageUrl": "/img/188_果裸.png",
+    "modernName": "栝楼、瓜蒌",
+    "taxonomy": "葫芦科·栝楼属",
+    "symbolism": "象征蔓延与依附，果裸之实蔓延于宇，喻事物自然生长蔓延。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/栝楼"
   },
   {
     "name": "蜮",
@@ -1887,7 +2639,11 @@
     "quote": "为鬼为蜮，则不可得。",
     "description": "短狐，含沙射影",
     "id": 189,
-    "imageUrl": "/img/189_蜮.jpg"
+    "imageUrl": "/img/189_蜮.jpg",
+    "modernName": "短狐、含沙蜮",
+    "taxonomy": "未知",
+    "symbolism": "象征阴谋与暗害，「为鬼为蜮」传说蜮能含沙射人影，使人得病，喻暗中害人。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蜮"
   },
   {
     "name": "青蝇",
@@ -1897,7 +2653,11 @@
     "quote": "营营青蝇，止于樊。",
     "description": "苍蝇",
     "id": 190,
-    "imageUrl": "/img/190_青蝇.jpg"
+    "imageUrl": "/img/190_青蝇.jpg",
+    "modernName": "苍蝇、绿头蝇",
+    "taxonomy": "双翅目·蝇科",
+    "symbolism": "象征谗人与污秽，「营营青蝇」喻谗人如苍蝇般污秽，止于藩篱。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/苍蝇"
   },
   {
     "name": "蜂",
@@ -1907,7 +2667,11 @@
     "quote": "其类维何，室家之壶。",
     "description": "蜜蜂",
     "id": 191,
-    "imageUrl": "/img/191_蜂.jpg"
+    "imageUrl": "/img/191_蜂.jpg",
+    "modernName": "蜜蜂",
+    "taxonomy": "膜翅目·蜜蜂科",
+    "symbolism": "象征勤劳与甜蜜，蜂蜜甘甜，喻生活甜美，家庭幸福。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/蜜蜂"
   },
   {
     "name": "鲂",
@@ -1917,7 +2681,11 @@
     "quote": "敝笱在梁，其鱼鲂鳏。",
     "description": "鳊鱼",
     "id": 192,
-    "imageUrl": "/img/192_鲂.jpg"
+    "imageUrl": "/img/192_鲂.jpg",
+    "modernName": "鳊鱼、武昌鱼",
+    "taxonomy": "鲤形目·鲤科",
+    "symbolism": "象征鱼儿与婚姻，鱼在梁上，喻夫妻相守，亦讽刺文姜与齐襄公之事。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鳊"
   },
   {
     "name": "鲤",
@@ -1927,7 +2695,11 @@
     "quote": "岂其食鱼，必河之鲤。",
     "description": "鲤鱼",
     "id": 193,
-    "imageUrl": "/img/193_鲤.jpg"
+    "imageUrl": "/img/193_鲤.jpg",
+    "modernName": "鲤鱼",
+    "taxonomy": "鲤形目·鲤科",
+    "symbolism": "象征美味与朴素，「岂其食鱼，必河之鲤」喻娶妻不必求完美，朴素亦可。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鲤"
   },
   {
     "name": "鳣",
@@ -1937,7 +2709,11 @@
     "quote": "施罛濊濊，鳣鲔发发。",
     "description": "鳝鱼",
     "id": 194,
-    "imageUrl": "/img/194_鳣.jpg"
+    "imageUrl": "/img/194_鳣.jpg",
+    "modernName": "鲟鱼、鳝鱼",
+    "taxonomy": "鲟形目·鲟科",
+    "symbolism": "象征大鱼与丰收，「鳣鲔发发」形容大鱼众多，喻渔业丰收。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鲟"
   },
   {
     "name": "鲔",
@@ -1947,7 +2723,11 @@
     "quote": "施罛濊濊，鳣鲔发发。",
     "description": "鲟鱼",
     "id": 195,
-    "imageUrl": "/img/195_鲔.jpg"
+    "imageUrl": "/img/195_鲔.jpg",
+    "modernName": "鲟鱼、金枪鱼",
+    "taxonomy": "鲟形目·鲟科",
+    "symbolism": "象征大鱼与丰盛，与鳣并称，形容渔获丰富，场面盛大。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鲔鱼"
   },
   {
     "name": "鳏",
@@ -1957,7 +2737,11 @@
     "quote": "敝笱在梁，其鱼鲂鳏。",
     "description": "大鱼",
     "id": 196,
-    "imageUrl": "/img/196_鳏.jpg"
+    "imageUrl": "/img/196_鳏.jpg",
+    "modernName": "鳡鱼、大鱼",
+    "taxonomy": "鲤形目·鲤科",
+    "symbolism": "象征大鱼与疏忽，「敝笱在梁，其鱼鲂鳏」讽刺鲁桓公不能约束文姜。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鳡"
   },
   {
     "name": "鳟",
@@ -1967,7 +2751,11 @@
     "quote": "九罭之鱼，鳟鲂。",
     "description": "赤目鱼",
     "id": 197,
-    "imageUrl": "/img/197_鳟.jpg"
+    "imageUrl": "/img/197_鳟.jpg",
+    "modernName": "赤目鳟、鳟鱼",
+    "taxonomy": "鲑形目·鲑科",
+    "symbolism": "象征美鱼与宾客，「九罭之鱼，鳟鲂」用细网捕得美鱼，喻主人留客的诚意。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鳟"
   },
   {
     "name": "鲿",
@@ -1977,7 +2765,11 @@
     "quote": "鱼丽于罶，鲿鲨。",
     "description": "黄颊鱼",
     "id": 198,
-    "imageUrl": "/img/198_鲿.jpg"
+    "imageUrl": "/img/198_鲿.jpg",
+    "modernName": "黄颡鱼、黄颊鱼",
+    "taxonomy": "鲇形目·鲿科",
+    "symbolism": "象征美鱼与宴饮，「鱼丽于罶，鲿鲨」形容鱼笼中装满各种美鱼，喻酒宴丰盛。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鲿"
   },
   {
     "name": "鲨",
@@ -1987,7 +2779,11 @@
     "quote": "鱼丽于罶，鲿鲨。",
     "description": "小鱼",
     "id": 199,
-    "imageUrl": "/img/199_鲨.jpg"
+    "imageUrl": "/img/199_鲨.jpg",
+    "modernName": "小鱼、吹沙",
+    "taxonomy": "鲤形目·鲤科",
+    "symbolism": "象征小鱼与丰盛，与鲿并称，形容渔获种类丰富，酒宴丰盛。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/鲨"
   },
   {
     "name": "鳢",
@@ -1997,7 +2793,11 @@
     "quote": "鱼丽于罶，鲂鳢。",
     "description": "黑鱼",
     "id": 200,
-    "imageUrl": "/img/200_鳢.png"
+    "imageUrl": "/img/200_鳢.png",
+    "modernName": "黑鱼、乌鳢",
+    "taxonomy": "鲈形目·鳢科",
+    "symbolism": "象征美鱼与宴饮，「鱼丽于罶，鲂鳢」形容鱼笼中装满美鱼，喻酒宴丰盛。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/乌鳢"
   },
   {
     "name": "嘉鱼",
@@ -2007,7 +2807,11 @@
     "quote": "南有嘉鱼，烝然罩罩。",
     "description": "好鱼",
     "id": 201,
-    "imageUrl": "/img/201_嘉鱼.jpg"
+    "imageUrl": "/img/201_嘉鱼.jpg",
+    "modernName": "卷口鱼、嘉鱼",
+    "taxonomy": "鲤形目·鲤科",
+    "symbolism": "象征美好与君子，「南有嘉鱼」形容南方有好鱼，喻君子有德，能吸引贤才。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/卷口鱼"
   },
   {
     "name": "鲐",
@@ -2017,7 +2821,11 @@
     "quote": "鲐背之寿，遐不作人。",
     "description": "河豚",
     "id": 202,
-    "imageUrl": "/img/202_鲐.jpg"
+    "imageUrl": "/img/202_鲐.jpg",
+    "modernName": "鲐鱼、河豚",
+    "taxonomy": "鲀形目·鲀科",
+    "symbolism": "象征长寿与老人，「鲐背」形容老人背部皮肤如鲐鱼斑纹，喻高寿。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/河豚"
   },
   {
     "name": "鲦",
@@ -2027,7 +2835,11 @@
     "quote": "其从如云，其从如雨。",
     "description": "白条鱼",
     "id": 203,
-    "imageUrl": "/img/203_鲦.jpg"
+    "imageUrl": "/img/203_鲦.jpg",
+    "modernName": "白条鱼、鲦鱼",
+    "taxonomy": "鲤形目·鲤科",
+    "symbolism": "象征小鱼与繁多，形容随从众多如云如雨，场面盛大。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/白条鱼"
   },
   {
     "name": "鳖",
@@ -2037,7 +2849,11 @@
     "quote": "匪鹑匪鸢，翰飞戾天。",
     "description": "甲鱼",
     "id": 204,
-    "imageUrl": "/img/204_鳖.jpg"
+    "imageUrl": "/img/204_鳖.jpg",
+    "modernName": "甲鱼、团鱼",
+    "taxonomy": "龟鳖目·鳖科",
+    "symbolism": "象征水族与食物，鳖为美味佳肴，是古代重要的食材。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/中华鳖"
   },
   {
     "name": "龟",
@@ -2047,7 +2863,11 @@
     "quote": "我龟既厌，不我告犹。",
     "description": "乌龟",
     "id": 205,
-    "imageUrl": "/img/205_龟.jpg"
+    "imageUrl": "/img/205_龟.jpg",
+    "modernName": "乌龟、神龟",
+    "taxonomy": "龟鳖目·龟科",
+    "symbolism": "象征占卜与长寿，「我龟既厌」古人用龟甲占卜，龟亦象征长寿。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/龟"
   },
   {
     "name": "鼍",
@@ -2057,6 +2877,10 @@
     "quote": "鼍鼓逢逢，矇瞍奏公。",
     "description": "鳄鱼",
     "id": 206,
-    "imageUrl": "/img/206_鼍.jpg"
+    "imageUrl": "/img/206_鼍.jpg",
+    "modernName": "扬子鳄、鼍龙",
+    "taxonomy": "鳄目·鼍科",
+    "symbolism": "象征鼓声与音乐，「鼍鼓逢逢」用鼍皮做鼓，声音洪亮，用于奏乐。",
+    "wikiLink": "https://zh.wikipedia.org/wiki/扬子鳄"
   }
 ]
