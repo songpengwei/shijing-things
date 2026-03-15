@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import type { ShijingItem } from '@/data/shijingData';
+import { useState, useEffect } from 'react';
+import type { ShijingItem } from '@/types';
+import poemFullText from '@/data/poemFullText.json';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Quote, BookOpen, Leaf } from 'lucide-react';
+import { Quote, BookOpen, Leaf, ScrollText, X } from 'lucide-react';
 
 interface ItemCardProps {
   item: ShijingItem;
@@ -27,7 +28,18 @@ const categoryBadgeColors = {
 
 export function ItemCard({ item }: ItemCardProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showFullText, setShowFullText] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  
+  // 获取全文数据
+  const fullPoem = poemFullText[item.poem as keyof typeof poemFullText];
+  
+  // 当弹窗关闭时重置全文显示状态
+  useEffect(() => {
+    if (!isOpen) {
+      setShowFullText(false);
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -142,6 +154,47 @@ export function ItemCard({ item }: ItemCardProps) {
                 {item.description}
               </p>
             </div>
+
+            {/* Full Text Section */}
+            {fullPoem && (
+              <div className="border-t border-gray-200 pt-4">
+                {!showFullText ? (
+                  <button
+                    onClick={() => setShowFullText(true)}
+                    className="flex items-center gap-2 text-amber-600 hover:text-amber-700 font-medium transition-colors"
+                  >
+                    <ScrollText className="w-4 h-4" />
+                    <span>查看《{item.poem}》全文</span>
+                  </button>
+                ) : (
+                  <div className="bg-stone-50 rounded-lg p-4 border border-stone-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-semibold text-stone-500 uppercase tracking-wider flex items-center gap-2">
+                        <ScrollText className="w-4 h-4" />
+                        诗经全文
+                      </h4>
+                      <button
+                        onClick={() => setShowFullText(false)}
+                        className="text-stone-400 hover:text-stone-600 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="text-center mb-3">
+                      <h5 className="text-lg font-bold text-stone-800">{fullPoem.title}</h5>
+                      <p className="text-xs text-stone-500 mt-1">{fullPoem.fullSource}</p>
+                    </div>
+                    <div className="space-y-2">
+                      {fullPoem.content.map((line: string, index: number) => (
+                        <p key={index} className="text-stone-700 leading-loose text-left font-medium">
+                          {line}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>

@@ -1,11 +1,11 @@
 import { useState, useMemo } from 'react';
 import { shijingData, categories } from '@/data/shijingData';
-import type { CategoryKey } from '@/data/shijingData';
-import { ItemCard } from '@/components/ItemCard';
+import type { CategoryKey } from '@/types';
+import { ItemCard } from '@/components/features/ItemCard';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
-export function MainContent() {
+export function HomeView() {
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
   const [searchQuery, setSearchQuery] = useState('');
 

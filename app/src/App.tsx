@@ -1,13 +1,12 @@
-import { Header } from '@/sections/Header';
-import { MainContent } from '@/sections/MainContent';
-import { Footer } from '@/sections/Footer';
-import './App.css';
+import { Header } from '@/components/layout/Header';
+import { HomeView } from '@/views/HomeView';
+import { Footer } from '@/components/layout/Footer';
 
 function App() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white">
       <Header />
-      <MainContent />
+      <HomeView />
       <Footer />
     </div>
   );
