@@ -1,21 +1,21 @@
 /* ===== 基础样式 ===== */
 :root {
-    --color-primary: #d97706;
-    --color-primary-dark: #b45309;
-    --color-primary-light: #fef3c7;
+    --color-primary: #77AAC2;
+    --color-primary-dark: #5a8fa8;
+    --color-primary-light: #e8f4f8;
     
-    --color-cao: #10b981;
-    --color-mu: #d97706;
-    --color-niao: #3b82f6;
-    --color-shou: #f97316;
-    --color-chong: #a855f7;
-    --color-yu: #06b6d4;
+    --color-cao: #79D9CE;
+    --color-mu: #77AAC2;
+    --color-niao: #FCD765;
+    --color-shou: #F19A97;
+    --color-chong: #696773;
+    --color-yu: #79D9CE;
     
-    --color-bg: #f8fafc;
+    --color-bg: #EFF1F3;
     --color-card: #ffffff;
-    --color-text: #1e293b;
-    --color-text-light: #64748b;
-    --color-border: #e2e8f0;
+    --color-text: #696773;
+    --color-text-light: #8a8994;
+    --color-border: #d1d5db;
     
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
@@ -137,6 +137,15 @@ body {
 
 .stat-item {
     text-align: center;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    transition: all 0.2s;
+}
+
+.stat-item:hover {
+    background: var(--color-bg);
+    transform: translateY(-2px);
 }
 
 .stat-number {
@@ -150,6 +159,22 @@ body {
     font-size: 0.875rem;
     color: var(--color-text-light);
 }
+
+/* 统计数字蓝绿+红黄四色间隔配色 */
+.stat-草 .stat-number { color: #77AAC2; }  /* 蓝 */
+.stat-木 .stat-number { color: #F19A97; }  /* 红 */
+.stat-鸟 .stat-number { color: #79D9CE; }  /* 绿 */
+.stat-兽 .stat-number { color: #FCD765; }  /* 黄 */
+.stat-虫 .stat-number { color: #5a8fa8; }  /* 蓝绿 */
+.stat-鱼 .stat-number { color: #c97a77; }  /* 红橙 */
+
+/* 统计标签也使用相同颜色 */
+.stat-草 .stat-label { color: #77AAC2; }
+.stat-木 .stat-label { color: #F19A97; }
+.stat-鸟 .stat-label { color: #79D9CE; }
+.stat-兽 .stat-label { color: #FCD765; }
+.stat-虫 .stat-label { color: #5a8fa8; }
+.stat-鱼 .stat-label { color: #c97a77; }
 
 /* ===== 筛选区域 ===== */
 .filter-section {
@@ -192,6 +217,43 @@ body {
     background: var(--color-primary);
     color: white;
     border-color: var(--color-primary);
+}
+
+/* 分类按钮选中时使用对应颜色 */
+.category-btn-all.active {
+    background: #77AAC2;
+    border-color: #77AAC2;
+}
+
+.category-btn-草.active {
+    background: #77AAC2;
+    border-color: #77AAC2;
+}
+
+.category-btn-木.active {
+    background: #F19A97;
+    border-color: #F19A97;
+}
+
+.category-btn-鸟.active {
+    background: #79D9CE;
+    border-color: #79D9CE;
+}
+
+.category-btn-兽.active {
+    background: #FCD765;
+    border-color: #FCD765;
+    color: #333;
+}
+
+.category-btn-虫.active {
+    background: #5a8fa8;
+    border-color: #5a8fa8;
+}
+
+.category-btn-鱼.active {
+    background: #c97a77;
+    border-color: #c97a77;
 }
 
 .search-box {
@@ -274,7 +336,7 @@ body {
     position: relative;
     height: 180px;
     overflow: hidden;
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    background: linear-gradient(135deg, #EFF1F3 0%, #e0e4e8 100%);
 }
 
 .card-image img {
@@ -308,12 +370,13 @@ body {
     font-weight: 600;
 }
 
-.category-badge.category-草 { background: #d1fae5; color: #065f46; }
-.category-badge.category-木 { background: #fef3c7; color: #92400e; }
-.category-badge.category-鸟 { background: #dbeafe; color: #1e40af; }
-.category-badge.category-兽 { background: #ffedd5; color: #9a3412; }
-.category-badge.category-虫 { background: #f3e8ff; color: #6b21a8; }
-.category-badge.category-鱼 { background: #cffafe; color: #0e7490; }
+/* 卡片类别徽章使用统一配色 */
+.category-badge.category-草 { background: rgba(119, 170, 194, 0.2); color: #77AAC2; }
+.category-badge.category-木 { background: rgba(241, 154, 151, 0.2); color: #F19A97; }
+.category-badge.category-鸟 { background: rgba(121, 217, 206, 0.2); color: #79D9CE; }
+.category-badge.category-兽 { background: rgba(252, 215, 101, 0.25); color: #c9a53d; }
+.category-badge.category-虫 { background: rgba(90, 143, 168, 0.2); color: #5a8fa8; }
+.category-badge.category-鱼 { background: rgba(201, 122, 119, 0.2); color: #c97a77; }
 
 .card-content {
     padding: 1rem;
@@ -418,7 +481,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    background: linear-gradient(135deg, #EFF1F3 0%, #e0e4e8 100%);
     font-size: 6rem;
 }
 
@@ -489,7 +552,7 @@ body {
 }
 
 .info-link a {
-    color: #3b82f6;
+    color: #77AAC2;
     text-decoration: none;
 }
 
@@ -515,7 +578,7 @@ body {
 }
 
 .poem-content {
-    background: #fafaf9;
+    background: #f8f9fa;
     padding: 1.5rem;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border);
@@ -524,7 +587,7 @@ body {
 .poem-line {
     font-size: 1.125rem;
     line-height: 2;
-    color: #44403c;
+    color: #696773;
     font-family: "Noto Serif SC", "SimSun", serif;
 }
 
@@ -631,7 +694,7 @@ body {
 }
 
 .form-group .required {
-    color: #ef4444;
+    color: #F19A97;
 }
 
 .form-group input,
@@ -700,16 +763,16 @@ body {
 }
 
 .btn-secondary:hover {
-    background: #cbd5e1;
+    background: #c5c9d0;
 }
 
 .btn-danger {
-    background: #fee2e2;
-    color: #dc2626;
+    background: rgba(241, 154, 151, 0.2);
+    color: #c97a77;
 }
 
 .btn-danger:hover {
-    background: #fecaca;
+    background: rgba(241, 154, 151, 0.35);
 }
 
 /* ===== 弹窗 ===== */

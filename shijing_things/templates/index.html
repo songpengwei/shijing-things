@@ -8,10 +8,10 @@
         <p class="hero-subtitle">《诗经》三百篇，涉及草木鸟兽者过半。本网站整理了《诗经》中出现的 {{ stats.total }} 种草木鸟兽，以飨读者。</p>
         <div class="hero-stats">
             {% for cat, count in stats.by_category.items() %}
-            <div class="stat-item">
+            <a href="/?category={{ cat }}" class="stat-item stat-{{ cat }}">
                 <span class="stat-number">{{ count }}</span>
                 <span class="stat-label">{{ cat }}类</span>
-            </div>
+            </a>
             {% endfor %}
         </div>
     </section>
@@ -22,7 +22,7 @@
         <div class="category-filter">
             {% for cat in categories %}
             <a href="/?category={{ cat.key }}" 
-               class="category-btn {% if current_category == cat.key %}active{% endif %}">
+               class="category-btn category-btn-{{ cat.key }} {% if current_category == cat.key %}active{% endif %}">
                 <span class="category-icon">{{ cat.icon }}</span>
                 <span>{{ cat.label }}</span>
             </a>
