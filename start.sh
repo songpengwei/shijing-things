@@ -17,7 +17,6 @@ echo ""
 
 # 获取脚本所在目录
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BACKEND_DIR="$SCRIPT_DIR/backend"
 
 cd "$SCRIPT_DIR"
 
@@ -48,7 +47,6 @@ fi
 # 2. 安装依赖
 echo ""
 echo -e "${YELLOW}[2/4] 安装依赖...${NC}"
-cd "$BACKEND_DIR"
 
 if [ -f "requirements.txt" ]; then
     pip install -q -r requirements.txt
@@ -70,12 +68,12 @@ if [ -f "shijing.db" ]; then
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         rm -f shijing.db
         echo "  已删除旧数据库"
-        python init_db.py <<< "y"
+        python scripts/init_db.py <<< "y"
     else
         echo "  跳过数据库初始化"
     fi
 else
-    python init_db.py <<< "y"
+    python scripts/init_db.py <<< "y"
 fi
 
 if [ ! -f "shijing.db" ]; then
@@ -105,4 +103,4 @@ echo -e "${GREEN}==============================================${NC}"
 echo ""
 
 # 启动服务
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn shijing_things.main:app --reload --host 0.0.0.0 --port 8000

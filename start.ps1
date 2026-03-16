@@ -16,7 +16,6 @@ Write-Host ""
 
 # 获取脚本所在目录
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$BackendDir = Join-Path $ScriptDir "backend"
 
 Set-Location $ScriptDir
 
@@ -67,7 +66,6 @@ Write-Host "  $Green✓ conda 环境已激活$NC"
 # 2. 安装依赖
 Write-Host ""
 Write-Host "$Yellow[2/4] 安装依赖...$NC"
-Set-Location $BackendDir
 
 if (Test-Path "requirements.txt") {
     pip install -q -r requirements.txt
@@ -87,12 +85,12 @@ if (Test-Path "shijing.db") {
     if ($reinit -eq "y" -or $reinit -eq "Y") {
         Remove-Item "shijing.db" -Force
         Write-Host "  已删除旧数据库"
-        echo "y" | python init_db.py
+        echo "y" | python scripts/init_db.py
     } else {
         Write-Host "  跳过数据库初始化"
     }
 } else {
-    echo "y" | python init_db.py
+    echo "y" | python scripts/init_db.py
 }
 
 if (-not (Test-Path "shijing.db")) {
@@ -122,4 +120,4 @@ Write-Host "$Green==============================================$NC"
 Write-Host ""
 
 # 启动服务
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn shijing_things.main:app --reload --host 0.0.0.0 --port 8000

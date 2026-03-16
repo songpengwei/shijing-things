@@ -1,175 +1,308 @@
-# 诗经事物项目元信息
+# 诗经事物项目 - 开发指南
 
 ## 项目概述
-- **项目名称**: shijing-things（诗经事物）
-- **项目类型**: 前端 Web 应用
-- **用途**: 展示《诗经》中提到的各种事物（草木鸟兽虫鱼）
+
+**诗经草木鸟兽大全** - 《诗经》三百篇，涉及草木鸟兽者过半。本项目整理了《诗经》中出现的 204 种草木鸟兽，提供完整的增删改查功能。
+
+> 孔子曰："多识于鸟兽草木之名"
 
 ## 技术栈
-- **框架**: React 18 + TypeScript
-- **构建工具**: Vite
-- **样式**: Tailwind CSS
-- **UI 组件库**: shadcn/ui
-- **图标**: Lucide React
+
+- **后端**: FastAPI + SQLAlchemy + SQLite
+- **前端**: Jinja2 模板 + 纯 HTML/CSS/JavaScript
+- **Python**: 3.11+
+- **部署**: Docker / Docker Compose
 
 ## 项目结构
 
 ```
 shijing-things/
-├── app/                        # 前端应用目录
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── features/       # 功能组件
-│   │   │   │   └── ItemCard.tsx    # 事物卡片组件（核心组件）
-│   │   │   ├── layout/         # 布局组件
-│   │   │   │   ├── Footer.tsx
-│   │   │   │   └── Header.tsx
-│   │   │   └── ui/             # shadcn/ui 组件库
-│   │   │       ├── card.tsx, dialog.tsx, button.tsx 等
-│   │   ├── data/               # 应用数据
-│   │   │   ├── poemFullText.json   # 诗经全文数据（以诗名为 key）
-│   │   │   ├── shijingData.json    # 事物列表数据
-│   │   │   └── shijingData.ts      # 数据导出和类型
-│   │   ├── hooks/              # 自定义 React Hooks
-│   │   ├── lib/                # 工具函数
-│   │   ├── styles/             # 样式文件
-│   │   ├── types/              # TypeScript 类型定义
-│   │   ├── views/              # 页面视图
-│   │   │   └── HomeView.tsx
-│   │   ├── App.tsx             # 主应用组件
-│   │   └── main.tsx            # 应用入口
-│   ├── dist/                   # 构建输出目录
-│   ├── index.html
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── vite.config.ts
-│   └── tailwind.config.js
-├── data/                       # 原始数据目录
-│   ├── shijing.json            # 诗经原文（按 ID 索引）
-│   ├── shijing_data.json       # 事物数据（另一个版本）
-│   ├── image_mapping.json      # 图片映射配置
-│   └── img/                    # 事物图片资源
-│       └── {id}_{name}.jpg/png/webp
-├── scripts/                    # 脚本工具
-├── README.md
-└── .gitignore
+├── shijing_things/            # Python 包（主应用）
+│   ├── main.py                # FastAPI 入口
+│   ├── core/                  # 配置 & 数据库
+│   ├── models/                # SQLAlchemy 模型
+│   ├── schemas/               # Pydantic 模型
+│   ├── crud/                  # 数据库操作
+│   ├── routers/               # 路由
+│   │   ├── pages.py           # HTML 页面路由
+│   │   └── api.py             # REST API 路由
+│   ├── templates/             # Jinja2 模板
+│   └── static/                # CSS/JS/图片
+├── data/                      # 原始数据
+│   ├── img/                   # 191张图片
+│   ├── shijing.json           # 诗经原文
+│   └── shijing_data.json      # 事物数据
+├── sql/
+│   └── init.sql               # 数据库初始化 SQL
+├── scripts/
+│   └── init_db.py             # 初始化脚本
+├── tests/                     # 测试目录
+├── docker-compose.yml         # Docker 配置
+├── Dockerfile                 # 镜像构建
+├── requirements.txt           # Python 依赖
+├── start.sh                   # macOS/Linux 启动脚本
+├── start.ps1                  # Windows 启动脚本
+└── README.md                  # 项目文档
 ```
 
-## 数据文件格式
+## 环境要求
 
-### 1. shijing.json（原始诗经数据）
-```typescript
-{
-  "1": {
-    "title": "关雎",
-    "chapter": "国风",
-    "section": "周南",
-    "content": ["关关雎鸠...", "参差荇菜...", ...]  // 每章一行
-  },
-  ...
-}
+- Python 3.11+
+- Conda (推荐) 或 venv
+- SQLite (内置)
+- Docker (可选)
+
+## 快速启动
+
+### 方式一：一键启动（推荐）
+
+**macOS/Linux:**
+```bash
+# 首次：创建 conda 环境
+conda create -n shijing python=3.11 -y
+
+# 一键启动（自动激活环境、安装依赖、初始化数据库、启动服务）
+./start.sh
 ```
 
-### 2. poemFullText.json（应用使用的全文数据）
-```typescript
-{
-  "关雎": {
-    "title": "关雎",
-    "chapter": "国风",
-    "section": "周南",
-    "content": ["关关雎鸠...", "参差荇菜...", ...],
-    "fullSource": "国风·周南·关雎"
-  },
-  ...
-}
+**Windows:**
+```powershell
+# 首次：创建 conda 环境
+conda create -n shijing python=3.11 -y
+
+# 一键启动
+.\start.ps1
 ```
 
-### 3. shijingData.json（事物列表）
-```typescript
-[
-  {
-    "id": 1,
-    "name": "荇菜",
-    "category": "草",        // 分类：草、木、鸟、兽、虫、鱼
-    "source": "周南",
-    "poem": "关雎",          // 所属诗篇
-    "quote": "参差荇菜，左右流之",
-    "description": "...",    // 简要注释
-    "imageUrl": "...",       // 图片路径
-    "modernName": "荇菜、莕菜、水荷叶",  // 今名（现代名称）
-    "taxonomy": "龙胆科·荇菜属",         // 纲目属（分类学信息）
-    "symbolism": "象征美好爱情与追求...", // 寓意（文化象征意义）
-    "wikiLink": "https://zh.wikipedia.org/wiki/荇菜"  // 百科链接
-  },
-  ...
-]
+### 方式二：手动启动
+
+```bash
+# 1. 激活环境
+conda activate shijing
+
+# 2. 安装依赖
+pip install -r requirements.txt
+
+# 3. 初始化数据库（首次）
+python scripts/init_db.py
+
+# 4. 启动服务
+uvicorn shijing_things.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-**数据规模**: 共 206 个事物
-- 草类：62 个
-- 木类：45 个
-- 鸟类：36 个
-- 兽类：27 个
-- 虫类：21 个
-- 鱼类：15 个
+### 方式三：Docker 启动
 
-## 核心组件说明
+```bash
+# 构建并启动
+docker-compose up -d
 
-### ItemCard.tsx
-- **功能**: 展示单个事物的卡片
-- **特性**:
-  - 点击弹出详情 Dialog
-  - 显示事物图片、名称、分类、引用诗句
-  - **详情弹窗展示内容**:
-    - 📛 **今名**: 现代名称（如：荇菜、莕菜、水荷叶）
-    - 🌲 **纲目属**: 分类学信息（如：龙胆科·荇菜属）
-    - 💡 **寓意**: 文化象征意义与诗意解读
-    - 🔗 **百科链接**: 维基百科/百度百科外部链接
-    - 📝 **简注**: 原简要注释
-  - 可展开查看所属诗篇的完整内容
-  - 支持按 JSON 中 content 数组多行渲染诗经全文
-- **样式**: 使用渐变色边框区分不同分类
+# 初始化数据库（首次）
+docker-compose exec app python scripts/init_db.py
+```
 
-## 分类体系
-事物按以下 6 类组织：
-1. **草** - 草本植物
-2. **木** - 树木植物
-3. **鸟** - 鸟类
-4. **兽** - 兽类
-5. **虫** - 昆虫类
-6. **鱼** - 鱼类
+## 访问地址
+
+启动后访问：
+- **首页**: http://localhost:8000
+- **API 文档**: http://localhost:8000/api/docs
+- **管理页面**: http://localhost:8000/manage
+- **健康检查**: http://localhost:8000/api/health
+
+## 数据库
+
+- **类型**: SQLite
+- **文件**: `shijing.db` (项目根目录)
+- **初始化**: `sql/init.sql` (包含 204 条事物 + 295 条诗篇)
+- **图片**: `shijing_things/static/img/` (192 张)
+
+### 重新初始化数据库
+
+```bash
+# 删除旧数据库
+rm shijing.db
+
+# 重新初始化
+python scripts/init_db.py
+```
+
+## 主要依赖
+
+```
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+sqlalchemy==2.0.36
+pydantic==2.9.2
+pydantic-settings==2.6.1
+jinja2==3.1.4
+python-multipart==0.0.17
+aiofiles==24.1.0
+```
+
+## 常用命令
+
+```bash
+# 启动开发服务器
+uvicorn shijing_things.main:app --reload
+
+# 生产模式启动
+uvicorn shijing_things.main:app --host 0.0.0.0 --port 8000
+
+# 运行测试
+pytest tests/
+
+# Docker 构建
+docker-compose build
+
+# Docker 停止
+docker-compose down
+
+# 查看日志
+docker-compose logs -f
+```
+
+## 配置说明
+
+配置文件：`shijing_things/core/config.py`
+
+| 配置项 | 默认值 | 说明 |
+|--------|--------|------|
+| `app_name` | 诗经事物 API | 应用名称 |
+| `app_version` | 1.0.0 | 版本号 |
+| `database_url` | sqlite:///./shijing.db | 数据库路径 |
+| `static_dir` | ./shijing_things/static | 静态文件目录 |
+| `img_dir` | ./shijing_things/static/img | 图片目录 |
+
+## API 端点
+
+### 事物 (Items)
+| 方法 | 端点 | 描述 |
+|------|------|------|
+| GET | `/api/items/` | 列表（支持筛选、搜索） |
+| GET | `/api/items/{id}` | 详情 |
+| POST | `/api/items/` | 创建 |
+| PUT | `/api/items/{id}` | 更新 |
+| DELETE | `/api/items/{id}` | 删除 |
+| GET | `/api/items/stats` | 统计数据 |
+| GET | `/api/items/categories` | 分类列表 |
+
+### 诗篇 (Poems)
+| 方法 | 端点 | 描述 |
+|------|------|------|
+| GET | `/api/poems/` | 列表 |
+| GET | `/api/poems/{id}` | 详情 |
+| GET | `/api/poems/title/{title}` | 按标题查询 |
+| POST | `/api/poems/` | 创建 |
+| PUT | `/api/poems/{id}` | 更新 |
+| DELETE | `/api/poems/{id}` | 删除 |
+
+## 页面路由
+
+| 路径 | 描述 |
+|------|------|
+| `/` | 首页 - 事物卡片列表 |
+| `/item/{id}` | 事物详情页 |
+| `/manage` | 数据管理页（表格） |
+| `/manage/item/new` | 新建事物 |
+| `/manage/item/{id}` | 编辑事物 |
+
+## 数据规模
+
+- **事物**: 204 条
+  - 草类: 62 个
+  - 木类: 44 个
+  - 鸟类: 35 个
+  - 兽类: 27 个
+  - 虫类: 21 个
+  - 鱼类: 15 个
+- **诗篇**: 295 条
+- **图片**: 192 张
 
 ## 开发注意事项
 
-### 修改诗经全文渲染
-- 文件: `app/src/components/features/ItemCard.tsx`
-- 渲染位置: Full Text Section 中的 `fullPoem.content.map`
-- 当前实现: 使用 `whitespace-pre-line` 保留换行，每章之间用 `space-y-4` 分隔
+### 添加新字段
 
-### 添加新数据
-1. 在 `shijingData.json` 中添加事物条目
-2. 确保 `poemFullText.json` 中有对应诗篇的完整内容
-3. 图片放入 `app/dist/img/` 或 `data/img/`
+1. 修改模型：`shijing_things/models/models.py`
+2. 修改 Schema：`shijing_things/schemas/schemas.py`
+3. 更新 SQL：`sql/init.sql`
+4. 更新模板：`shijing_things/templates/edit.html`
+5. 重新初始化数据库
 
-### 常用命令
-```bash
-cd app
-npm run dev      # 开发服务器 (http://localhost:5173)
-npm run build    # 构建
-npm run preview  # 预览生产构建
+### 导入路径
+
+所有导入使用 `shijing_things` 作为根包名：
+
+```python
+from shijing_things.core.config import get_settings
+from shijing_things.crud.crud import item
+from shijing_things.models.models import ShijingItem
 ```
 
-### Node.js 版本兼容性
-- **推荐版本**: Node.js 20.19+ 或 22.12+
-- **当前环境**: Node.js 21.1.0（已降级 Vite 至 5.x 以兼容）
-- **已降级包**: 
-  - `vite`: 7.2.4 → 5.4.14
-  - `@vitejs/plugin-react`: 5.1.1 → 4.3.4
+### 图片路径
 
-## 文件路径速查
-- **主数据**: `app/src/data/shijingData.json`
-- **诗全文**: `app/src/data/poemFullText.json`
-- **卡片组件**: `app/src/components/features/ItemCard.tsx`
-- **首页视图**: `app/src/views/HomeView.tsx`
-- **原始诗经**: `data/shijing.json`
-- **类型定义**: `app/src/types/index.ts`
+- 数据库存储：`/static/img/xxx.jpg`
+- 实际位置：`shijing_things/static/img/xxx.jpg`
+
+## 故障排查
+
+### 数据库找不到
+```bash
+# 检查文件是否存在
+ls -la shijing.db
+
+# 重新初始化
+python scripts/init_db.py
+```
+
+### 图片 404
+```bash
+# 检查图片是否存在
+ls shijing_things/static/img/
+
+# 检查路径是否正确（应为 /static/img/xxx.jpg）
+```
+
+### 导入错误
+```bash
+# 确保在项目根目录运行
+pwd  # 应显示 .../shijing-things
+
+# 检查 Python 路径
+python -c "import sys; print(sys.path)"
+```
+
+### 端口占用
+```bash
+# 更换端口启动
+uvicorn shijing_things.main:app --reload --port 8080
+```
+
+## 快捷键
+
+- `Ctrl+C` - 停止服务
+- `Ctrl+S` - 保存文件（触发 reload）
+
+## 部署建议
+
+### 生产环境
+
+1. 使用 Gunicorn + Uvicorn
+2. 配置反向代理（Nginx）
+3. 设置环境变量
+4. 定期备份数据库
+
+### Docker 生产部署
+
+```bash
+# 构建镜像
+docker-compose build
+
+# 后台运行
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f app
+```
+
+---
+
+**最后更新**: 2024-03-16

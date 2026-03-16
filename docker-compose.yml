@@ -3,17 +3,16 @@ version: '3.8'
 services:
   app:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     container_name: shijing-app
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/static:/app/static
-      - ./backend/shijing.db:/app/shijing.db
+      - ./shijing_things/static:/app/shijing_things/static
+      - ./shijing.db:/app/shijing.db
     environment:
-      - DATABASE_URL=sqlite:///./shijing.db
-      - STATIC_DIR=./static
+      - DATABASE_URL=sqlite:////app/shijing.db
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]

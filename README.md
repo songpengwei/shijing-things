@@ -14,30 +14,35 @@
 
 ```
 shijing-things/
-├── backend/                    # Python 后端
-│   ├── app/
-│   │   ├── main.py            # FastAPI 主应用
-│   │   ├── core/              # 配置和数据库
-│   │   ├── models/            # SQLAlchemy 模型
-│   │   ├── schemas/           # Pydantic 模型
-│   │   ├── crud/              # 数据库操作
-│   │   ├── routers/           # 路由
-│   │   │   ├── pages.py       # 页面路由 (HTML)
-│   │   │   └── api.py         # API 路由 (JSON)
-│   │   └── templates/         # Jinja2 模板
-│   ├── static/                # 静态文件
-│   │   ├── css/style.css
-│   │   ├── js/app.js
-│   │   └── img/               # 图片资源
-│   ├── init.sql               # 数据库初始化 SQL
-│   ├── init_db.py             # 数据库初始化脚本
-│   ├── requirements.txt
-│   └── Dockerfile
-├── data/                       # 原始数据
+├── shijing_things/            # Python 包
+│   ├── __init__.py
+│   ├── main.py                # FastAPI 主应用
+│   ├── core/                  # 配置和数据库
+│   ├── models/                # SQLAlchemy 模型
+│   ├── schemas/               # Pydantic 模型
+│   ├── crud/                  # 数据库操作
+│   ├── routers/               # 路由
+│   │   ├── pages.py           # 页面路由 (HTML)
+│   │   └── api.py             # API 路由 (JSON)
+│   ├── templates/             # Jinja2 模板
+│   └── static/                # 静态文件
+│       ├── css/style.css
+│       ├── js/app.js
+│       └── img/               # 图片资源
+├── data/                      # 原始数据
 │   ├── shijing.json           # 诗经原文
 │   ├── shijing_data.json      # 事物基础数据
 │   └── img/                   # 原始图片
+├── sql/
+│   └── init.sql               # 数据库初始化 SQL
+├── scripts/
+│   └── init_db.py             # 数据库初始化脚本
+├── tests/                     # 测试目录
 ├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+├── start.sh                   # macOS/Linux 一键启动
+├── start.ps1                  # Windows 一键启动
 └── README.md
 ```
 
@@ -96,7 +101,7 @@ pip install -r requirements.txt
 python init_db.py
 
 # 4. 启动服务
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn shijing_things.main:app --reload --host 0.0.0.0 --port 8000
 
 # 5. 访问 http://localhost:8000
 ```
