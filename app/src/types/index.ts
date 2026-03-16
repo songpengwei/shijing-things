@@ -15,6 +15,11 @@ export interface ShijingItem {
   quote: string;
   description: string;
   imageUrl: string;
+  // 详细释义
+  modernName: string;   // 今名
+  taxonomy: string;     // 纲目属
+  symbolism: string;    // 寓意
+  wikiLink: string;     // 百科链接
 }
 
 // 分类配置

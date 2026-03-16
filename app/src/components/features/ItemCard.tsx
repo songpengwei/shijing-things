@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { ShijingItem } from '@/types';
 import poemFullText from '@/data/poemFullText.json';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Quote, BookOpen, Leaf, ScrollText, X } from 'lucide-react';
+import { Quote, BookOpen, Leaf, ScrollText, X, ExternalLink, Tag, TreePine } from 'lucide-react';
 
 interface ItemCardProps {
   item: ShijingItem;
@@ -145,12 +145,62 @@ export function ItemCard({ item }: ItemCardProps) {
               </div>
             </div>
 
-            {/* Description */}
-            <div>
+            {/* Detailed Info */}
+            <div className="space-y-4">
+              {/* 今名 */}
+              <div className="flex items-start gap-3">
+                <Tag className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                    今名
+                  </h4>
+                  <p className="text-gray-700">{item.modernName}</p>
+                </div>
+              </div>
+
+              {/* 纲目属 */}
+              <div className="flex items-start gap-3">
+                <TreePine className="w-4 h-4 text-blue-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                    纲目属
+                  </h4>
+                  <p className="text-gray-700">{item.taxonomy}</p>
+                </div>
+              </div>
+
+              {/* 寓意 */}
+              <div className="bg-amber-50/50 rounded-lg p-4 border border-amber-100">
+                <h4 className="text-sm font-semibold text-amber-700 uppercase tracking-wider mb-2">
+                  寓意
+                </h4>
+                <p className="text-gray-700 leading-relaxed">
+                  {item.symbolism}
+                </p>
+              </div>
+
+              {/* 百科链接 */}
+              {item.wikiLink && (
+                <div className="flex items-center gap-2">
+                  <ExternalLink className="w-4 h-4 text-blue-500" />
+                  <a
+                    href={item.wikiLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-700 hover:underline text-sm"
+                  >
+                    查看更多（维基百科/百度百科）
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* Original Description */}
+            <div className="border-t border-gray-200 pt-4">
               <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                释义
+                简注
               </h4>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed">
                 {item.description}
               </p>
             </div>
@@ -184,9 +234,9 @@ export function ItemCard({ item }: ItemCardProps) {
                       <h5 className="text-lg font-bold text-stone-800">{fullPoem.title}</h5>
                       <p className="text-xs text-stone-500 mt-1">{fullPoem.fullSource}</p>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-4">
                       {fullPoem.content.map((line: string, index: number) => (
-                        <p key={index} className="text-stone-700 leading-loose text-left font-medium">
+                        <p key={index} className="text-stone-700 leading-loose text-left font-medium whitespace-pre-line">
                           {line}
                         </p>
                       ))}
