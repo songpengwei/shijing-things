@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}{% if is_edit %}编辑 {{ item.name }}{% else %}新建事物{% endif %} - 诗经事物{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">
+            {% if is_edit %}
+            ✏️ 编辑 "{{ item.name }}"
+            {% else %}
+            ➕ 新建事物
+            {% endif %}
+        </h1>
+        <a href="/manage" class="back-link">← 返回管理</a>
+    </div>
+
+    <form id="item-form" class="edit-form">
+        <div class="form-grid">
+            <!-- 基本信息 -->
+            <div class="form-section">
+                <h3>基本信息</h3>
+                
+                <div class="form-group">
+                    <label for="name">名称 <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" required
+                           value="{{ item.name if item else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">分类 <span class="required">*</span></label>
+                    <select id="category" name="category" required>
+                        <option value="">请选择</option>
+                        <option value="草" {% if item and item.category == '草' %}selected{% endif %}>草（草木）</option>
+                        <option value="木" {% if item and item.category == '木' %}selected{% endif %}>木（树木）</option>
+                        <option value="鸟" {% if item and item.category == '鸟' %}selected{% endif %}>鸟（鸟类）</option>
+                        <option value="兽" {% if item and item.category == '兽' %}selected{% endif %}>兽（兽类）</option>
+                        <option value="虫" {% if item and item.category == '虫' %}selected{% endif %}>虫（昆虫）</option>
+                        <option value="鱼" {% if item and item.category == '鱼' %}selected{% endif %}>鱼（鱼类）</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="source">出处（章节）<span class="required">*</span></label>
+                        <input type="text" id="source" name="source" required
+                               value="{{ item.source if item else '' }}"
+                               placeholder="如：周南、邶风">
+                    </div>
+                    <div class="form-group">
+                        <label for="poem">所属诗篇 <span class="required">*</span></label>
+                        <input type="text" id="poem" name="poem" required
+                               value="{{ item.poem if item else '' }}"
+                               placeholder="如：关雎">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="quote">引用诗句 <span class="required">*</span></label>
+                    <textarea id="quote" name="quote" rows="2" required
+                              placeholder="诗经中描述该事物的诗句">{{ item.quote if item else '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">简要注释</label>
+                    <textarea id="description" name="description" rows="2"
+                              placeholder="简要说明">{{ item.description if item else '' }}</textarea>
+                </div>
+            </div>
+
+            <!-- 详细信息 -->
+            <div class="form-section">
+                <h3>详细信息</h3>
+                
+                <div class="form-group">
+                    <label for="modern_name">今名</label>
+                    <input type="text" id="modern_name" name="modern_name"
+                           value="{{ item.modern_name if item else '' }}"
+                           placeholder="现代名称">
+                </div>
+
+                <div class="form-group">
+                    <label for="taxonomy">纲目属</label>
+                    <input type="text" id="taxonomy" name="taxonomy"
+                           value="{{ item.taxonomy if item else '' }}"
+                           placeholder="如：龙胆科·荇菜属">
+                </div>
+
+                <div class="form-group">
+                    <label for="symbolism">寓意/象征</label>
+                    <textarea id="symbolism" name="symbolism" rows="3"
+                              placeholder="文化象征意义与诗意解读">{{ item.symbolism if item else '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="wiki_link">百科链接</label>
+                    <input type="url" id="wiki_link" name="wiki_link"
+                           value="{{ item.wiki_link if item else '' }}"
+                           placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label for="image_url">图片路径</label>
+                    <input type="text" id="image_url" name="image_url"
+                           value="{{ item.image_url if item else '' }}"
+                           placeholder="/img/xxx.jpg">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg">
+                {% if is_edit %}保存修改{% else %}创建事物{% endif %}
+            </button>
+            <a href="/manage" class="btn btn-secondary btn-lg">取消</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('item-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+    
+    const isEdit = {{ 'true' if is_edit else 'false' }};
+    const itemId = {{ item.id if item else 'null' }};
+    
+    const url = isEdit ? `/api/items/${itemId}` : '/api/items/';
+    const method = isEdit ? 'PUT' : 'POST';
+    
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        
+        if (response.ok) {
+            alert(isEdit ? '修改成功！' : '创建成功！');
+            window.location.href = '/manage';
+        } else {
+            const error = await response.json();
+            alert('错误：' + (error.detail || '操作失败'));
+        }
+    } catch (err) {
+        console.error(err);
+        alert('网络错误，请重试');
+    }
+});
+</script>
+{% endblock %}

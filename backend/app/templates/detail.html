@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.name }} - 诗经事物{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- 返回按钮 -->
+    <a href="/" class="back-link">← 返回列表</a>
+
+    <!-- 详情卡片 -->
+    <article class="detail-card">
+        <header class="detail-header">
+            <h1 class="detail-title">
+                {{ item.name }}
+                <span class="category-badge category-{{ item.category }}">{{ item.category }}类</span>
+            </h1>
+        </header>
+
+        <div class="detail-body">
+            <!-- 图片 -->
+            <div class="detail-image">
+                {% if item.image_url %}
+                <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                {% else %}
+                <div class="detail-placeholder">
+                    {{ 
+                        '🌱' if item.category == '草' else
+                        '🌳' if item.category == '木' else
+                        '🦅' if item.category == '鸟' else
+                        '🦌' if item.category == '兽' else
+                        '🦋' if item.category == '虫' else
+                        '🐟'
+                    }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 引用 -->
+            <blockquote class="detail-quote">
+                <span class="quote-mark">"</span>
+                {{ item.quote }}
+                <span class="quote-mark">"</span>
+                <cite>——《{{ item.source }}·{{ item.poem }}》</cite>
+            </blockquote>
+
+            <!-- 详细信息 -->
+            <div class="detail-info">
+                {% if item.modern_name %}
+                <div class="info-item">
+                    <span class="info-label">📛 今名</span>
+                    <span class="info-value">{{ item.modern_name }}</span>
+                </div>
+                {% endif %}
+
+                {% if item.taxonomy %}
+                <div class="info-item">
+                    <span class="info-label">🌲 纲目属</span>
+                    <span class="info-value">{{ item.taxonomy }}</span>
+                </div>
+                {% endif %}
+
+                {% if item.symbolism %}
+                <div class="info-symbolism">
+                    <h3>💡 寓意</h3>
+                    <p>{{ item.symbolism }}</p>
+                </div>
+                {% endif %}
+
+                {% if item.wiki_link %}
+                <div class="info-link">
+                    <a href="{{ item.wiki_link }}" target="_blank" rel="noopener">
+                        🔗 查看更多（维基百科）
+                    </a>
+                </div>
+                {% endif %}
+
+                {% if item.description %}
+                <div class="info-description">
+                    <h3>📝 简注</h3>
+                    <p>{{ item.description }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 诗篇全文 -->
+            {% if poem and poem_content %}
+            <div class="poem-section">
+                <h3 class="poem-title">
+                    📜 《{{ poem.title }}》全文
+                    <span class="poem-source">{{ poem.full_source }}</span>
+                </h3>
+                <div class="poem-content">
+                    {% for line in poem_content %}
+                    <p class="poem-line">{{ line }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="detail-actions">
+            <a href="/manage/item/{{ item.id }}" class="btn btn-primary">编辑</a>
+            <button class="btn btn-danger" onclick="deleteItem({{ item.id }}, '{{ item.name }}')">删除</button>
+        </div>
+    </article>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function deleteItem(id, name) {
+    if (confirm(`确定要删除 "${name}" 吗？`)) {
+        fetch(`/api/items/${id}`, { method: 'DELETE' })
+            .then(res => {
+                if (res.ok) {
+                    alert('删除成功！');
+                    window.location.href = '/';
+                } else {
+                    alert('删除失败！');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('删除失败！');
+            });
+    }
+}
+</script>
+{% endblock %}

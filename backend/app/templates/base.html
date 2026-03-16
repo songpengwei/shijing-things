@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}诗经草木鸟兽大全{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- 头部 -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <span class="logo-icon">🌿</span>
+                    <span class="logo-text">诗经草木鸟兽</span>
+                </a>
+                <nav class="nav">
+                    <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">首页</a>
+                    <a href="/manage" class="nav-link {% if request.url.path.startswith('/manage') %}active{% endif %}">管理</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 底部 -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-quote">"多识于鸟兽草木之名" —— 孔子</p>
+            <p class="footer-copy">诗经事物 © 2024</p>
+        </div>
+    </footer>
+
+    <!-- 详情弹窗 -->
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

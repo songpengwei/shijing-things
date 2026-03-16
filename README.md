@@ -1,122 +1,162 @@
 # 诗经草木鸟兽大全
 
-《诗经》三百篇，涉及草木鸟兽者过半。本网站整理了《诗经》中出现的草木鸟兽，共计100余种，以飨读者。
+《诗经》三百篇，涉及草木鸟兽者过半。本项目整理了《诗经》中出现的 204 种草木鸟兽，以飨读者。
 
 > 孔子曰："多识于鸟兽草木之名"
+
+## 技术架构
+
+**后端**: FastAPI + SQLAlchemy + SQLite  
+**前端**: 纯 HTML + CSS + JavaScript (Jinja2 模板)  
+**部署**: Docker + Docker Compose
 
 ## 目录结构
 
 ```
 shijing-things/
-├── 📁 app/                    # React + Vite 前端项目
-│   ├── 📁 src/
-│   │   ├── 📁 components/     # 组件
-│   │   │   ├── 📁 ui/         # shadcn/ui 基础组件
-│   │   │   ├── 📁 layout/     # 布局组件（Header, Footer）
-│   │   │   └── 📁 features/   # 业务功能组件（ItemCard）
-│   │   ├── 📁 views/          # 页面视图（HomeView）
-│   │   ├── 📁 hooks/          # 自定义 Hooks
-│   │   ├── 📁 lib/            # 工具函数
-│   │   ├── 📁 data/           # 前端静态数据
-│   │   │   ├── shijingData.json      # 草木鸟兽数据
-│   │   │   ├── poemFullText.json     # 诗经全文数据（由脚本生成）
-│   │   │   └── shijingData.ts        # 数据导出 & 统计
-│   │   ├── 📁 types/          # TypeScript 类型定义
-│   │   ├── 📁 styles/         # 全局样式
-│   │   ├── App.tsx            # 根组件
-│   │   └── main.tsx           # 入口文件
-│   ├── 📄 package.json        # 依赖配置
-│   └── 📄 ...                 # 其他配置文件
-│
-├── 📁 data/                   # 原始数据文件
-│   ├── shijing.json           # 诗经305篇全文（原始数据）
-│   ├── shijing_data.json      # 草木鸟兽基础数据
-│   ├── image_mapping.json     # 图片映射数据
-│   └── 📁 img/                # 下载的本地图片（191张）
-│
-├── 📁 scripts/                # Python 脚本
-│   ├── process_shijing.py     # 处理诗经数据生成 JSON
-│   └── serve.sh               # 启动本地服务器
-│
-├── 📄 .gitignore              # Git 忽略配置
-└── 📄 README.md               # 本文件
+├── backend/                    # Python 后端
+│   ├── app/
+│   │   ├── main.py            # FastAPI 主应用
+│   │   ├── core/              # 配置和数据库
+│   │   ├── models/            # SQLAlchemy 模型
+│   │   ├── schemas/           # Pydantic 模型
+│   │   ├── crud/              # 数据库操作
+│   │   ├── routers/           # 路由
+│   │   │   ├── pages.py       # 页面路由 (HTML)
+│   │   │   └── api.py         # API 路由 (JSON)
+│   │   └── templates/         # Jinja2 模板
+│   ├── static/                # 静态文件
+│   │   ├── css/style.css
+│   │   ├── js/app.js
+│   │   └── img/               # 图片资源
+│   ├── init.sql               # 数据库初始化 SQL
+│   ├── init_db.py             # 数据库初始化脚本
+│   ├── requirements.txt
+│   └── Dockerfile
+├── data/                       # 原始数据
+│   ├── shijing.json           # 诗经原文
+│   ├── shijing_data.json      # 事物基础数据
+│   └── img/                   # 原始图片
+├── docker-compose.yml
+└── README.md
 ```
 
 ## 快速开始
 
-### 安装依赖
+### 方式一: Docker 部署（推荐）
 
 ```bash
-cd app
-npm install
+# 1. 构建并启动
+docker-compose up -d
+
+# 2. 初始化数据库（首次运行）
+docker-compose exec app python init_db.py
+
+# 3. 访问
+# 网站: http://localhost:8000
+# API 文档: http://localhost:8000/api/docs
 ```
 
-### 开发模式
+### 方式二: 本地运行
 
 ```bash
-cd app
-npm run dev
+# 1. 进入后端目录
+cd backend
+
+# 2. 安装依赖
+pip install -r requirements.txt
+
+# 3. 初始化数据库
+python init_db.py
+
+# 4. 启动服务
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+# 5. 访问 http://localhost:8000
 ```
 
-### 构建生产版本
+## 数据初始化
+
+数据库使用 SQL 文件初始化 (`backend/init.sql`)，包含：
+- 事物数据：204 条
+- 诗篇数据：295 条
+- 图片资源：191 张
 
 ```bash
-cd app
-npm run build
+# 重新初始化数据库
+cd backend
+python init_db.py
 ```
-
-### 本地预览（使用脚本）
-
-构建完成后，在项目根目录运行：
-
-```bash
-./scripts/serve.sh
-```
-
-然后访问 http://localhost:8080
-
-## 数据更新
-
-如需更新诗经全文数据：
-
-```bash
-cd scripts
-python3 process_shijing.py
-```
-
-这会从 `data/shijing.json` 读取原始数据，处理后生成 `app/src/data/poemFullText.json`。
-
-### 下载图片
-
-如需重新下载所有图片（数据中的图片 URL 已更新为本地路径）：
-
-```bash
-cd scripts
-python3 download_images.py
-```
-
-这会：
-1. 下载所有图片到 `data/img/` 目录
-2. 复制图片到 `app/public/img/` 供前端使用
-3. 自动更新 `app/src/data/shijingData.json` 中的图片路径为本地路径
-
-当前共有 **191** 张图片，**15** 个条目暂无图片。
-
-## 技术栈
-
-- **框架**: React + TypeScript
-- **构建工具**: Vite
-- **样式**: Tailwind CSS
-- **UI 组件**: shadcn/ui
-- **数据**: 诗经原始数据来自 [chinese-poetry](https://github.com/chinese-poetry/chinese-poetry) 开源项目
 
 ## 功能特性
 
-- 🌿 按类别筛选：草、木、鸟、兽、虫、鱼
-- 🔍 实时搜索：名称、诗篇、出处
-- 📖 查看诗经全文：点击卡片查看完整诗篇
-- 🖼️ 本地图片：191张草木鸟兽图片已下载到本地
-- 📱 响应式设计：支持移动端访问
+### 1. 前端页面
+- **首页** (`/`): 展示事物卡片，支持分类筛选和搜索
+- **详情页** (`/item/{id}`): 展示事物详细信息，包括诗经全文
+- **管理页** (`/manage`): 数据管理，表格形式展示所有数据
+- **编辑页** (`/manage/item/{id}` 或 `/manage/item/new`): 新增/编辑事物
+
+### 2. RESTful API
+- 完整的 CRUD 操作
+- 自动生成的 API 文档 (/api/docs)
+- 支持分类筛选、搜索、分页
+
+### 3. 数据库模型
+
+**事物 (ShijingItem)**:
+- id, name, category, poem, source, quote
+- description, image_url
+- modern_name, taxonomy, symbolism, wiki_link
+
+**诗篇 (Poem)**:
+- id, title, chapter, section, content, full_source
+
+## API 端点
+
+### 事物 (Items)
+| 方法 | 端点 | 描述 |
+|------|------|------|
+| GET | `/api/items/` | 列表（支持筛选、搜索） |
+| GET | `/api/items/{id}` | 详情 |
+| POST | `/api/items/` | 创建 |
+| PUT | `/api/items/{id}` | 更新 |
+| DELETE | `/api/items/{id}` | 删除 |
+| GET | `/api/items/stats` | 统计 |
+| GET | `/api/items/categories` | 分类列表 |
+
+### 诗篇 (Poems)
+| 方法 | 端点 | 描述 |
+|------|------|------|
+| GET | `/api/poems/` | 列表 |
+| GET | `/api/poems/{id}` | 详情 |
+| GET | `/api/poems/title/{title}` | 按标题查询 |
+| POST | `/api/poems/` | 创建 |
+| PUT | `/api/poems/{id}` | 更新 |
+| DELETE | `/api/poems/{id}` | 删除 |
+
+## 数据规模
+
+共 **204** 个事物：
+- 草类：62 个
+- 木类：44 个
+- 鸟类：35 个
+- 兽类：27 个
+- 虫类：21 个
+- 鱼类：15 个
+
+## 开发说明
+
+### 添加新字段
+
+1. **修改模型** (`app/models/models.py`)
+2. **修改 Schema** (`app/schemas/schemas.py`)
+3. **修改 SQL 文件** (`init.sql`)
+4. **修改表单** (`app/templates/edit.html`)
+5. **修改列表/详情页** (`app/templates/index.html`, `detail.html`)
+
+### 样式调整
+
+所有样式在 `backend/static/css/style.css` 中，使用 CSS 变量方便主题定制。
 
 ## License
 

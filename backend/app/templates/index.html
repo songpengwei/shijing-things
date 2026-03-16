@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <h1 class="hero-title">诗经草木鸟兽大全</h1>
+        <p class="hero-subtitle">《诗经》三百篇，涉及草木鸟兽者过半。本网站整理了《诗经》中出现的 {{ stats.total }} 种草木鸟兽，以飨读者。</p>
+        <div class="hero-stats">
+            {% for cat, count in stats.by_category.items() %}
+            <div class="stat-item">
+                <span class="stat-number">{{ count }}</span>
+                <span class="stat-label">{{ cat }}类</span>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- 筛选和搜索 -->
+    <section class="filter-section">
+        <!-- 分类筛选 -->
+        <div class="category-filter">
+            {% for cat in categories %}
+            <a href="/?category={{ cat.key }}" 
+               class="category-btn {% if current_category == cat.key %}active{% endif %}">
+                <span class="category-icon">{{ cat.icon }}</span>
+                <span>{{ cat.label }}</span>
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- 搜索框 -->
+        <form class="search-box" method="get" action="/">
+            <input type="hidden" name="category" value="{{ current_category }}">
+            <input type="text" 
+                   name="search" 
+                   class="search-input" 
+                   placeholder="搜索草木鸟兽、诗篇或出处..."
+                   value="{{ search }}">
+            <button type="submit" class="search-btn">🔍</button>
+        </form>
+    </section>
+
+    <!-- 结果统计 -->
+    <div class="results-info">
+        共找到 <strong>{{ total }}</strong> 种草木鸟兽
+        {% if search %}（搜索: "{{ search }}"）{% endif %}
+    </div>
+
+    <!-- 卡片网格 -->
+    <section class="items-grid">
+        {% for item in items %}
+        <article class="item-card" data-id="{{ item.id }}">
+            <div class="card-image">
+                {% if item.image_url %}
+                <img src="{{ item.image_url }}" alt="{{ item.name }}" loading="lazy">
+                {% else %}
+                <div class="card-placeholder">
+                    {{ 
+                        '草' if item.category == '草' else
+                        '木' if item.category == '木' else
+                        '鸟' if item.category == '鸟' else
+                        '兽' if item.category == '兽' else
+                        '虫' if item.category == '虫' else
+                        '鱼'
+                    }}
+                </div>
+                {% endif %}
+                <span class="category-badge category-{{ item.category }}">{{ item.category }}</span>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">{{ item.name }}</h3>
+                <div class="card-source">
+                    <span>📖</span>《{{ item.source }}·{{ item.poem }}》
+                </div>
+                <p class="card-quote">{{ item.quote }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    </section>
+
+    {% if not items %}
+    <div class="empty-state">
+        <div class="empty-icon">🌿</div>
+        <h3>未找到相关内容</h3>
+        <p>请尝试其他搜索词或筛选条件</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
