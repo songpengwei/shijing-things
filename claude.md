@@ -158,6 +158,18 @@ docker-compose down
 
 # 查看日志
 docker-compose logs -f
+
+# 导出数据库为 JSON
+python scripts/export_data.py -f json -o export.json
+
+# 导出数据库为 SQL
+python scripts/export_data.py -f sql -o export.sql
+
+# 导出事物数据（兼容前端格式）
+python scripts/export_data.py -f items -o items.json
+
+# 导出诗篇数据（兼容前端格式）
+python scripts/export_data.py -f poems -o poems.json
 ```
 
 ## 配置说明
@@ -259,6 +271,56 @@ python scripts/init_db.py
 ls shijing_things/static/img/
 
 # 检查路径是否正确（应为 /static/img/xxx.jpg）
+```
+
+## 数据导出
+
+使用 `scripts/export_data.py` 脚本导出数据库数据：
+
+### 导出格式
+
+| 格式 | 说明 | 用途 |
+|------|------|------|
+| `json` | 完整数据库 JSON | 数据备份、迁移 |
+| `sql` | SQL 插入语句 | 数据库重建、迁移 |
+| `items` | 事物数据（驼峰命名） | 兼容前端格式 |
+| `poems` | 诗篇数据（按标题索引） | 兼容前端格式 |
+
+### 导出示例
+
+```bash
+# 导出为 JSON（默认）
+python scripts/export_data.py
+
+# 导出为 JSON（指定文件名）
+python scripts/export_data.py -f json -o backup.json
+
+# 导出为 SQL
+python scripts/export_data.py -f sql -o backup.sql
+
+# 导出事物数据（前端兼容格式）
+python scripts/export_data.py -f items -o shijingData.json
+
+# 导出诗篇数据（前端兼容格式）
+python scripts/export_data.py -f poems -o poemFullText.json
+```
+
+### 导出 JSON 结构
+
+```json
+{
+  "metadata": {
+    "export_time": "2024-03-16T20:00:00",
+    "version": "1.0.0",
+    "source": "shijing-things"
+  },
+  "stats": {
+    "total_items": 204,
+    "total_poems": 295
+  },
+  "items": [...],
+  "poems": [...]
+}
 ```
 
 ### 导入错误
