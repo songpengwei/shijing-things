@@ -43,7 +43,33 @@ shijing-things/
 
 ## 快速开始
 
-### 方式一: Docker 部署（推荐）
+### 方式一: 一键启动（推荐）
+
+**macOS/Linux:**
+```bash
+# 确保已创建 conda 环境
+conda create -n shijing python=3.11 -y
+
+# 一键启动
+./start.sh
+```
+
+**Windows:**
+```powershell
+# 确保已创建 conda 环境
+conda create -n shijing python=3.11 -y
+
+# 一键启动
+.\start.ps1
+```
+
+脚本会自动：
+1. 激活 conda 环境 `shijing`
+2. 安装 Python 依赖
+3. 初始化数据库（首次运行）
+4. 启动开发服务器
+
+### 方式二: Docker 部署
 
 ```bash
 # 1. 构建并启动
@@ -57,7 +83,7 @@ docker-compose exec app python init_db.py
 # API 文档: http://localhost:8000/api/docs
 ```
 
-### 方式二: 本地运行
+### 方式三: 手动运行
 
 ```bash
 # 1. 进入后端目录
