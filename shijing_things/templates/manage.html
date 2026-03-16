@@ -347,13 +347,26 @@
     width: 100%;
 }
 
-/* 操作列垂直居中 */
+/* 操作列垂直居中 - 覆盖全局 flex 样式 */
 .manage-table td.actions {
+    display: table-cell;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 .manage-table td {
     vertical-align: middle;
+}
+
+/* 操作按钮容器 */
+.manage-table td.actions .btn {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-right: 0.25rem;
+}
+
+.manage-table td.actions .btn:last-child {
+    margin-right: 0;
 }
 
 /* 表格响应式 */
