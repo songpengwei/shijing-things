@@ -69,12 +69,7 @@
                         {% endif %}
                     </td>
                     <td><strong>{{ item.name }}</strong></td>
-                    <td>
-                        <span class="category-badge category-{{ item.category }}" title="{{ category_names.get(item.category, item.category) }}">
-                            {{ item.category }}
-                        </span>
-                        <span class="category-name">{{ category_names.get(item.category, item.category) }}</span>
-                    </td>
+                    <td>{{ item.category }}</td>
                     <td>{{ item.source }}</td>
                     <td>{{ item.poem }}</td>
                     <td class="actions">
