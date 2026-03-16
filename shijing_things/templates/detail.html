@@ -109,21 +109,33 @@
 
 {% block extra_js %}
 <script>
-function deleteItem(id, name) {
-    if (confirm(`确定要删除 "${name}" 吗？`)) {
-        fetch(`/api/items/${id}`, { method: 'DELETE' })
-            .then(res => {
-                if (res.ok) {
-                    alert('删除成功！');
-                    window.location.href = '/';
-                } else {
-                    alert('删除失败！');
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('删除失败！');
-            });
+async function deleteItem(id, name) {
+    // 先尝试删除，检查登录状态
+    try {
+        const response = await fetch(`/api/items/${id}`, { method: 'DELETE' });
+        
+        if (response.status === 401) {
+            // 未登录，跳转登录页
+            window.location.href = '/login?next=' + encodeURIComponent(window.location.pathname);
+            return;
+        }
+        
+        if (response.ok) {
+            // 已登录，显示确认对话框
+            if (confirm(`确定要删除 "${name}" 吗？`)) {
+                alert('删除成功！');
+                window.location.href = '/';
+            }
+            return;
+        }
+        
+        // 其他错误
+        const error = await response.json();
+        alert('删除失败：' + (error.detail || '未知错误'));
+        
+    } catch (err) {
+        console.error(err);
+        alert('网络错误，请检查连接');
     }
 }
 </script>

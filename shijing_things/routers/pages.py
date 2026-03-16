@@ -2,8 +2,8 @@
 页面路由 - 渲染 HTML 模板
 """
 import json
-from fastapi import APIRouter, Request, Depends, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Request, Depends, HTTPException, Form
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional
@@ -13,6 +13,22 @@ from shijing_things.crud.crud import item as crud_item, poem as crud_poem
 
 router = APIRouter()
 templates = Jinja2Templates(directory="shijing_things/templates")
+
+# 固定的用户名和密码
+ADMIN_USERNAME = "qtmuniao"
+ADMIN_PASSWORD = "xiaosong"
+
+
+def is_logged_in(request: Request) -> bool:
+    """检查用户是否已登录"""
+    return request.session.get("logged_in") is True
+
+
+def require_login(request: Request):
+    """要求登录，未登录则跳转到登录页"""
+    if not is_logged_in(request):
+        return RedirectResponse(url="/login?next=" + str(request.url.path), status_code=302)
+    return None
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -71,29 +87,105 @@ def item_detail(item_id: int, request: Request, db: Session = Depends(get_db)):
     })
 
 
+# ==================== 登录相关 ====================
+
+@router.get("/login", response_class=HTMLResponse)
+def login_page(request: Request, next: Optional[str] = "/manage", error: Optional[str] = None):
+    """登录页面"""
+    # 如果已登录，直接跳转
+    if is_logged_in(request):
+        return RedirectResponse(url=next, status_code=302)
+    
+    return templates.TemplateResponse("login.html", {
+        "request": request,
+        "next": next,
+        "error": error,
+    })
+
+
+@router.post("/login")
+def login_submit(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...),
+    next: Optional[str] = Form("/manage")
+):
+    """登录提交"""
+    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        request.session["logged_in"] = True
+        request.session["username"] = username
+        return RedirectResponse(url=next, status_code=302)
+    else:
+        return RedirectResponse(
+            url=f"/login?next={next}&error=用户名或密码错误",
+            status_code=302
+        )
+
+
+@router.get("/logout")
+def logout(request: Request):
+    """登出"""
+    request.session.clear()
+    return RedirectResponse(url="/", status_code=302)
+
+
+# ==================== 管理页面（需要登录） ====================
+
 @router.get("/manage", response_class=HTMLResponse)
-def manage_page(request: Request, db: Session = Depends(get_db)):
+def manage_page(
+    request: Request, 
+    db: Session = Depends(get_db),
+    search: Optional[str] = None
+):
     """管理页面"""
-    items, _ = crud_item.get_multi(db, skip=0, limit=1000)
+    # 检查登录状态
+    if not is_logged_in(request):
+        return RedirectResponse(url="/login?next=/manage", status_code=302)
+    
+    items, total = crud_item.get_multi(db, skip=0, limit=1000, search=search)
+    
+    # 分类名称映射
+    category_names = {
+        "草": "草木",
+        "木": "树木",
+        "鸟": "鸟类",
+        "兽": "兽类",
+        "虫": "昆虫",
+        "鱼": "鱼类"
+    }
+    
     return templates.TemplateResponse("manage.html", {
         "request": request,
         "items": items,
+        "total": total,
+        "search": search or "",
+        "username": request.session.get("username", ""),
+        "category_names": category_names,
     })
 
 
 @router.get("/manage/item/new", response_class=HTMLResponse)
 def new_item_page(request: Request):
     """新建事物页面"""
+    # 检查登录状态
+    if not is_logged_in(request):
+        return RedirectResponse(url="/login?next=/manage/item/new", status_code=302)
+    
     return templates.TemplateResponse("edit.html", {
         "request": request,
         "item": None,
         "is_edit": False,
+        "username": request.session.get("username", ""),
     })
 
 
 @router.get("/manage/item/{item_id}", response_class=HTMLResponse)
 def edit_item_page(item_id: int, request: Request, db: Session = Depends(get_db)):
     """编辑事物页面"""
+    # 检查登录状态
+    if not is_logged_in(request):
+        return RedirectResponse(url=f"/login?next=/manage/item/{item_id}", status_code=302)
+    
     item = crud_item.get(db, item_id=item_id)
     if not item:
         raise HTTPException(status_code=404, detail="事物不存在")
@@ -102,4 +194,5 @@ def edit_item_page(item_id: int, request: Request, db: Session = Depends(get_db)
         "request": request,
         "item": item,
         "is_edit": True,
+        "username": request.session.get("username", ""),
     })

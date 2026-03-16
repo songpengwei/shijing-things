@@ -5,6 +5,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
 import os
 
 from shijing_things.core.config import get_settings
@@ -28,6 +29,13 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json"
+)
+
+# Session 中间件（用于登录状态）
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="shijing-things-secret-key-change-in-production",
+    max_age=3600 * 24  # 24小时
 )
 
 # CORS 配置

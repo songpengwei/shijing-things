@@ -2,7 +2,7 @@
 RESTful API 路由
 提供 JSON 格式的数据接口
 """
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy.orm import Session
 from typing import Optional
 
@@ -14,6 +14,16 @@ from shijing_things.schemas.schemas import (
 from shijing_things.crud.crud import item as crud_item, poem as crud_poem
 
 router = APIRouter(prefix="/api")
+
+
+def require_auth(request: Request):
+    """检查用户是否已登录，未登录返回 401"""
+    if not request.session.get("logged_in"):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="未登录，请先登录"
+        )
+    return True
 
 
 # ==================== 事物 API ====================
@@ -55,8 +65,13 @@ def get_item(item_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/items/", response_model=ShijingItemResponse, status_code=status.HTTP_201_CREATED)
-def create_item(item_in: ShijingItemCreate, db: Session = Depends(get_db)):
-    """创建事物"""
+def create_item(
+    request: Request,
+    item_in: ShijingItemCreate,
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_auth)
+):
+    """创建事物（需要登录）"""
     existing = crud_item.get_by_name(db, name=item_in.name)
     if existing:
         raise HTTPException(status_code=400, detail=f"事物 '{item_in.name}' 已存在")
@@ -64,8 +79,14 @@ def create_item(item_in: ShijingItemCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/items/{item_id}", response_model=ShijingItemResponse)
-def update_item(item_id: int, item_in: ShijingItemUpdate, db: Session = Depends(get_db)):
-    """更新事物"""
+def update_item(
+    request: Request,
+    item_id: int,
+    item_in: ShijingItemUpdate,
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_auth)
+):
+    """更新事物（需要登录）"""
     db_item = crud_item.get(db, item_id=item_id)
     if not db_item:
         raise HTTPException(status_code=404, detail="事物不存在")
@@ -73,8 +94,13 @@ def update_item(item_id: int, item_in: ShijingItemUpdate, db: Session = Depends(
 
 
 @router.delete("/items/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_item(item_id: int, db: Session = Depends(get_db)):
-    """删除事物"""
+def delete_item(
+    request: Request,
+    item_id: int,
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_auth)
+):
+    """删除事物（需要登录）"""
     db_item = crud_item.delete(db, item_id=item_id)
     if not db_item:
         raise HTTPException(status_code=404, detail="事物不存在")
@@ -114,8 +140,13 @@ def get_poem_by_title(title: str, db: Session = Depends(get_db)):
 
 
 @router.post("/poems/", response_model=PoemResponse, status_code=status.HTTP_201_CREATED)
-def create_poem(poem_in: PoemCreate, db: Session = Depends(get_db)):
-    """创建诗篇"""
+def create_poem(
+    request: Request,
+    poem_in: PoemCreate,
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_auth)
+):
+    """创建诗篇（需要登录）"""
     existing = crud_poem.get_by_title(db, title=poem_in.title)
     if existing:
         raise HTTPException(status_code=400, detail=f"诗篇 '{poem_in.title}' 已存在")
@@ -123,8 +154,14 @@ def create_poem(poem_in: PoemCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/poems/{poem_id}", response_model=PoemResponse)
-def update_poem(poem_id: int, poem_in: PoemUpdate, db: Session = Depends(get_db)):
-    """更新诗篇"""
+def update_poem(
+    request: Request,
+    poem_id: int,
+    poem_in: PoemUpdate,
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_auth)
+):
+    """更新诗篇（需要登录）"""
     db_poem = crud_poem.get(db, poem_id=poem_id)
     if not db_poem:
         raise HTTPException(status_code=404, detail="诗篇不存在")
@@ -132,8 +169,13 @@ def update_poem(poem_id: int, poem_in: PoemUpdate, db: Session = Depends(get_db)
 
 
 @router.delete("/poems/{poem_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_poem(poem_id: int, db: Session = Depends(get_db)):
-    """删除诗篇"""
+def delete_poem(
+    request: Request,
+    poem_id: int,
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_auth)
+):
+    """删除诗篇（需要登录）"""
     db_poem = crud_poem.delete(db, poem_id=poem_id)
     if not db_poem:
         raise HTTPException(status_code=404, detail="诗篇不存在")

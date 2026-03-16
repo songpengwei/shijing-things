@@ -186,36 +186,52 @@ python scripts/export_data.py -f poems -o poems.json
 
 ## API 端点
 
-### 事物 (Items)
-| 方法 | 端点 | 描述 |
+### 权限说明
+
+| 类型 | 方法 | 说明 |
 |------|------|------|
-| GET | `/api/items/` | 列表（支持筛选、搜索） |
-| GET | `/api/items/{id}` | 详情 |
-| POST | `/api/items/` | 创建 |
-| PUT | `/api/items/{id}` | 更新 |
-| DELETE | `/api/items/{id}` | 删除 |
-| GET | `/api/items/stats` | 统计数据 |
-| GET | `/api/items/categories` | 分类列表 |
+| 🔓 公开 | GET | 任何人都可以访问 |
+| 🔒 需登录 | POST, PUT, DELETE | 需要登录（401 未授权） |
+
+### 事物 (Items)
+| 方法 | 端点 | 描述 | 权限 |
+|------|------|------|------|
+| GET | `/api/items/` | 列表（支持筛选、搜索） | 🔓 公开 |
+| GET | `/api/items/{id}` | 详情 | 🔓 公开 |
+| POST | `/api/items/` | 创建 | 🔒 需登录 |
+| PUT | `/api/items/{id}` | 更新 | 🔒 需登录 |
+| DELETE | `/api/items/{id}` | 删除 | 🔒 需登录 |
+| GET | `/api/items/stats` | 统计数据 | 🔓 公开 |
+| GET | `/api/items/categories` | 分类列表 | 🔓 公开 |
 
 ### 诗篇 (Poems)
-| 方法 | 端点 | 描述 |
-|------|------|------|
-| GET | `/api/poems/` | 列表 |
-| GET | `/api/poems/{id}` | 详情 |
-| GET | `/api/poems/title/{title}` | 按标题查询 |
-| POST | `/api/poems/` | 创建 |
-| PUT | `/api/poems/{id}` | 更新 |
-| DELETE | `/api/poems/{id}` | 删除 |
+| 方法 | 端点 | 描述 | 权限 |
+|------|------|------|------|
+| GET | `/api/poems/` | 列表 | 🔓 公开 |
+| GET | `/api/poems/{id}` | 详情 | 🔓 公开 |
+| GET | `/api/poems/title/{title}` | 按标题查询 | 🔓 公开 |
+| POST | `/api/poems/` | 创建 | 🔒 需登录 |
+| PUT | `/api/poems/{id}` | 更新 | 🔒 需登录 |
+| DELETE | `/api/poems/{id}` | 删除 | 🔒 需登录 |
 
 ## 页面路由
 
-| 路径 | 描述 |
-|------|------|
-| `/` | 首页 - 事物卡片列表 |
-| `/item/{id}` | 事物详情页 |
-| `/manage` | 数据管理页（表格） |
-| `/manage/item/new` | 新建事物 |
-| `/manage/item/{id}` | 编辑事物 |
+| 路径 | 描述 | 权限 |
+|------|------|------|
+| `/` | 首页 - 事物卡片列表 | 公开 |
+| `/item/{id}` | 事物详情页 | 公开 |
+| `/login` | 管理员登录页 | 公开 |
+| `/logout` | 登出 | 登录后 |
+| `/manage` | 数据管理页（表格） | 需登录 |
+| `/manage/item/new` | 新建事物 | 需登录 |
+| `/manage/item/{id}` | 编辑事物 | 需登录 |
+
+### 管理员账号
+
+- **用户名**: `qtmuniao`
+- **密码**: `xiaosong`
+
+访问管理页面需要先登录，未登录会自动跳转到登录页。
 
 ## 数据规模
 
