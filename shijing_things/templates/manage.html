@@ -43,7 +43,7 @@
                     <th>缩略图</th>
                     <th>名称</th>
                     <th>分类</th>
-                    <th>出处</th>
+                    <th>章节·部分</th>
                     <th>所属诗篇</th>
                     <th>操作</th>
                 </tr>
@@ -70,8 +70,8 @@
                     </td>
                     <td><strong>{{ item.name }}</strong></td>
                     <td>{{ item.category }}</td>
-                    <td>{{ item.source }}</td>
-                    <td>{{ item.poem }}</td>
+                    <td>{{ item.chapter }}·{{ item.section }}</td>
+                    <td>{{ item.title }}</td>
                     <td class="actions">
                         <a href="/item/{{ item.id }}" class="btn btn-sm">查看</a>
                         <a href="/manage/item/{{ item.id }}" class="btn btn-sm btn-primary">编辑</a>

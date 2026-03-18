@@ -9,8 +9,10 @@ class ShijingItem(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False, index=True)
     category = Column(String(10), nullable=False, index=True)  # 草、木、鸟、兽、虫、鱼
-    poem = Column(String(100), nullable=False, index=True)  # 所属诗篇
-    source = Column(String(50), nullable=False, index=True)  # 出处（如：周南、邶风等）
+    title = Column(String(100), nullable=False, index=True)  # 所属诗篇标题
+    chapter = Column(String(50), nullable=False, index=True)  # 章节（如：国风、小雅）
+    section = Column(String(50), nullable=False, index=True)  # 部分（如：周南、鹿鸣之什）
+    poem_id = Column(Integer, nullable=False, index=True)  # 诗篇ID
     quote = Column(Text, nullable=False)  # 引用诗句
     description = Column(Text, nullable=True)  # 简要注释
     image_url = Column(String(255), nullable=True, default="")  # 图片路径

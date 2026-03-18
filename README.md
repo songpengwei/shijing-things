@@ -31,7 +31,7 @@ shijing-things/
 │       └── img/               # 图片资源
 ├── data/                      # 原始数据
 │   ├── shijing.json           # 诗经原文
-│   ├── shijing_data.json      # 事物基础数据
+│   ├── shijing_things.json    # 事物基础数据
 │   └── img/                   # 原始图片
 ├── sql/
 │   └── init.sql               # 数据库初始化 SQL

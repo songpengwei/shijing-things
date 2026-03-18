@@ -71,7 +71,7 @@ def item_detail(item_id: int, request: Request, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="事物不存在")
     
     # 获取所属诗篇
-    poem = crud_poem.get_by_title(db, title=item.poem)
+    poem = crud_poem.get_by_title(db, title=item.title)
     poem_content = []
     if poem:
         try:

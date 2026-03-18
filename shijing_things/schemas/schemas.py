@@ -12,8 +12,10 @@ class ShijingItemBase(BaseModel):
     """事物基础模型"""
     name: str
     category: category_type
-    poem: str
-    source: str
+    title: str  # 诗篇标题（原 poem）
+    chapter: str  # 章节（原 source）
+    section: str  # 部分（新增）
+    poem_id: int  # 诗篇ID（新增）
     quote: str
     description: Optional[str] = ""
     image_url: Optional[str] = ""
@@ -32,8 +34,10 @@ class ShijingItemUpdate(BaseModel):
     """更新事物请求模型"""
     name: Optional[str] = None
     category: Optional[category_type] = None
-    poem: Optional[str] = None
-    source: Optional[str] = None
+    title: Optional[str] = None
+    chapter: Optional[str] = None
+    section: Optional[str] = None
+    poem_id: Optional[int] = None
     quote: Optional[str] = None
     description: Optional[str] = None
     image_url: Optional[str] = None

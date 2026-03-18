@@ -43,8 +43,9 @@ class CRUDItem:
             search_pattern = f"%{search}%"
             query = query.filter(
                 (ShijingItem.name.contains(search)) |
-                (ShijingItem.poem.contains(search)) |
-                (ShijingItem.source.contains(search)) |
+                (ShijingItem.title.contains(search)) |
+                (ShijingItem.chapter.contains(search)) |
+                (ShijingItem.section.contains(search)) |
                 (ShijingItem.quote.contains(search))
             )
         
