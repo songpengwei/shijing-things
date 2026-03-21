@@ -369,7 +369,7 @@
     "poem_id": 34,
     "quote": "匏有苦叶，济有深涉。",
     "description": "葫芦",
-    "image_url": "/static/img/31_匏.png"
+    "image_url": "/static/img/31_匏.jpg"
   },
   {
     "id": 32,
@@ -549,7 +549,7 @@
     "poem_id": 154,
     "quote": "八月断壶，九月叔苴。",
     "description": "葫芦",
-    "image_url": "/static/img/46_壶.png"
+    "image_url": "/static/img/46_壶.jpg"
   },
   {
     "id": 47,
@@ -597,7 +597,7 @@
     "poem_id": 154,
     "quote": "七月食瓜，八月断壶。",
     "description": "瓜果",
-    "image_url": "/static/img/50_瓜.png"
+    "image_url": "/static/img/50_瓜.jpg"
   },
   {
     "id": 51,
@@ -814,7 +814,7 @@
     "poem_id": 64,
     "quote": "投我以木李，报之以琼玖。",
     "description": "榠楂",
-    "image_url": "/static/img/68_木李.png"
+    "image_url": "/static/img/68_木李.jpg"
   },
   {
     "id": 69,
