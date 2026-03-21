@@ -21,7 +21,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 # 1. 检查并激活 conda 环境
-echo -e "${YELLOW}[1/4] 检查 conda 环境...${NC}"
+echo -e "${YELLOW}[1/5] 检查 conda 环境...${NC}"
 
 # 检查是否在 conda 环境中
 if [ -z "$CONDA_DEFAULT_ENV" ]; then
@@ -46,7 +46,7 @@ fi
 
 # 2. 安装依赖
 echo ""
-echo -e "${YELLOW}[2/4] 安装依赖...${NC}"
+echo -e "${YELLOW}[2/5] 安装依赖...${NC}"
 
 if [ -f "requirements.txt" ]; then
     pip install -q -r requirements.txt
@@ -58,22 +58,69 @@ fi
 
 # 3. 初始化数据库
 echo ""
-echo -e "${YELLOW}[3/4] 初始化数据库...${NC}"
+echo -e "${YELLOW}[3/5] 初始化数据库...${NC}"
 
 # 检查是否需要重新初始化
 if [ -f "shijing.db" ]; then
     echo "  数据库文件已存在"
-    read -p "  是否重新初始化数据库? (y/N): " -n 1 -r
     echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        rm -f shijing.db
-        echo "  已删除旧数据库"
-        python scripts/init_db.py <<< "y"
-    else
-        echo "  跳过数据库初始化"
-    fi
+    echo "  请选择操作:"
+    echo "    1) 跳过数据库操作 (默认)"
+    echo "    2) 从 shijing_things.json 重新加载数据"
+    echo "    3) 完全重新初始化数据库 (删除并重建)"
+    echo ""
+    read -p "  请输入选项 (1/2/3): " -n 1 -r
+    echo ""
+    
+    case $REPLY in
+        2)
+            echo "  正在从 shijing_things.json 重新加载数据..."
+            python scripts/load_from_json.py
+            ;;
+        3)
+            echo "  正在完全重新初始化数据库..."
+            rm -f shijing.db
+            echo "  已删除旧数据库"
+            python scripts/init_db.py <<< "y"
+            ;;
+        *)
+            echo "  跳过数据库操作"
+            ;;
+    esac
 else
     python scripts/init_db.py <<< "y"
+fi
+
+# 4. 复制图片
+echo ""
+echo -e "${YELLOW}[4/5] 检查图片...${NC}"
+
+img_source="data/img"
+img_target="shijing_things/static/img"
+
+if [ -d "$img_source" ]; then
+    # 检查是否需要重新复制图片
+    read -p "  是否重新复制图片到 $img_target? (y/N): " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "  正在复制图片..."
+        mkdir -p "$img_target"
+        
+        count=0
+        for filename in "$img_source"/*; do
+            if [ -f "$filename" ]; then
+                basename=$(basename "$filename")
+                cp "$filename" "$img_target/$basename"
+                count=$((count + 1))
+            fi
+        done
+        
+        echo -e "  ${GREEN}✓ 复制了 $count 张图片${NC}"
+    else
+        echo "  跳过图片复制"
+    fi
+else
+    echo -e "  ${YELLOW}⚠ 图片源目录不存在: $img_source${NC}"
 fi
 
 if [ ! -f "shijing.db" ]; then
@@ -83,9 +130,9 @@ fi
 
 echo -e "  ${GREEN}✓ 数据库准备就绪${NC}"
 
-# 4. 启动服务
+# 5. 启动服务
 echo ""
-echo -e "${YELLOW}[4/4] 启动服务...${NC}"
+echo -e "${YELLOW}[5/5] 启动服务...${NC}"
 echo ""
 echo -e "${GREEN}==============================================${NC}"
 echo -e "${GREEN}  服务即将启动${NC}"

@@ -417,7 +417,7 @@
     "poem_id": 60,
     "quote": "芄兰之支，童子佩觿。",
     "description": "萝藦",
-    "image_url": ""
+    "image_url": "/static/img/35_芄兰.jpg"
   },
   {
     "id": 36,
@@ -453,7 +453,7 @@
     "poem_id": 108,
     "quote": "彼汾沮洳，言采其藚。",
     "description": "泽泻",
-    "image_url": ""
+    "image_url": "/static/img/38_藚.jpg"
   },
   {
     "id": 39,
@@ -465,7 +465,7 @@
     "poem_id": 124,
     "quote": "葛生蒙楚，蔹蔓于野。",
     "description": "葡萄科藤本",
-    "image_url": ""
+    "image_url": "/static/img/39_蔹.jpg"
   },
   {
     "id": 40,
@@ -489,7 +489,7 @@
     "poem_id": 229,
     "quote": "白华菅兮，白茅束兮。",
     "description": "菅草",
-    "image_url": ""
+    "image_url": "/static/img/41_菅.jpg"
   },
   {
     "id": 42,
@@ -789,8 +789,10 @@
     "poem_id": 64,
     "quote": "投我以木瓜，报之以琼琚。",
     "description": "蔷薇科灌木果实",
-    "image_url": "/static/img/66_木瓜.png",
-    "links": ["https://zhuanlan.zhihu.com/p/61589461"]
+    "image_url": "/static/img/66_木瓜.jpg",
+    "links": [
+      "https://zhuanlan.zhihu.com/p/61589461"
+    ]
   },
   {
     "id": 67,
@@ -826,7 +828,7 @@
     "poem_id": 95,
     "quote": "维士与女，伊其相谑，赠之以勺药。",
     "description": "香草，结别赠礼",
-    "image_url": ""
+    "image_url": "/static/img/69_芍药.jpg"
   },
   {
     "id": 70,
@@ -1187,7 +1189,9 @@
     "quote": "常棣之华，鄂不韡韡。",
     "description": "棠棣，白棣棠 鸡麻",
     "image_url": "/static/img/99_常棣.jpg",
-    "links": ["https://zhuanlan.zhihu.com/p/469067504"]
+    "links": [
+      "https://zhuanlan.zhihu.com/p/469067504"
+    ]
   },
   {
     "id": 100,
@@ -1559,7 +1563,7 @@
     "poem_id": 127,
     "quote": "公曰左之，舍拔则获。",
     "description": "鸟名",
-    "image_url": ""
+    "image_url": "/static/img/130_正.jpg"
   },
   {
     "id": 131,
@@ -2399,7 +2403,7 @@
     "poem_id": 170,
     "quote": "鱼丽于罶，鲂鳢。",
     "description": "黑鱼",
-    "image_url": "/static/img/200_鳢.png"
+    "image_url": "/static/img/200_鳢.jpg"
   },
   {
     "id": 201,
