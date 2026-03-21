@@ -117,7 +117,7 @@
     "poem_id": 35,
     "quote": "谁谓荼苦，其甘如荠。",
     "description": "荠菜",
-    "image_url": ""
+    "image_url": "/static/img/10_荠.jpg"
   },
   {
     "id": 11,
@@ -128,7 +128,7 @@
     "section": "周南",
     "poem_id": 3,
     "quote": "采采卷耳，不盈顷筐。",
-    "description": "苍耳",
+    "description": "球序卷耳",
     "image_url": "/static/img/11_卷耳.jpg"
   },
   {
@@ -381,7 +381,7 @@
     "poem_id": 38,
     "quote": "山有榛，隰有苓。",
     "description": "甘草",
-    "image_url": ""
+    "image_url": "/static/img/32_苓.jpg"
   },
   {
     "id": 33,
@@ -560,7 +560,7 @@
     "section": "豳风",
     "poem_id": 154,
     "quote": "九月叔苴，采荼薪樗。",
-    "description": "大麻子",
+    "description": "青麻",
     "image_url": "/static/img/47_苴.png"
   },
   {
@@ -789,7 +789,8 @@
     "poem_id": 64,
     "quote": "投我以木瓜，报之以琼琚。",
     "description": "蔷薇科灌木果实",
-    "image_url": "/static/img/66_木瓜.png"
+    "image_url": "/static/img/66_木瓜.png",
+    "links": ["https://zhuanlan.zhihu.com/p/61589461"]
   },
   {
     "id": 67,
@@ -1172,7 +1173,7 @@
     "section": "召南",
     "poem_id": 24,
     "quote": "何彼襛矣，唐棣之华。",
-    "description": "棠棣",
+    "description": "棠棣，白棣棠 鸡麻",
     "image_url": "/static/img/98_唐棣.jpg"
   },
   {
@@ -1184,8 +1185,9 @@
     "section": "鹿鸣之什",
     "poem_id": 164,
     "quote": "常棣之华，鄂不韡韡。",
-    "description": "棠棣",
-    "image_url": "/static/img/99_常棣.jpg"
+    "description": "棠棣，白棣棠 鸡麻",
+    "image_url": "/static/img/99_常棣.jpg",
+    "links": ["https://zhuanlan.zhihu.com/p/469067504"]
   },
   {
     "id": 100,
@@ -2246,13 +2248,13 @@
   {
     "id": 188,
     "name": "果裸",
-    "category": "虫",
+    "category": "木",
     "title": "东山",
     "chapter": "国风",
     "section": "豳风",
     "poem_id": 156,
     "quote": "果裸之实，亦施于宇。",
-    "description": "栝楼，此处指虫",
+    "description": "栝楼",
     "image_url": "/static/img/188_果裸.png"
   },
   {
