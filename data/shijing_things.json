@@ -1554,18 +1554,6 @@
     "image_url": "/static/img/129_凫.jpg"
   },
   {
-    "id": 130,
-    "name": "正",
-    "category": "鸟",
-    "title": "驷驖",
-    "chapter": "国风",
-    "section": "秦风",
-    "poem_id": 127,
-    "quote": "公曰左之，舍拔则获。",
-    "description": "鸟名",
-    "image_url": "/static/img/130_正.jpg"
-  },
-  {
     "id": 131,
     "name": "鴥",
     "category": "鸟",

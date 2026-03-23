@@ -521,7 +521,7 @@ def list_all_comments(
 def get_comment_stats(
     request: Request,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """获取评论统计（需要管理员权限）"""
     return crud_comment.get_stats(db)
