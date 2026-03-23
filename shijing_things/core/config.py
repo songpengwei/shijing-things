@@ -53,7 +53,7 @@ class Settings(BaseSettings):
 
     # 管理员账户
     admin_username: str = ""
-    admin_password_hash: str = ""
+    admin_password: str = ""
 
 
 @lru_cache()

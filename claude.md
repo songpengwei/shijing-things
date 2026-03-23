@@ -201,7 +201,7 @@ python scripts/export_data.py -f poems -o poems.json
 | `static_dir` | ./shijing_things/static | 静态文件目录 |
 | `img_dir` | ./shijing_things/static/img | 图片目录 |
 | `admin_username` | 空 | 管理员用户名，需在环境变量中配置 |
-| `admin_password_hash` | 空 | 管理员密码的 bcrypt 哈希 |
+| `admin_password` | 空 | 管理员密码，需在环境变量中配置 |
 | `github_client_id` | 空 | GitHub OAuth App Client ID |
 | `github_client_secret` | 空 | GitHub OAuth App Client Secret |
 | `github_redirect_uri` | http://localhost:8000/auth/github/callback | GitHub 回调地址 |
@@ -283,7 +283,7 @@ python scripts/export_data.py -f poems -o poems.json
 
 ### 管理员账号
 
-- 管理员用户名和密码哈希必须通过环境变量配置。
+- 管理员用户名和密码必须通过环境变量配置。
 - 登录页不再展示管理员凭据。
 
 访问管理页面需要先用已配置的管理员账号登录，未登录会自动跳转到 `/login`。

@@ -2,7 +2,6 @@
 页面路由 - 渲染 HTML 模板
 """
 import json
-import secrets
 from fastapi import APIRouter, Request, Depends, HTTPException, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -11,7 +10,6 @@ from typing import Optional
 
 from shijing_things.core.config import get_settings
 from shijing_things.core.database import get_db
-from shijing_things.core.security import verify_password
 from shijing_things.crud.crud import item as crud_item, poem as crud_poem
 
 router = APIRouter()
@@ -129,7 +127,7 @@ def login_page(request: Request, next: Optional[str] = "/manage", error: Optiona
         "request": request,
         "next": next,
         "error": error,
-        "admin_login_enabled": bool(settings.admin_username and settings.admin_password_hash),
+        "admin_login_enabled": bool(settings.admin_username and settings.admin_password),
         "github_oauth_enabled": bool(settings.github_client_id and settings.github_client_secret),
         "wechat_oauth_enabled": bool(settings.wechat_app_id and settings.wechat_app_secret),
     })
@@ -143,18 +141,13 @@ def login_submit(
     next: Optional[str] = Form("/manage")
 ):
     """登录提交"""
-    if not settings.admin_username or not settings.admin_password_hash:
+    if not settings.admin_username or not settings.admin_password:
         return RedirectResponse(
             url=f"/login?next={next}&error=管理员密码登录未配置",
             status_code=302
         )
 
-    is_valid_admin = (
-        secrets.compare_digest(username, settings.admin_username)
-        and verify_password(password, settings.admin_password_hash)
-    )
-
-    if is_valid_admin:
+    if username == settings.admin_username and password == settings.admin_password:
         request.session["logged_in"] = True
         request.session["username"] = username
         return RedirectResponse(url=next, status_code=302)
