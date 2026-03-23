@@ -10,7 +10,7 @@ import os
 
 from shijing_things.core.config import get_settings
 from shijing_things.core.database import engine, Base
-from shijing_things.routers import api, pages
+from shijing_things.routers import api, pages, auth
 
 settings = get_settings()
 
@@ -53,6 +53,7 @@ app.mount("/static", StaticFiles(directory=settings.static_dir), name="static")
 # 注册路由
 app.include_router(pages.router)      # 页面路由（HTML 渲染）
 app.include_router(api.router)        # API 路由（JSON）
+app.include_router(auth.router)       # 认证路由（OAuth/登录）
 
 
 @app.get("/api/health")

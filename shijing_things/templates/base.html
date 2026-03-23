@@ -12,10 +12,14 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <a href="/" class="logo">
-                    <span class="logo-icon">🌿</span>
-                    <span class="logo-text">诗经草木鸟兽</span>
-                </a>
+                <div class="logo-wrap">
+                    <a href="/" class="logo">
+                        <span class="logo-icon">🌿</span>
+                        <span class="logo-text">诗经草木鸟兽</span>
+                    </a>
+                    <span class="logo-separator">·</span>
+                    <a href="https://www.qtmuniao.com/" target="_blank" rel="noopener" class="logo-author">木鸟杂记</a>
+                </div>
                 <nav class="nav">
                     <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">首页</a>
                     <a href="/manage" class="nav-link {% if request.url.path.startswith('/manage') %}active{% endif %}">管理</a>
@@ -33,7 +37,7 @@
     <footer class="footer">
         <div class="container">
             <p class="footer-quote">"多识于鸟兽草木之名" —— 孔子</p>
-            <p class="footer-copy">诗经事物 © 2024</p>
+            <p class="footer-copy">诗经物什 © 木鸟杂记 since 2026</p>
         </div>
     </footer>
 

@@ -6,90 +6,340 @@
 <div class="container">
     <div class="page-header">
         <div class="page-header-left">
-            <h1 class="page-title">📋 数据管理</h1>
+            <h1 class="page-title">📋 后台管理</h1>
             <span class="user-badge">👤 {{ username }}</span>
         </div>
         <div class="page-header-right">
-            <a href="/manage/item/new" class="btn btn-primary">+ 新建事物</a>
+            <a href="/" class="btn btn-secondary">返回首页</a>
             <a href="/logout" class="btn btn-secondary">退出登录</a>
         </div>
     </div>
 
-    <!-- 搜索区域 -->
-    <div class="search-section">
-        <form class="search-box" method="get" action="/manage">
-            <input type="text" 
-                   name="search" 
-                   class="search-input" 
-                   placeholder="搜索名称、分类、出处、诗篇、引文、今名..."
-                   value="{{ search }}"
-                   id="search-input">
-            <button type="submit" class="search-btn">🔍</button>
-            {% if search %}
-            <a href="/manage" class="btn btn-secondary">清除</a>
-            {% endif %}
-        </form>
+    <!-- 管理标签页 -->
+    <div class="manage-tabs">
+        <button class="tab-btn active" data-tab="items" onclick="switchTab('items')">
+            📚 事物管理
+        </button>
+        <button class="tab-btn" data-tab="comments" onclick="switchTab('comments')">
+            💬 留言管理
+            <span class="tab-badge" id="comments-badge">0</span>
+        </button>
+        <button class="tab-btn" data-tab="users" onclick="switchTab('users')">
+            👥 用户管理
+        </button>
+        <button class="tab-btn" data-tab="security" onclick="switchTab('security')">
+            🛡️ 安全防护
+        </button>
+    </div>
+
+    <!-- 事物管理面板 -->
+    <div id="tab-items" class="tab-panel active">
+        <div class="panel-header">
+            <a href="/manage/item/new" class="btn btn-primary">+ 新建事物</a>
+            <!-- 搜索区域 -->
+            <div class="search-section-inline">
+                <form class="search-box" method="get" action="/manage">
+                    <input type="text" 
+                           name="search" 
+                           class="search-input" 
+                           placeholder="搜索名称、分类、出处、诗篇、引文、今名..."
+                           value="{{ search }}"
+                           id="search-input">
+                    <button type="submit" class="search-btn">🔍</button>
+                    {% if search %}
+                    <a href="/manage" class="btn btn-secondary">清除</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
         <div class="search-info">
             共 <strong>{{ total }}</strong> 条记录
             {% if search %}（搜索: "{{ search }}"）{% endif %}
         </div>
+
+        <div class="manage-table-wrapper">
+            <table class="manage-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>缩略图</th>
+                        <th>名称</th>
+                        <th>分类</th>
+                        <th>章节·部分</th>
+                        <th>所属诗篇</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>
+                            {% if item.image_url %}
+                            <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-thumbnail" loading="lazy">
+                            {% else %}
+                            <div class="item-thumbnail-placeholder">
+                                {{ 
+                                    '🌱' if item.category == '草' else
+                                    '🌳' if item.category == '木' else
+                                    '🦅' if item.category == '鸟' else
+                                    '🦌' if item.category == '兽' else
+                                    '🦋' if item.category == '虫' else
+                                    '🐟'
+                                }}
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ item.name }}</strong></td>
+                        <td>{{ item.category }}</td>
+                        <td>{{ item.chapter }}·{{ item.section }}</td>
+                        <td>{{ item.title }}</td>
+                        <td class="actions">
+                            <a href="/item/{{ item.id }}" class="btn btn-sm">查看</a>
+                            <a href="/manage/item/{{ item.id }}" class="btn btn-sm btn-primary">编辑</a>
+                            <button class="btn btn-sm btn-danger" onclick="deleteItem({{ item.id }}, '{{ item.name }}')">删除</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if not items %}
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h3>暂无数据</h3>
+            <p>{% if search %}没有匹配 "{{ search }}" 的结果{% else %}点击上方按钮创建第一条记录{% endif %}</p>
+        </div>
+        {% endif %}
     </div>
 
-    <div class="manage-table-wrapper">
-        <table class="manage-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>缩略图</th>
-                    <th>名称</th>
-                    <th>分类</th>
-                    <th>章节·部分</th>
-                    <th>所属诗篇</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
-                <tr>
-                    <td>{{ item.id }}</td>
-                    <td>
-                        {% if item.image_url %}
-                        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-thumbnail" loading="lazy">
-                        {% else %}
-                        <div class="item-thumbnail-placeholder">
-                            {{ 
-                                '🌱' if item.category == '草' else
-                                '🌳' if item.category == '木' else
-                                '🦅' if item.category == '鸟' else
-                                '🦌' if item.category == '兽' else
-                                '🦋' if item.category == '虫' else
-                                '🐟'
-                            }}
-                        </div>
-                        {% endif %}
-                    </td>
-                    <td><strong>{{ item.name }}</strong></td>
-                    <td>{{ item.category }}</td>
-                    <td>{{ item.chapter }}·{{ item.section }}</td>
-                    <td>{{ item.title }}</td>
-                    <td class="actions">
-                        <a href="/item/{{ item.id }}" class="btn btn-sm">查看</a>
-                        <a href="/manage/item/{{ item.id }}" class="btn btn-sm btn-primary">编辑</a>
-                        <button class="btn btn-sm btn-danger" onclick="deleteItem({{ item.id }}, '{{ item.name }}')">删除</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- 留言管理面板 -->
+    <div id="tab-comments" class="tab-panel">
+        <div class="panel-header">
+            <div class="filter-section">
+                <select id="comment-filter" class="filter-select" onchange="loadComments()">
+                    <option value="">全部留言</option>
+                    <option value="0">待审核</option>
+                    <option value="1">已通过</option>
+                    <option value="2">已拒绝</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="loadComments()">🔄 刷新</button>
+        </div>
+        <div class="stats-cards" id="comment-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="stat-total">0</div>
+                <div class="stat-label">总留言</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-number" id="stat-pending">0</div>
+                <div class="stat-label">待审核</div>
+            </div>
+            <div class="stat-card approved">
+                <div class="stat-number" id="stat-approved">0</div>
+                <div class="stat-label">已通过</div>
+            </div>
+            <div class="stat-card rejected">
+                <div class="stat-number" id="stat-rejected">0</div>
+                <div class="stat-label">已拒绝</div>
+            </div>
+        </div>
+        <div class="manage-table-wrapper">
+            <table class="manage-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>用户</th>
+                        <th>事物</th>
+                        <th>内容</th>
+                        <th>状态</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="comments-table-body">
+                    <tr><td colspan="7" class="loading-cell">加载中...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    {% if not items %}
-    <div class="empty-state">
-        <div class="empty-icon">📭</div>
-        <h3>暂无数据</h3>
-        <p>{% if search %}没有匹配 "{{ search }}" 的结果{% else %}点击上方按钮创建第一条记录{% endif %}</p>
+    <!-- 用户管理面板 -->
+    <div id="tab-users" class="tab-panel">
+        <div class="panel-header">
+            <div class="filter-section">
+                <select id="user-filter" class="filter-select" onchange="loadUsers()">
+                    <option value="">全部用户</option>
+                    <option value="0">正常</option>
+                    <option value="1">已禁言</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="loadUsers()">🔄 刷新</button>
+        </div>
+        <div class="manage-table-wrapper">
+            <table class="manage-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>昵称</th>
+                        <th>标识符</th>
+                        <th>留言上限</th>
+                        <th>信任分</th>
+                        <th>总留言</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    <tr><td colspan="9" class="loading-cell">加载中...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    {% endif %}
+
+    <!-- 安全防护面板 -->
+    <div id="tab-security" class="tab-panel">
+        <div class="panel-header">
+            <h3>🛡️ 安全统计</h3>
+            <button class="btn btn-secondary" onclick="loadSecurityStats()">🔄 刷新</button>
+        </div>
+        
+        <div class="stats-cards" id="security-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="sec-rate-limits">0</div>
+                <div class="stat-label">24h频率限制触发</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-number" id="sec-blocked-attempts">0</div>
+                <div class="stat-label">24h被拦截尝试</div>
+            </div>
+            <div class="stat-card rejected">
+                <div class="stat-number" id="sec-blacklist-count">0</div>
+                <div class="stat-label">黑名单IP数</div>
+            </div>
+            <div class="stat-card approved">
+                <div class="stat-number" id="sec-active-users">0</div>
+                <div class="stat-label">24h活跃用户</div>
+            </div>
+        </div>
+
+        <div class="security-sections">
+            <!-- IP 黑名单 -->
+            <div class="security-section">
+                <div class="section-header">
+                    <h4>🚫 IP 黑名单</h4>
+                    <button class="btn btn-primary btn-sm" onclick="showAddIPModal()">+ 添加IP</button>
+                </div>
+                <div class="manage-table-wrapper">
+                    <table class="manage-table">
+                        <thead>
+                            <tr>
+                                <th>IP地址</th>
+                                <th>原因</th>
+                                <th>类型</th>
+                                <th>过期时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ip-blacklist-body">
+                            <tr><td colspan="5" class="loading-cell">加载中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 垃圾内容特征 -->
+            <div class="security-section">
+                <div class="section-header">
+                    <h4>🛡️ 垃圾内容过滤规则</h4>
+                    <button class="btn btn-primary btn-sm" onclick="showAddPatternModal()">+ 添加规则</button>
+                </div>
+                <div class="manage-table-wrapper">
+                    <table class="manage-table">
+                        <thead>
+                            <tr>
+                                <th>规则</th>
+                                <th>类型</th>
+                                <th>操作</th>
+                                <th>描述</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="spam-patterns-body">
+                            <tr><td colspan="5" class="loading-cell">加载中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加IP到黑名单弹窗 -->
+<div id="add-ip-modal" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h3>🚫 添加IP到黑名单</h3>
+            <span class="modal-close" onclick="closeAddIPModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>IP地址</label>
+                <input type="text" id="new-ip-address" class="form-input" placeholder="例如：192.168.1.1">
+            </div>
+            <div class="form-group">
+                <label>原因</label>
+                <input type="text" id="new-ip-reason" class="form-input" placeholder="封禁原因">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="new-ip-permanent"> 永久封禁
+                </label>
+            </div>
+            <div class="form-group" id="expire-hours-group">
+                <label>封禁时长（小时）</label>
+                <input type="number" id="new-ip-expire" class="form-input" value="24" min="1">
+            </div>
+            <button class="btn btn-primary btn-block" onclick="addIPToBlacklist()">确认添加</button>
+        </div>
+    </div>
+</div>
+
+<!-- 添加垃圾规则弹窗 -->
+<div id="add-pattern-modal" class="modal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h3>🛡️ 添加过滤规则</h3>
+            <span class="modal-close" onclick="closeAddPatternModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>规则内容</label>
+                <input type="text" id="new-pattern" class="form-input" placeholder="关键词或正则表达式">
+            </div>
+            <div class="form-group">
+                <label>类型</label>
+                <select id="new-pattern-type" class="form-input">
+                    <option value="keyword">关键词</option>
+                    <option value="regex">正则表达式</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>操作</label>
+                <select id="new-pattern-action" class="form-input">
+                    <option value="block">直接拦截</option>
+                    <option value="review">需要审核</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>描述</label>
+                <input type="text" id="new-pattern-desc" class="form-input" placeholder="规则描述（可选）">
+            </div>
+            <button class="btn btn-primary btn-block" onclick="addSpamPattern()">确认添加</button>
+        </div>
+    </div>
 </div>
 
 <!-- 登录弹窗 -->
@@ -163,6 +413,169 @@
     border-radius: 9999px;
     font-size: 0.875rem;
     font-weight: 500;
+}
+
+/* 管理标签页 */
+.manage-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0;
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    color: var(--color-text-light);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tab-btn:hover {
+    color: var(--color-text);
+    background: var(--color-bg);
+}
+
+.tab-btn.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: 500;
+}
+
+.tab-badge {
+    background: #f44336;
+    color: white;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.tab-badge:empty,
+.tab-badge[data-count="0"] {
+    display: none;
+}
+
+/* 标签页面板 */
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.search-section-inline {
+    flex: 1;
+    max-width: 500px;
+}
+
+/* 安全管理样式 */
+.security-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.security-section {
+    background: var(--color-card);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.section-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: 0.9375rem;
+    background: var(--color-card);
+    color: var(--color-text);
+}
+
+.filter-section {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-card);
+    color: var(--color-text);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* 统计卡片 */
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: var(--color-card);
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    text-align: center;
+    border: 1px solid var(--color-border);
+}
+
+.stat-card.pending {
+    border-left: 4px solid #ff9800;
+}
+
+.stat-card.approved {
+    border-left: 4px solid #4caf50;
+}
+
+.stat-card.rejected {
+    border-left: 4px solid #f44336;
+}
+
+.stat-number {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-top: 0.25rem;
 }
 
 /* 搜索区域 */
@@ -569,5 +982,468 @@ document.getElementById('confirm-modal').addEventListener('click', function(e) {
 });
 
 // 搜索仅在点击搜索按钮时提交，不启用实时搜索
+
+// ==================== 标签页切换 ====================
+function switchTab(tabName) {
+    // 更新按钮状态
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+    });
+    
+    // 更新面板显示
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    
+    // 加载数据
+    if (tabName === 'comments') {
+        loadComments();
+        loadCommentStats();
+    } else if (tabName === 'users') {
+        loadUsers();
+    } else if (tabName === 'security') {
+        loadSecurityStats();
+        loadIPBlacklist();
+        loadSpamPatterns();
+    }
+}
+
+// ==================== 留言管理 ====================
+async function loadCommentStats() {
+    try {
+        const response = await fetch('/api/admin/comments/stats');
+        if (response.ok) {
+            const stats = await response.json();
+            document.getElementById('stat-total').textContent = stats.total;
+            document.getElementById('stat-pending').textContent = stats.pending;
+            document.getElementById('stat-approved').textContent = stats.approved;
+            document.getElementById('stat-rejected').textContent = stats.rejected;
+            document.getElementById('comments-badge').textContent = stats.pending;
+            document.getElementById('comments-badge').dataset.count = stats.pending;
+        }
+    } catch (err) {
+        console.error('加载统计失败:', err);
+    }
+}
+
+async function loadComments() {
+    const filter = document.getElementById('comment-filter').value;
+    const tbody = document.getElementById('comments-table-body');
+    tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">加载中...</td></tr>';
+    
+    try {
+        let url = '/api/admin/comments/';
+        if (filter !== '') {
+            url += `?is_approved=${filter}`;
+        }
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            if (response.status === 401) {
+                showLoginModal();
+                return;
+            }
+            throw new Error('加载失败');
+        }
+        
+        const data = await response.json();
+        renderComments(data.items);
+    } catch (err) {
+        console.error('加载留言失败:', err);
+        tbody.innerHTML = `<tr><td colspan="7" class="loading-cell">加载失败: ${err.message}</td></tr>`;
+    }
+}
+
+function renderComments(comments) {
+    const tbody = document.getElementById('comments-table-body');
+    
+    if (comments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">暂无留言</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = comments.map(c => {
+        const statusClass = c.is_approved === 1 ? 'approved' : c.is_approved === 0 ? 'pending' : 'rejected';
+        const statusText = c.is_approved === 1 ? '已通过' : c.is_approved === 0 ? '待审核' : '已拒绝';
+        const content = c.content.length > 50 ? c.content.substring(0, 50) + '...' : c.content;
+        
+        return `
+            <tr>
+                <td>${c.id}</td>
+                <td>${c.user.nickname}</td>
+                <td>事物#${c.item_id}</td>
+                <td title="${escapeHtml(c.content)}">${escapeHtml(content)}</td>
+                <td><span class="comment-status status-${statusClass}">${statusText}</span></td>
+                <td>${formatDateTime(c.created_at)}</td>
+                <td class="actions">
+                    ${c.is_approved !== 1 ? `<button class="btn btn-sm btn-success" onclick="approveComment(${c.id})">通过</button>` : ''}
+                    ${c.is_approved !== 2 ? `<button class="btn btn-sm btn-warning" onclick="rejectComment(${c.id})">拒绝</button>` : ''}
+                    <button class="btn btn-sm btn-danger" onclick="deleteComment(${c.id})">删除</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+async function approveComment(id) {
+    await updateCommentStatus(id, 1);
+}
+
+async function rejectComment(id) {
+    await updateCommentStatus(id, 2);
+}
+
+async function updateCommentStatus(id, status) {
+    try {
+        const response = await fetch(`/api/admin/comments/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ is_approved: status })
+        });
+        
+        if (response.ok) {
+            loadComments();
+            loadCommentStats();
+        } else {
+            alert('操作失败');
+        }
+    } catch (err) {
+        alert('网络错误');
+    }
+}
+
+async function deleteComment(id) {
+    if (!confirm('确定要删除这条留言吗？')) return;
+    
+    try {
+        const response = await fetch(`/api/admin/comments/${id}`, { method: 'DELETE' });
+        
+        if (response.ok) {
+            loadComments();
+            loadCommentStats();
+        } else {
+            alert('删除失败');
+        }
+    } catch (err) {
+        alert('网络错误');
+    }
+}
+
+// ==================== 用户管理 ====================
+async function loadUsers() {
+    const filter = document.getElementById('user-filter').value;
+    const tbody = document.getElementById('users-table-body');
+    tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">加载中...</td></tr>';
+    
+    try {
+        let url = '/api/admin/users/';
+        if (filter !== '') {
+            url += `?is_blocked=${filter}`;
+        }
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            if (response.status === 401) {
+                showLoginModal();
+                return;
+            }
+            throw new Error('加载失败');
+        }
+        
+        const data = await response.json();
+        renderUsers(data.items);
+    } catch (err) {
+        console.error('加载用户失败:', err);
+        tbody.innerHTML = `<tr><td colspan="7" class="loading-cell">加载失败: ${err.message}</td></tr>`;
+    }
+}
+
+function renderUsers(users) {
+    const tbody = document.getElementById('users-table-body');
+    
+    if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="loading-cell">暂无用户</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = users.map(u => {
+        const statusText = u.is_blocked ? '已禁言' : '正常';
+        const statusClass = u.is_blocked ? 'rejected' : 'approved';
+        const trustClass = u.trust_score < 50 ? 'warning' : u.trust_score < 80 ? 'pending' : 'approved';
+        
+        return `
+            <tr>
+                <td>${u.id}</td>
+                <td>${u.nickname}</td>
+                <td title="${u.identifier}">${u.identifier.substring(0, 16)}...</td>
+                <td>${u.max_comments_per_page}</td>
+                <td><span class="comment-status status-${trustClass}">${u.trust_score.toFixed(1)}</span></td>
+                <td>${u.total_comments || 0}</td>
+                <td><span class="comment-status status-${statusClass}">${statusText}</span></td>
+                <td>${formatDateTime(u.created_at)}</td>
+                <td class="actions">
+                    <button class="btn btn-sm btn-primary" onclick="editUser(${u.id}, '${u.nickname}', ${u.max_comments_per_page}, ${u.is_blocked})">编辑</button>
+                    ${u.is_blocked 
+                        ? `<button class="btn btn-sm btn-success" onclick="unblockUser(${u.id})">解除禁言</button>`
+                        : `<button class="btn btn-sm btn-warning" onclick="blockUser(${u.id})">禁言</button>`
+                    }
+                    <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">删除</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+async function blockUser(id) {
+    await updateUser(id, { is_blocked: 1 });
+}
+
+async function unblockUser(id) {
+    await updateUser(id, { is_blocked: 0 });
+}
+
+async function updateUser(id, data) {
+    try {
+        const response = await fetch(`/api/admin/users/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            loadUsers();
+        } else {
+            alert('操作失败');
+        }
+    } catch (err) {
+        alert('网络错误');
+    }
+}
+
+async function deleteUser(id) {
+    if (!confirm('确定要删除这个用户吗？其所有留言也将被删除！')) return;
+    
+    try {
+        const response = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+        
+        if (response.ok) {
+            loadUsers();
+        } else {
+            alert('删除失败');
+        }
+    } catch (err) {
+        alert('网络错误');
+    }
+}
+
+function editUser(id, nickname, maxComments, isBlocked) {
+    const newMax = prompt(`修改用户 "${nickname}" 的留言上限（当前: ${maxComments}）:`, maxComments);
+    if (newMax === null) return;
+    
+    const maxNum = parseInt(newMax);
+    if (isNaN(maxNum) || maxNum < 1) {
+        alert('请输入有效的数字');
+        return;
+    }
+    
+    updateUser(id, { max_comments_per_page: maxNum });
+}
+
+// ==================== 工具函数 ====================
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function formatDateTime(timeStr) {
+    const date = new Date(timeStr);
+    return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// 初始化时加载统计数据
+loadCommentStats();
+
+// ==================== 安全管理 ====================
+
+function loadSecurityStats() {
+    fetch('/api/admin/security/stats')
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
+            document.getElementById('sec-rate-limits').textContent = data.rate_limit_triggers_24h;
+            document.getElementById('sec-blocked-attempts').textContent = data.blocked_attempts_24h;
+            document.getElementById('sec-blacklist-count').textContent = data.active_blacklist_count;
+            document.getElementById('sec-active-users').textContent = data.active_users_24h;
+        })
+        .catch(err => console.error('加载安全统计失败:', err));
+}
+
+function loadIPBlacklist() {
+    fetch('/api/admin/security/ip-blacklist')
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
+            const tbody = document.getElementById('ip-blacklist-body');
+            if (data.items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="loading-cell">暂无黑名单记录</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.items.map(ip => `
+                <tr>
+                    <td>${ip.ip_address}</td>
+                    <td>${ip.reason || '-'}</td>
+                    <td>${ip.is_permanent ? '永久' : '临时'}</td>
+                    <td>${ip.expire_at ? formatDateTime(ip.expire_at) : '永不过期'}</td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-danger" onclick="removeIPFromBlacklist('${ip.ip_address}')">移除</button>
+                    </td>
+                </tr>
+            `).join('');
+        })
+        .catch(err => {
+            console.error('加载黑名单失败:', err);
+            document.getElementById('ip-blacklist-body').innerHTML = '<tr><td colspan="5" class="loading-cell">加载失败</td></tr>';
+        });
+}
+
+function loadSpamPatterns() {
+    fetch('/api/admin/security/spam-patterns')
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
+            const tbody = document.getElementById('spam-patterns-body');
+            if (data.items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="loading-cell">暂无过滤规则</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.items.map(p => `
+                <tr>
+                    <td>${escapeHtml(p.pattern)}</td>
+                    <td>${p.pattern_type === 'keyword' ? '关键词' : '正则'}</td>
+                    <td>${p.action === 'block' ? '拦截' : '审核'}</td>
+                    <td>${p.description || '-'}</td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-danger" onclick="deleteSpamPattern(${p.id})">删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        })
+        .catch(err => {
+            console.error('加载过滤规则失败:', err);
+            document.getElementById('spam-patterns-body').innerHTML = '<tr><td colspan="5" class="loading-cell">加载失败</td></tr>';
+        });
+}
+
+// IP 黑名单弹窗
+function showAddIPModal() {
+    document.getElementById('add-ip-modal').classList.add('active');
+}
+
+function closeAddIPModal() {
+    document.getElementById('add-ip-modal').classList.remove('active');
+}
+
+function addIPToBlacklist() {
+    const ip = document.getElementById('new-ip-address').value.trim();
+    const reason = document.getElementById('new-ip-reason').value.trim();
+    const isPermanent = document.getElementById('new-ip-permanent').checked;
+    const expireHours = isPermanent ? null : parseInt(document.getElementById('new-ip-expire').value);
+    
+    if (!ip) {
+        alert('请输入IP地址');
+        return;
+    }
+    
+    const params = new URLSearchParams({
+        ip_address: ip,
+        reason: reason,
+        is_permanent: isPermanent
+    });
+    if (expireHours) params.append('expire_hours', expireHours);
+    
+    fetch('/api/admin/security/ip-blacklist?' + params, { method: 'POST' })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(() => {
+            closeAddIPModal();
+            loadIPBlacklist();
+            loadSecurityStats();
+        })
+        .catch(() => alert('添加失败'));
+}
+
+function removeIPFromBlacklist(ip) {
+    if (!confirm(`确定要从黑名单移除 ${ip} 吗？`)) return;
+    
+    fetch(`/api/admin/security/ip-blacklist/${ip}`, { method: 'DELETE' })
+        .then(r => r.ok ? null : Promise.reject())
+        .then(() => {
+            loadIPBlacklist();
+            loadSecurityStats();
+        })
+        .catch(() => alert('移除失败'));
+}
+
+// 垃圾规则弹窗
+function showAddPatternModal() {
+    document.getElementById('add-pattern-modal').classList.add('active');
+}
+
+function closeAddPatternModal() {
+    document.getElementById('add-pattern-modal').classList.remove('active');
+}
+
+function addSpamPattern() {
+    const pattern = document.getElementById('new-pattern').value.trim();
+    const type = document.getElementById('new-pattern-type').value;
+    const action = document.getElementById('new-pattern-action').value;
+    const desc = document.getElementById('new-pattern-desc').value.trim();
+    
+    if (!pattern) {
+        alert('请输入规则内容');
+        return;
+    }
+    
+    const params = new URLSearchParams({
+        pattern: pattern,
+        pattern_type: type,
+        action: action,
+        description: desc
+    });
+    
+    fetch('/api/admin/security/spam-patterns?' + params, { method: 'POST' })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(() => {
+            closeAddPatternModal();
+            loadSpamPatterns();
+        })
+        .catch(() => alert('添加失败'));
+}
+
+function deleteSpamPattern(id) {
+    if (!confirm('确定要删除这条过滤规则吗？')) return;
+    
+    fetch(`/api/admin/security/spam-patterns/${id}`, { method: 'DELETE' })
+        .then(r => r.ok ? null : Promise.reject())
+        .then(() => loadSpamPatterns())
+        .catch(() => alert('删除失败'));
+}
+
+// 监听永久封禁复选框
+document.getElementById('new-ip-permanent')?.addEventListener('change', function() {
+    document.getElementById('expire-hours-group').style.display = this.checked ? 'none' : 'block';
+});
+
+// 点击弹窗外部关闭
+document.getElementById('add-ip-modal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeAddIPModal();
+});
+document.getElementById('add-pattern-modal')?.addEventListener('click', function(e) {
+    if (e.target === this) closeAddPatternModal();
+});
 </script>
 {% endblock %}

@@ -20,13 +20,30 @@ ADMIN_PASSWORD = "xiaosong"
 
 
 def is_logged_in(request: Request) -> bool:
-    """检查用户是否已登录"""
+    """检查用户是否已登录（管理员或 OAuth 用户）"""
+    return request.session.get("logged_in") is True or request.session.get("is_authenticated") is True
+
+
+def is_admin(request: Request) -> bool:
+    """检查是否是管理员"""
     return request.session.get("logged_in") is True
+
+
+def is_oauth_user(request: Request) -> bool:
+    """检查是否是 OAuth 登录用户"""
+    return request.session.get("is_authenticated") is True
 
 
 def require_login(request: Request):
     """要求登录，未登录则跳转到登录页"""
     if not is_logged_in(request):
+        return RedirectResponse(url="/login?next=" + str(request.url.path), status_code=302)
+    return None
+
+
+def require_admin(request: Request):
+    """要求管理员权限"""
+    if not is_admin(request):
         return RedirectResponse(url="/login?next=" + str(request.url.path), status_code=302)
     return None
 
@@ -129,7 +146,7 @@ def logout(request: Request):
     return RedirectResponse(url="/", status_code=302)
 
 
-# ==================== 管理页面（需要登录） ====================
+# ==================== 管理页面（需要管理员登录） ====================
 
 @router.get("/manage", response_class=HTMLResponse)
 def manage_page(
@@ -137,9 +154,9 @@ def manage_page(
     db: Session = Depends(get_db),
     search: Optional[str] = None
 ):
-    """管理页面"""
-    # 检查登录状态
-    if not is_logged_in(request):
+    """管理页面 - 仅管理员可访问"""
+    # 检查管理员登录状态
+    if not is_admin(request):
         return RedirectResponse(url="/login?next=/manage", status_code=302)
     
     items, total = crud_item.get_multi(db, skip=0, limit=1000, search=search)
@@ -166,9 +183,9 @@ def manage_page(
 
 @router.get("/manage/item/new", response_class=HTMLResponse)
 def new_item_page(request: Request):
-    """新建事物页面"""
-    # 检查登录状态
-    if not is_logged_in(request):
+    """新建事物页面 - 仅管理员可访问"""
+    # 检查管理员登录状态
+    if not is_admin(request):
         return RedirectResponse(url="/login?next=/manage/item/new", status_code=302)
     
     return templates.TemplateResponse("edit.html", {
@@ -181,9 +198,9 @@ def new_item_page(request: Request):
 
 @router.get("/manage/item/{item_id}", response_class=HTMLResponse)
 def edit_item_page(item_id: int, request: Request, db: Session = Depends(get_db)):
-    """编辑事物页面"""
-    # 检查登录状态
-    if not is_logged_in(request):
+    """编辑事物页面 - 仅管理员可访问"""
+    # 检查管理员登录状态
+    if not is_admin(request):
         return RedirectResponse(url=f"/login?next=/manage/item/{item_id}", status_code=302)
     
     item = crud_item.get(db, item_id=item_id)

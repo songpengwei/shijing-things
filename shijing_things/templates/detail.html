@@ -104,11 +104,330 @@
             <button class="btn btn-danger" onclick="deleteItem({{ item.id }}, '{{ item.name }}')">删除</button>
         </div>
     </article>
+
+    <!-- 留言区域 -->
+    <section class="comments-section" id="comments-section">
+        <h2 class="comments-title">
+            💬 留言讨论
+            <span class="comments-count" id="comments-count">(加载中...)</span>
+        </h2>
+        
+        <!-- 留言限制提示 -->
+        <div class="comment-limit-info" id="comment-limit-info" style="display: none;">
+            <p class="limit-text"></p>
+        </div>
+
+        <!-- 留言输入框 -->
+        <div class="comment-form-container" id="comment-form-container">
+            <div class="comment-user-info">
+                <input type="text" id="comment-nickname" class="comment-input nickname-input" 
+                       placeholder="您的昵称" maxlength="20" value="">
+            </div>
+            <div class="comment-input-wrapper">
+                <textarea id="comment-content" class="comment-textarea" 
+                          placeholder="写下您的留言...（支持回复他人，点击回复按钮即可）" 
+                          maxlength="500" rows="3"></textarea>
+                <div class="comment-toolbar">
+                    <span class="char-count"><span id="char-count">0</span>/500</span>
+                    <button class="btn btn-primary btn-submit-comment" id="btn-submit-comment" onclick="submitComment()">
+                        发表留言
+                    </button>
+                </div>
+            </div>
+            <div class="reply-info" id="reply-info" style="display: none;">
+                <span class="reply-text">正在回复 <strong id="reply-to-name"></strong></span>
+                <button class="btn-cancel-reply" onclick="cancelReply()">取消回复</button>
+            </div>
+        </div>
+
+        <!-- 登录提示（未登录时显示） -->
+        <div class="comment-login-tip" id="comment-login-tip" style="display: none;">
+            <p>您已达到留言上限，如需继续留言请联系管理员</p>
+        </div>
+
+        <!-- 留言列表 -->
+        <div class="comments-list" id="comments-list">
+            <!-- 动态加载 -->
+        </div>
+
+        <!-- 加载更多 -->
+        <div class="comments-load-more" id="comments-load-more" style="display: none;">
+            <button class="btn btn-secondary" onclick="loadMoreComments()">加载更多</button>
+        </div>
+    </section>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<!-- 留言样式已移至公共样式表 -->
 {% endblock %}
 
 {% block extra_js %}
 <script>
+// 当前事物ID
+const currentItemId = {{ item.id }};
+let currentReplyTo = null;
+let userIdentifier = localStorage.getItem('shijing_user_identifier');
+let userNickname = localStorage.getItem('shijing_user_nickname') || '';
+
+// 生成用户标识符
+function generateIdentifier() {
+    if (!userIdentifier) {
+        userIdentifier = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('shijing_user_identifier', userIdentifier);
+    }
+    return userIdentifier;
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    generateIdentifier();
+    
+    // 恢复昵称
+    if (userNickname) {
+        document.getElementById('comment-nickname').value = userNickname;
+    }
+    
+    // 加载留言限制信息
+    loadCommentLimit();
+    
+    // 加载留言列表
+    loadComments();
+    
+    // 字符计数
+    const textarea = document.getElementById('comment-content');
+    const charCount = document.getElementById('char-count');
+    textarea.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+    });
+});
+
+// 加载留言限制信息
+async function loadCommentLimit() {
+    try {
+        const response = await fetch(`/api/comments/item/${currentItemId}/limit`, {
+            headers: {
+                'nickname': userNickname || '匿名用户'
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            updateLimitUI(data);
+        }
+    } catch (err) {
+        console.error('加载限制信息失败:', err);
+    }
+}
+
+// 更新限制UI
+function updateLimitUI(data) {
+    const limitInfo = document.getElementById('comment-limit-info');
+    const formContainer = document.getElementById('comment-form-container');
+    const limitText = limitInfo.querySelector('.limit-text');
+    
+    if (!data.can_comment) {
+        formContainer.style.display = 'none';
+        limitInfo.className = 'comment-limit-info warning';
+        limitText.innerHTML = `⚠️ 您已达到留言上限（${data.max_allowed}条），无法继续留言。`;
+        limitInfo.style.display = 'block';
+    } else {
+        formContainer.style.display = 'block';
+        if (data.remaining <= 1) {
+            limitInfo.className = 'comment-limit-info warning';
+            limitText.innerHTML = `⚠️ 您还可以留言 ${data.remaining} 条（上限 ${data.max_allowed} 条）`;
+        } else {
+            limitInfo.className = 'comment-limit-info success';
+            limitText.innerHTML = `✅ 您还可以留言 ${data.remaining} 条（上限 ${data.max_allowed} 条）`;
+        }
+        limitInfo.style.display = 'block';
+    }
+}
+
+// 加载留言列表
+async function loadComments() {
+    try {
+        const response = await fetch(`/api/comments/item/${currentItemId}`);
+        
+        if (response.ok) {
+            const comments = await response.json();
+            renderComments(comments);
+        }
+    } catch (err) {
+        console.error('加载留言失败:', err);
+        document.getElementById('comments-list').innerHTML = 
+            '<div class="comments-empty">加载失败，请刷新重试</div>';
+    }
+}
+
+// 渲染留言列表（树形结构）
+function renderComments(comments) {
+    const container = document.getElementById('comments-list');
+    const countSpan = document.getElementById('comments-count');
+    
+    // 计算总评论数
+    let totalCount = 0;
+    function countAll(commentsList) {
+        commentsList.forEach(c => {
+            totalCount++;
+            if (c.replies && c.replies.length > 0) {
+                countAll(c.replies);
+            }
+        });
+    }
+    countAll(comments);
+    countSpan.textContent = `(${totalCount}条)`;
+    
+    if (comments.length === 0) {
+        container.innerHTML = `
+            <div class="comments-empty">
+                <div class="comments-empty-icon">💬</div>
+                <p>暂无留言，来发表第一条留言吧！</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = comments.map(comment => renderCommentItem(comment)).join('');
+}
+
+// 渲染单条留言
+function renderCommentItem(comment, isReply = false) {
+    const avatarUrl = comment.user.avatar_url;
+    const avatarHtml = avatarUrl 
+        ? `<img src="${avatarUrl}" alt="${comment.user.nickname}">`
+        : comment.user.nickname.charAt(0).toUpperCase();
+    
+    const repliesHtml = comment.replies && comment.replies.length > 0
+        ? `<div class="replies-list">${comment.replies.map(r => renderCommentItem(r, true)).join('')}</div>`
+        : '';
+    
+    return `
+        <div class="comment-item ${isReply ? 'reply' : ''}" data-id="${comment.id}">
+            <div class="comment-header">
+                <div class="comment-avatar">${avatarHtml}</div>
+                <div class="comment-meta">
+                    <div class="comment-author">${comment.user.nickname}</div>
+                    <div class="comment-time">${formatTime(comment.created_at)}</div>
+                </div>
+            </div>
+            <div class="comment-content">${escapeHtml(comment.content)}</div>
+            <div class="comment-actions">
+                <button onclick="replyTo(${comment.id}, '${escapeHtml(comment.user.nickname)}')">回复</button>
+            </div>
+            ${repliesHtml}
+        </div>
+    `;
+}
+
+// 格式化时间
+function formatTime(timeStr) {
+    const date = new Date(timeStr);
+    const now = new Date();
+    const diff = now - date;
+    
+    // 小于1小时显示"X分钟前"
+    if (diff < 3600000) {
+        const minutes = Math.floor(diff / 60000);
+        return minutes < 1 ? '刚刚' : `${minutes}分钟前`;
+    }
+    
+    // 小于24小时显示"X小时前"
+    if (diff < 86400000) {
+        return `${Math.floor(diff / 3600000)}小时前`;
+    }
+    
+    // 否则显示日期
+    return date.toLocaleDateString('zh-CN');
+}
+
+// HTML转义
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// 回复某人
+function replyTo(commentId, nickname) {
+    currentReplyTo = commentId;
+    document.getElementById('reply-to-name').textContent = nickname;
+    document.getElementById('reply-info').style.display = 'flex';
+    document.getElementById('comment-content').focus();
+}
+
+// 取消回复
+function cancelReply() {
+    currentReplyTo = null;
+    document.getElementById('reply-info').style.display = 'none';
+}
+
+// 提交留言
+async function submitComment() {
+    const nicknameInput = document.getElementById('comment-nickname');
+    const contentInput = document.getElementById('comment-content');
+    const submitBtn = document.getElementById('btn-submit-comment');
+    
+    const nickname = nicknameInput.value.trim() || '匿名用户';
+    const content = contentInput.value.trim();
+    
+    if (!content) {
+        alert('请输入留言内容');
+        return;
+    }
+    
+    // 保存昵称
+    localStorage.setItem('shijing_user_nickname', nickname);
+    userNickname = nickname;
+    
+    submitBtn.disabled = true;
+    submitBtn.textContent = '发送中...';
+    
+    try {
+        const response = await fetch('/api/comments/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: content,
+                item_id: currentItemId,
+                parent_id: currentReplyTo,
+                nickname: nickname,
+                identifier: userIdentifier
+            })
+        });
+        
+        if (response.ok) {
+            // 清空输入
+            contentInput.value = '';
+            document.getElementById('char-count').textContent = '0';
+            cancelReply();
+            
+            // 重新加载留言和限制信息
+            await loadComments();
+            await loadCommentLimit();
+            
+            alert('留言发表成功！');
+        } else if (response.status === 429) {
+            const error = await response.json();
+            alert(error.detail || '留言次数已达上限');
+            await loadCommentLimit();
+        } else if (response.status === 403) {
+            alert('您已被禁言，无法发表留言');
+        } else {
+            const error = await response.json();
+            alert('发表失败：' + (error.detail || '未知错误'));
+        }
+    } catch (err) {
+        console.error('发表留言失败:', err);
+        alert('网络错误，请检查连接');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '发表留言';
+    }
+}
+
 async function deleteItem(id, name) {
     // 先尝试删除，检查登录状态
     try {

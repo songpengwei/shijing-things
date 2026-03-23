@@ -6,6 +6,7 @@
     <section class="hero">
         <h1 class="hero-title">诗经草木鸟兽大全</h1>
         <p class="hero-subtitle">《诗经》三百篇，涉及草木鸟兽者过半。本网站整理了《诗经》中出现的 {{ stats.total }} 种草木鸟兽，以飨读者。</p>
+        <p class="hero-note">📌 由于精力所限，配图配文多有疏漏，欢迎在具体页面留言指出。如有其他建议，可以在<a href="https://www.qtmuniao.com/about/" target="_blank" rel="noopener">这里</a>找到我，或者在最下面留言板留言。</p>
         <div class="hero-stats">
             {% for cat, count in stats.by_category.items() %}
             <a href="/?category={{ cat }}" class="stat-item stat-{{ cat }}">
@@ -86,5 +87,218 @@
         <p>请尝试其他搜索词或筛选条件</p>
     </div>
     {% endif %}
+
+    <!-- 全站留言板 -->
+    <section class="comments-section" id="comments-section">
+        <h2 class="comments-title">
+            💬 留言板
+            <span class="comments-count">欢迎留下您的建议或想法</span>
+        </h2>
+        
+        <!-- 留言限制提示 -->
+        <div class="comment-limit-info" id="comment-limit-info" style="display: none;">
+            <p class="limit-text"></p>
+        </div>
+
+        <!-- 留言输入框 -->
+        <div class="comment-form-container" id="comment-form-container">
+            <div class="comment-user-info">
+                <input type="text" id="comment-nickname" class="comment-input nickname-input" 
+                       placeholder="您的昵称" maxlength="20" value="">
+            </div>
+            <div class="comment-input-wrapper">
+                <textarea id="comment-content" class="comment-textarea" 
+                          placeholder="写下您的留言..." 
+                          maxlength="500" rows="3"></textarea>
+                <div class="comment-toolbar">
+                    <span class="char-count"><span id="char-count">0</span>/500</span>
+                    <button class="btn btn-primary btn-submit-comment" id="btn-submit-comment" onclick="submitComment()">
+                        发表留言
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 留言列表 -->
+        <div class="comments-list" id="comments-list">
+            <!-- 动态加载 -->
+        </div>
+    </section>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 首页全站留言板功能
+let userIdentifier = localStorage.getItem('shijing_user_identifier');
+let userNickname = localStorage.getItem('shijing_user_nickname') || '';
+
+// 生成用户标识符
+function generateIdentifier() {
+    if (!userIdentifier) {
+        userIdentifier = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('shijing_user_identifier', userIdentifier);
+    }
+    return userIdentifier;
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    generateIdentifier();
+    
+    // 恢复昵称
+    if (userNickname) {
+        document.getElementById('comment-nickname').value = userNickname;
+    }
+    
+    // 加载留言列表
+    loadSiteComments();
+    
+    // 字符计数
+    const textarea = document.getElementById('comment-content');
+    const charCount = document.getElementById('char-count');
+    textarea.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+    });
+});
+
+// 加载全站留言列表
+async function loadSiteComments() {
+    try {
+        // 使用 item_id = 0 作为全站留言的标识
+        const response = await fetch('/api/comments/item/0');
+        
+        if (response.ok) {
+            const comments = await response.json();
+            renderSiteComments(comments);
+        }
+    } catch (err) {
+        console.error('加载留言失败:', err);
+        document.getElementById('comments-list').innerHTML = 
+            '<div class="comments-empty">加载失败，请刷新重试</div>';
+    }
+}
+
+// 渲染留言列表
+function renderSiteComments(comments) {
+    const container = document.getElementById('comments-list');
+    
+    if (comments.length === 0) {
+        container.innerHTML = `
+            <div class="comments-empty">
+                <div class="comments-empty-icon">💬</div>
+                <p>暂无留言，来发表第一条留言吧！</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = comments.map(comment => renderCommentItem(comment)).join('');
+}
+
+// 渲染单条留言
+function renderCommentItem(comment) {
+    const avatarUrl = comment.user.avatar_url;
+    const avatarHtml = avatarUrl 
+        ? `<img src="${avatarUrl}" alt="${comment.user.nickname}">`
+        : comment.user.nickname.charAt(0).toUpperCase();
+    
+    return `
+        <div class="comment-item" data-id="${comment.id}">
+            <div class="comment-header">
+                <div class="comment-avatar">${avatarHtml}</div>
+                <div class="comment-meta">
+                    <div class="comment-author">${comment.user.nickname}</div>
+                    <div class="comment-time">${formatTime(comment.created_at)}</div>
+                </div>
+            </div>
+            <div class="comment-content">${escapeHtml(comment.content)}</div>
+        </div>
+    `;
+}
+
+// 格式化时间
+function formatTime(timeStr) {
+    const date = new Date(timeStr);
+    const now = new Date();
+    const diff = now - date;
+    
+    if (diff < 3600000) {
+        const minutes = Math.floor(diff / 60000);
+        return minutes < 1 ? '刚刚' : `${minutes}分钟前`;
+    }
+    
+    if (diff < 86400000) {
+        return `${Math.floor(diff / 3600000)}小时前`;
+    }
+    
+    return date.toLocaleDateString('zh-CN');
+}
+
+// HTML转义
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// 提交留言
+async function submitComment() {
+    const nicknameInput = document.getElementById('comment-nickname');
+    const contentInput = document.getElementById('comment-content');
+    const submitBtn = document.getElementById('btn-submit-comment');
+    
+    const nickname = nicknameInput.value.trim() || '匿名用户';
+    const content = contentInput.value.trim();
+    
+    if (!content) {
+        alert('请输入留言内容');
+        return;
+    }
+    
+    localStorage.setItem('shijing_user_nickname', nickname);
+    userNickname = nickname;
+    
+    submitBtn.disabled = true;
+    submitBtn.textContent = '发送中...';
+    
+    try {
+        // 使用 item_id = 0 作为全站留言
+        const response = await fetch('/api/comments/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: content,
+                item_id: 0,  // 0 表示全站留言
+                parent_id: null,
+                nickname: nickname,
+                identifier: userIdentifier
+            })
+        });
+        
+        if (response.ok) {
+            contentInput.value = '';
+            document.getElementById('char-count').textContent = '0';
+            await loadSiteComments();
+            alert('留言发表成功！');
+        } else if (response.status === 429) {
+            const error = await response.json();
+            alert(error.detail || '留言次数已达上限');
+        } else if (response.status === 403) {
+            alert('您已被禁言，无法发表留言');
+        } else {
+            const error = await response.json();
+            alert('发表失败：' + (error.detail || '未知错误'));
+        }
+    } catch (err) {
+        console.error('发表留言失败:', err);
+        alert('网络错误，请检查连接');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '发表留言';
+    }
+}
+</script>
 {% endblock %}
