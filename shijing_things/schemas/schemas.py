@@ -160,6 +160,7 @@ class CommentCreate(BaseModel):
     parent_id: Optional[int] = None
     nickname: str  # 用户昵称
     identifier: str  # 用户唯一标识
+    is_approved: Optional[int] = 1
 
 
 class CommentUpdate(BaseModel):

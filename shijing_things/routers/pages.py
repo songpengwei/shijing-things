@@ -8,15 +8,13 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional
 
+from shijing_things.core.config import get_settings
 from shijing_things.core.database import get_db
 from shijing_things.crud.crud import item as crud_item, poem as crud_poem
 
 router = APIRouter()
 templates = Jinja2Templates(directory="shijing_things/templates")
-
-# 固定的用户名和密码
-ADMIN_USERNAME = "qtmuniao"
-ADMIN_PASSWORD = "xiaosong"
+settings = get_settings()
 
 
 def is_logged_in(request: Request) -> bool:
@@ -117,6 +115,8 @@ def login_page(request: Request, next: Optional[str] = "/manage", error: Optiona
         "request": request,
         "next": next,
         "error": error,
+        "admin_login_enabled": bool(settings.admin_username and settings.admin_password),
+        "github_oauth_enabled": bool(settings.github_client_id and settings.github_client_secret),
     })
 
 
@@ -128,7 +128,13 @@ def login_submit(
     next: Optional[str] = Form("/manage")
 ):
     """登录提交"""
-    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+    if not settings.admin_username or not settings.admin_password:
+        return RedirectResponse(
+            url=f"/login?next={next}&error=管理员密码登录未配置",
+            status_code=302
+        )
+
+    if username == settings.admin_username and password == settings.admin_password:
         request.session["logged_in"] = True
         request.session["username"] = username
         return RedirectResponse(url=next, status_code=302)

@@ -1,6 +1,8 @@
+from pydantic import Field
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 from pathlib import Path
+import secrets
 
 
 # 项目根目录（shijing_things 的父目录）
@@ -33,8 +35,14 @@ class Settings(BaseSettings):
     github_redirect_uri: str = "http://localhost:8000/auth/github/callback"  # 回调地址
     
     # 应用安全配置
-    secret_key: str = "shijing-things-secret-key-change-in-production"  # JWT 密钥
+    secret_key: str = Field(default_factory=lambda: secrets.token_urlsafe(32))  # JWT/Session 密钥
     access_token_expire_minutes: int = 60 * 24 * 7  # Token 过期时间（7天）
+    session_https_only: bool = False
+    session_same_site: str = "lax"
+
+    # 管理员账户（未配置则禁用密码登录）
+    admin_username: str = ""
+    admin_password: str = ""
     
     class Config:
         env_file = ".env"

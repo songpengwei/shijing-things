@@ -9,6 +9,7 @@ import hashlib
 
 from shijing_things.core.database import get_db
 from shijing_things.core.config import get_settings
+from shijing_things.models.models import Comment
 from shijing_things.schemas.schemas import (
     ShijingItemCreate, ShijingItemUpdate, ShijingItemResponse, ShijingItemList,
     PoemCreate, PoemUpdate, PoemResponse, PoemList,
@@ -26,12 +27,22 @@ from shijing_things.crud.crud import (
 router = APIRouter(prefix="/api")
 
 
-def require_auth(request: Request):
+def require_login(request: Request):
     """检查用户是否已登录，未登录返回 401"""
-    if not request.session.get("logged_in"):
+    if not (request.session.get("logged_in") or request.session.get("is_authenticated")):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="未登录，请先登录"
+        )
+    return True
+
+
+def require_admin(request: Request):
+    """检查是否为管理员，未授权返回 403"""
+    if not request.session.get("logged_in"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="需要管理员权限"
         )
     return True
 
@@ -79,9 +90,9 @@ def create_item(
     request: Request,
     item_in: ShijingItemCreate,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
-    """创建事物（需要登录）"""
+    """创建事物（需要管理员权限）"""
     existing = crud_item.get_by_name(db, name=item_in.name)
     if existing:
         raise HTTPException(status_code=400, detail=f"事物 '{item_in.name}' 已存在")
@@ -94,9 +105,9 @@ def update_item(
     item_id: int,
     item_in: ShijingItemUpdate,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
-    """更新事物（需要登录）"""
+    """更新事物（需要管理员权限）"""
     db_item = crud_item.get(db, item_id=item_id)
     if not db_item:
         raise HTTPException(status_code=404, detail="事物不存在")
@@ -108,9 +119,9 @@ def delete_item(
     request: Request,
     item_id: int,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
-    """删除事物（需要登录）"""
+    """删除事物（需要管理员权限）"""
     db_item = crud_item.delete(db, item_id=item_id)
     if not db_item:
         raise HTTPException(status_code=404, detail="事物不存在")
@@ -154,9 +165,9 @@ def create_poem(
     request: Request,
     poem_in: PoemCreate,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
-    """创建诗篇（需要登录）"""
+    """创建诗篇（需要管理员权限）"""
     existing = crud_poem.get_by_title(db, title=poem_in.title)
     if existing:
         raise HTTPException(status_code=400, detail=f"诗篇 '{poem_in.title}' 已存在")
@@ -169,9 +180,9 @@ def update_poem(
     poem_id: int,
     poem_in: PoemUpdate,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
-    """更新诗篇（需要登录）"""
+    """更新诗篇（需要管理员权限）"""
     db_poem = crud_poem.get(db, poem_id=poem_id)
     if not db_poem:
         raise HTTPException(status_code=404, detail="诗篇不存在")
@@ -183,9 +194,9 @@ def delete_poem(
     request: Request,
     poem_id: int,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
-    """删除诗篇（需要登录）"""
+    """删除诗篇（需要管理员权限）"""
     db_poem = crud_poem.delete(db, poem_id=poem_id)
     if not db_poem:
         raise HTTPException(status_code=404, detail="诗篇不存在")
@@ -285,7 +296,12 @@ def create_comment(
     # ========== 第2层防护：用户禁言检查 ==========
     if user.is_blocked:
         # 记录可疑行为
-        crud_rate_limit.increment(db, identifier=comment_in.identifier, action_type="blocked_attempt")
+        crud_rate_limit.increment(
+            db,
+            identifier=comment_in.identifier,
+            action_type="blocked_attempt",
+            ip_address=client_ip
+        )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="您已被禁言，无法发表评论"
@@ -322,7 +338,12 @@ def create_comment(
     )
     if not allowed:
         # 触发频率限制，添加到黑名单观察列表
-        crud_rate_limit.increment(db, identifier=comment_in.identifier, action_type="rate_limit_triggered")
+        crud_rate_limit.increment(
+            db,
+            identifier=comment_in.identifier,
+            action_type="rate_limit_triggered",
+            ip_address=client_ip
+        )
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail=f"您留言过于频繁，已达到每小时上限（{settings.max_comments_per_hour_per_user}条），请稍后再试"
@@ -386,8 +407,10 @@ def create_comment(
                     detail="留言包含违规内容，请修改后重试"
                 )
             elif action == "review":
-                # 标记为需要审核
-                comment_in.is_approved = 0  # 待审核
+                comment_in.is_approved = 0
+
+    if settings.comment_approval_required:
+        comment_in.is_approved = 0
     
     # 检查关键词（简单版本）
     for keyword in settings.spam_keywords:
@@ -432,7 +455,12 @@ def create_comment(
     crud_guest_user.update_after_comment(db, user_id=user.id)
     
     # 更新频率限制计数
-    crud_rate_limit.increment(db, identifier=comment_in.identifier, action_type="comment")
+    crud_rate_limit.increment(
+        db,
+        identifier=comment_in.identifier,
+        action_type="comment",
+        ip_address=client_ip
+    )
     
     db.commit()
     db.refresh(comment)
@@ -474,7 +502,7 @@ def list_all_comments(
     user_id: Optional[int] = Query(None),
     is_approved: Optional[int] = Query(None),
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """获取所有评论（需要管理员权限）"""
     items, total = crud_comment.get_multi(
@@ -504,7 +532,7 @@ def get_comment_detail(
     request: Request,
     comment_id: int,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """获取评论详情（需要管理员权限）"""
     comment = crud_comment.get(db, comment_id=comment_id)
@@ -519,7 +547,7 @@ def update_comment(
     comment_id: int,
     comment_in: CommentUpdate,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """更新评论（需要管理员权限）"""
     db_comment = crud_comment.get(db, comment_id=comment_id)
@@ -534,7 +562,7 @@ def delete_comment(
     comment_id: int,
     soft: bool = Query(True, description="是否软删除"),
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """删除评论（需要管理员权限）"""
     db_comment = crud_comment.delete(db, comment_id=comment_id, soft=soft)
@@ -552,7 +580,7 @@ def list_guest_users(
     limit: int = Query(50, ge=1, le=200),
     is_blocked: Optional[int] = Query(None),
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """获取所有访客用户（需要管理员权限）"""
     items, total = crud_guest_user.get_multi(
@@ -566,7 +594,7 @@ def get_guest_user(
     request: Request,
     user_id: int,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """获取访客用户详情（需要管理员权限）"""
     user = crud_guest_user.get(db, user_id=user_id)
@@ -574,8 +602,8 @@ def get_guest_user(
         raise HTTPException(status_code=404, detail="用户不存在")
     
     # 获取用户评论统计
-    comments_count = crud_comment.get_count_by_item_and_user(
-        db, item_id=0, user_id=user_id  # item_id=0 表示获取所有
+    _, comments_count = crud_comment.get_multi(
+        db, skip=0, limit=1, user_id=user_id, is_deleted=0
     )
     
     return {
@@ -590,7 +618,7 @@ def update_guest_user(
     user_id: int,
     user_in: GuestUserUpdate,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """更新访客用户（需要管理员权限）- 可修改留言上限、禁言状态等"""
     db_user = crud_guest_user.get(db, user_id=user_id)
@@ -604,7 +632,7 @@ def delete_guest_user(
     request: Request,
     user_id: int,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """删除访客用户及其所有评论（需要管理员权限）"""
     db_user = crud_guest_user.delete(db, user_id=user_id)
@@ -622,7 +650,7 @@ def list_ip_blacklist(
     limit: int = Query(50, ge=1, le=200),
     is_permanent: Optional[int] = Query(None),
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """获取 IP 黑名单列表"""
     items, total = crud_ip_blacklist.get_multi(
@@ -639,7 +667,7 @@ def add_ip_to_blacklist(
     is_permanent: bool = Query(False),
     expire_hours: Optional[int] = Query(None),
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """添加 IP 到黑名单"""
     record = crud_ip_blacklist.add(
@@ -657,7 +685,7 @@ def remove_ip_from_blacklist(
     request: Request,
     ip_address: str,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """从黑名单移除 IP"""
     success = crud_ip_blacklist.remove(db, ip_address=ip_address)
@@ -674,7 +702,7 @@ def list_spam_patterns(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """获取垃圾内容特征列表"""
     items, total = crud_spam_pattern.get_multi(db, skip=skip, limit=limit)
@@ -689,7 +717,7 @@ def add_spam_pattern(
     action: str = Query("block"),
     description: str = Query(""),
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """添加垃圾内容特征"""
     record = crud_spam_pattern.add(
@@ -707,7 +735,7 @@ def delete_spam_pattern(
     request: Request,
     pattern_id: int,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """删除垃圾内容特征"""
     success = crud_spam_pattern.delete(db, pattern_id=pattern_id)
@@ -722,11 +750,11 @@ def delete_spam_pattern(
 def get_security_stats(
     request: Request,
     db: Session = Depends(get_db),
-    _: bool = Depends(require_auth)
+    _: bool = Depends(require_admin)
 ):
     """获取安全防护统计"""
-    from datetime import timedelta
-    from shijing_things.models.models import RateLimit, GuestUser
+    from datetime import datetime, timedelta
+    from shijing_things.models.models import RateLimit, GuestUser, IPBlacklist
     
     # 最近24小时的拦截统计
     since = datetime.utcnow() - timedelta(hours=24)

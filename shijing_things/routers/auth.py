@@ -1,16 +1,14 @@
 """
 认证路由 - 注册、登录、OAuth
 """
-from fastapi import APIRouter, Depends, HTTPException, Request, status, Form
-from fastapi.responses import RedirectResponse, JSONResponse
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
-from typing import Optional
-from datetime import timedelta
 
 from shijing_things.core.database import get_db
 from shijing_things.core.config import get_settings
 from shijing_things.core.oauth import github_oauth, generate_oauth_state
-from shijing_things.core.security import create_access_token, generate_session_token
+from shijing_things.core.security import create_access_token
 from shijing_things.crud.crud import user as crud_user, oauth_account as crud_oauth, user_session as crud_session
 from shijing_things.schemas.schemas import UserCreate, UserLogin, UserResponse, Token
 
@@ -23,6 +21,12 @@ settings = get_settings()
 @router.get("/login")
 def login_page(request: Request, next: str = "/"):
     """登录页面 - 支持 GitHub OAuth"""
+    if not settings.github_client_id or not settings.github_client_secret:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="GitHub OAuth 未配置"
+        )
+
     # 生成 state 防止 CSRF
     state = generate_oauth_state()
     request.session["oauth_state"] = state
@@ -32,18 +36,8 @@ def login_page(request: Request, next: str = "/"):
     
     # 获取 GitHub 授权 URL
     github_auth_url = github_oauth.get_authorize_url(state)
-    
-    return {
-        "message": "请使用以下方式登录",
-        "methods": {
-            "github": {
-                "name": "GitHub",
-                "url": github_auth_url,
-                "icon": "github"
-            }
-        },
-        "note": "GitHub 登录将自动创建账户"
-    }
+
+    return RedirectResponse(url=github_auth_url, status_code=302)
 
 
 @router.get("/github/callback")

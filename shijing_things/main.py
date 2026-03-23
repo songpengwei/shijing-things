@@ -34,8 +34,10 @@ app = FastAPI(
 # Session 中间件（用于登录状态）
 app.add_middleware(
     SessionMiddleware,
-    secret_key="shijing-things-secret-key-change-in-production",
-    max_age=3600 * 24  # 24小时
+    secret_key=settings.secret_key,
+    max_age=3600 * 24,  # 24小时
+    same_site=settings.session_same_site,
+    https_only=settings.session_https_only
 )
 
 # CORS 配置

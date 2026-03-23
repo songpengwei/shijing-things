@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func, and_
+from sqlalchemy import func
 from typing import Optional, List
 from datetime import datetime
 
@@ -407,7 +407,8 @@ class CRUDComment:
             content=obj_in.content,
             item_id=obj_in.item_id,
             user_id=user_id,
-            parent_id=obj_in.parent_id
+            parent_id=obj_in.parent_id,
+            is_approved=obj_in.is_approved if obj_in.is_approved is not None else 1
         )
         db.add(db_obj)
         db.commit()
@@ -519,7 +520,14 @@ class CRUDRateLimit:
         
         return record.count < max_requests, record.count
     
-    def increment(self, db: Session, *, identifier: str, action_type: str = "comment") -> None:
+    def increment(
+        self,
+        db: Session,
+        *,
+        identifier: str,
+        action_type: str = "comment",
+        ip_address: str = "unknown"
+    ) -> None:
         """增加计数"""
         from datetime import timedelta
         
@@ -533,8 +541,19 @@ class CRUDRateLimit:
         
         if record:
             record.count += 1
+            if ip_address and record.ip_address == "unknown":
+                record.ip_address = ip_address
             db.add(record)
-            db.commit()
+        else:
+            record = RateLimit(
+                identifier=identifier,
+                ip_address=ip_address,
+                action_type=action_type,
+                count=1,
+                window_start=datetime.utcnow()
+            )
+            db.add(record)
+        db.commit()
     
     def check_ip_rate_limit(
         self,
@@ -550,12 +569,12 @@ class CRUDRateLimit:
         
         window_start = datetime.utcnow() - timedelta(minutes=window_minutes)
         
-        # 统计该IP在该时间窗口内的所有请求
-        count = db.query(RateLimit).filter(
+        # 统计该 IP 在该时间窗口内的总请求数
+        count = db.query(func.coalesce(func.sum(RateLimit.count), 0)).filter(
             RateLimit.ip_address == ip_address,
             RateLimit.action_type == action_type,
             RateLimit.window_start >= window_start
-        ).count()
+        ).scalar()
         
         return count < max_requests, count
     
