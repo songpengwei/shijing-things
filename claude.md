@@ -200,8 +200,8 @@ python scripts/export_data.py -f poems -o poems.json
 | `database_url` | sqlite:///./shijing.db | 数据库路径 |
 | `static_dir` | ./shijing_things/static | 静态文件目录 |
 | `img_dir` | ./shijing_things/static/img | 图片目录 |
-| `admin_username` | qtmuniao | 固定管理员用户名 |
-| `admin_password` | xiaosong | 固定管理员密码 |
+| `admin_username` | 空 | 管理员用户名，需在环境变量中配置 |
+| `admin_password_hash` | 空 | 管理员密码的 bcrypt 哈希 |
 | `github_client_id` | 空 | GitHub OAuth App Client ID |
 | `github_client_secret` | 空 | GitHub OAuth App Client Secret |
 | `github_redirect_uri` | http://localhost:8000/auth/github/callback | GitHub 回调地址 |
@@ -283,14 +283,14 @@ python scripts/export_data.py -f poems -o poems.json
 
 ### 管理员账号
 
-- **用户名**: `qtmuniao`
-- **密码**: `xiaosong`
+- 管理员用户名和密码哈希必须通过环境变量配置。
+- 登录页不再展示管理员凭据。
 
-访问管理页面需要先用固定管理员账号登录，未登录会自动跳转到 `/login`。
+访问管理页面需要先用已配置的管理员账号登录，未登录会自动跳转到 `/login`。
 
 ## 认证与留言规则
 
-- 管理员不进入普通用户表，后台管理仍然使用固定账号 `qtmuniao / xiaosong`。
+- 管理员不进入普通用户表，后台管理使用独立环境变量配置的管理员账号。
 - 留言用户使用正式 `users` 表管理，支持后台增删改查。
 - 留言前必须先完成 OAuth 登录，目前支持 GitHub 和微信。
 - OAuth 首次登录会自动创建正式用户，并同步生成留言用的内部映射身份。

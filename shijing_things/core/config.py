@@ -52,8 +52,10 @@ class Settings(BaseSettings):
     session_same_site: str = "lax"
 
     # 管理员账户
-    admin_username: str = "qtmuniao"
-    admin_password: str = "xiaosong"
+    admin_username: str = ""
+    admin_password_hash: str = ""
+
+
 @lru_cache()
 def get_settings():
     return Settings()

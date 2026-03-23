@@ -59,8 +59,8 @@ cp .env.example .env
 至少需要按部署域名填写这些值：
 
 ```env
-admin_username=qtmuniao
-admin_password=xiaosong
+admin_username=replace-with-admin-username
+admin_password_hash=replace-with-bcrypt-hash
 
 github_client_id=your_github_client_id
 github_client_secret=your_github_client_secret
@@ -73,6 +73,7 @@ wechat_redirect_uri=https://shi.qtmuniao.com/auth/wechat/callback
 
 说明：
 - `.env` 已被 `.gitignore` 忽略，不要提交真实密钥。
+- 管理员密码改为 `bcrypt` 哈希，不要把明文密码写进仓库或模板。
 - `github_redirect_uri` 和 `wechat_redirect_uri` 必须写完整回调路径，不能只写域名。
 - 如果你刚刚泄露过 `github_client_secret`，应先去 GitHub 重新生成新的 secret。
 
