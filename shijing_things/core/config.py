@@ -39,11 +39,28 @@ class Settings(BaseSettings):
     github_client_id: str = ""  # GitHub OAuth App Client ID
     github_client_secret: str = ""  # GitHub OAuth App Client Secret
     github_redirect_uri: str = "http://localhost:8000/auth/github/callback"  # 回调地址
+
+    # Google OAuth 配置
+    google_client_id: str = ""
+    google_client_secret: str = ""
+    google_redirect_uri: str = "http://localhost:8000/auth/google/callback"
     
     # 微信 OAuth 配置（网站应用扫码登录）
     wechat_app_id: str = ""
     wechat_app_secret: str = ""
     wechat_redirect_uri: str = "http://localhost:8000/auth/wechat/callback"
+
+    # 邮箱验证码登录配置
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = ""
+    smtp_from_name: str = "诗经事物"
+    smtp_use_tls: bool = True
+    smtp_use_ssl: bool = False
+    email_login_code_expire_minutes: int = 10
+    email_login_code_cooldown_seconds: int = 60
     
     # 应用安全配置
     secret_key: str = Field(default_factory=lambda: secrets.token_urlsafe(32))  # JWT/Session 密钥

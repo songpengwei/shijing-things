@@ -48,12 +48,12 @@ def require_admin(request: Request):
 
 
 def get_oauth_comment_user(request: Request, db: Session):
-    """获取当前 OAuth 登录用户对应的留言身份"""
+    """获取当前已登录用户对应的留言身份"""
     auth_type = request.session.get("auth_type")
-    if auth_type not in {"oauth_github", "oauth_wechat"} or not request.session.get("is_authenticated"):
+    if auth_type not in {"oauth_github", "oauth_google", "oauth_wechat", "email_code"} or not request.session.get("is_authenticated"):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="留言需要使用 GitHub 或微信登录"
+            detail="留言需要先登录支持的账号"
         )
 
     user_id = request.session.get("user_id")
@@ -71,7 +71,7 @@ def get_oauth_comment_user(request: Request, db: Session):
         )
 
     identifier = f"oauth_user_{db_user.id}"
-    nickname = db_user.nickname or db_user.username or "OAuth用户"
+    nickname = db_user.nickname or db_user.username or "登录用户"
     avatar_url = db_user.avatar_url or ""
     comment_user = crud_guest_user.get_or_create(
         db,
@@ -270,7 +270,7 @@ def get_user_comment_limit(
     request: Request,
     db: Session = Depends(get_db)
 ):
-    """获取当前 OAuth 登录用户在该事物的留言限制信息"""
+    """获取当前已登录用户在该事物的留言限制信息"""
     user, _ = get_oauth_comment_user(request, db)
     
     # 检查用户是否被禁言
@@ -304,7 +304,7 @@ def create_comment(
     comment_in: CommentCreate,
     db: Session = Depends(get_db)
 ):
-    """创建评论（需要 OAuth 登录）"""
+    """创建评论（需要登录）"""
     settings = get_settings()
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "")[:500]

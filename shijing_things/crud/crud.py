@@ -5,7 +5,7 @@ from datetime import datetime
 
 from shijing_things.models.models import (
     ShijingItem, Poem, Comment, GuestUser, RateLimit, IPBlacklist, SpamPattern,
-    User, OAuthAccount, UserSession
+    User, OAuthAccount, UserSession, EmailLoginCode
 )
 from shijing_things.schemas.schemas import (
     ShijingItemCreate, ShijingItemUpdate, PoemCreate, PoemUpdate,
@@ -850,6 +850,20 @@ class CRUDUser:
         db.commit()
         
         return db_obj
+
+    def ensure_unique_username(self, db: Session, *, base_username: str) -> str:
+        """生成唯一用户名"""
+        candidate = base_username[:50] or "user"
+        if not self.get_by_username(db, candidate):
+            return candidate
+
+        suffix = 1
+        while True:
+            trimmed = base_username[: max(1, 50 - len(str(suffix)) - 1)] or "user"
+            candidate = f"{trimmed}_{suffix}"
+            if not self.get_by_username(db, candidate):
+                return candidate
+            suffix += 1
     
     def authenticate(self, db: Session, *, username: str, password: str) -> Optional[User]:
         """验证用户名/邮箱和密码"""
@@ -1026,7 +1040,49 @@ class CRUDUserSession:
         return result
 
 
+class CRUDEmailLoginCode:
+    """邮箱验证码登录 CRUD"""
+
+    def get_latest_active(self, db: Session, *, email: str, purpose: str = "login") -> Optional[EmailLoginCode]:
+        return db.query(EmailLoginCode).filter(
+            EmailLoginCode.email == email,
+            EmailLoginCode.purpose == purpose,
+            EmailLoginCode.consumed_at.is_(None),
+            EmailLoginCode.expires_at > datetime.utcnow()
+        ).order_by(EmailLoginCode.created_at.desc()).first()
+
+    def create(
+        self,
+        db: Session,
+        *,
+        email: str,
+        code_hash: str,
+        expires_at: datetime,
+        purpose: str = "login",
+        ip_address: str = ""
+    ) -> EmailLoginCode:
+        record = EmailLoginCode(
+            email=email,
+            code_hash=code_hash,
+            expires_at=expires_at,
+            purpose=purpose,
+            ip_address=ip_address
+        )
+        db.add(record)
+        db.commit()
+        db.refresh(record)
+        return record
+
+    def consume(self, db: Session, *, record: EmailLoginCode) -> EmailLoginCode:
+        record.consumed_at = datetime.utcnow()
+        db.add(record)
+        db.commit()
+        db.refresh(record)
+        return record
+
+
 # 实例化 User CRUD 对象
 user = CRUDUser()
 oauth_account = CRUDOAuthAccount()
 user_session = CRUDUserSession()
+email_login_code = CRUDEmailLoginCode()

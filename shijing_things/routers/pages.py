@@ -28,11 +28,22 @@ def is_admin(request: Request) -> bool:
 
 
 def is_oauth_user(request: Request) -> bool:
-    """检查是否是 OAuth 登录用户"""
+    """检查是否是可用于留言的登录用户"""
     return (
         request.session.get("is_authenticated") is True
-        and request.session.get("auth_type") in {"oauth_github", "oauth_wechat"}
+        and request.session.get("auth_type") in {"oauth_github", "oauth_google", "oauth_wechat", "email_code"}
     )
+
+
+def get_comment_auth_label(request: Request) -> str:
+    auth_type = request.session.get("auth_type")
+    if auth_type == "oauth_wechat":
+        return "微信"
+    if auth_type == "oauth_google":
+        return "Google"
+    if auth_type == "email_code":
+        return "邮箱验证码"
+    return "GitHub"
 
 
 def require_login(request: Request):
@@ -69,6 +80,16 @@ def home(
         "stats": stats,
         "current_category": category or "all",
         "search": search or "",
+        "is_oauth_user": is_oauth_user(request),
+        "github_login_url": f"/auth/login?next={request.url.path}",
+        "wechat_login_url": f"/auth/login?provider=wechat&next={request.url.path}",
+        "comment_login_page_url": f"/login?next={request.url.path}",
+        "comment_user_name": request.session.get("nickname") or request.session.get("username") or "登录用户",
+        "comment_user_avatar": request.session.get("avatar_url") or "",
+        "comment_auth_label": get_comment_auth_label(request),
+        "google_login_url": f"/auth/login?provider=google&next={request.url.path}",
+        "google_oauth_enabled": bool(settings.google_client_id and settings.google_client_secret),
+        "wechat_oauth_enabled": bool(settings.wechat_app_id and settings.wechat_app_secret),
         "categories": [
             {"key": "all", "label": "全部", "icon": "🌿"},
             {"key": "草", "label": "草木", "icon": "🌱"},
@@ -107,9 +128,11 @@ def item_detail(item_id: int, request: Request, db: Session = Depends(get_db)):
         "github_login_url": f"/auth/login?next={request.url.path}",
         "wechat_login_url": f"/auth/login?provider=wechat&next={request.url.path}",
         "comment_login_page_url": f"/login?next={request.url.path}",
-        "comment_user_name": request.session.get("nickname") or request.session.get("username") or "GitHub用户",
+        "comment_user_name": request.session.get("nickname") or request.session.get("username") or "登录用户",
         "comment_user_avatar": request.session.get("avatar_url") or "",
-        "comment_auth_label": "微信" if request.session.get("auth_type") == "oauth_wechat" else "GitHub",
+        "comment_auth_label": get_comment_auth_label(request),
+        "google_login_url": f"/auth/login?provider=google&next={request.url.path}",
+        "google_oauth_enabled": bool(settings.google_client_id and settings.google_client_secret),
         "wechat_oauth_enabled": bool(settings.wechat_app_id and settings.wechat_app_secret),
     })
 
@@ -128,7 +151,15 @@ def login_page(request: Request, next: Optional[str] = "/manage", error: Optiona
         "next": next,
         "error": error,
         "admin_login_enabled": bool(settings.admin_username and settings.admin_password),
+        "email_login_enabled": bool(
+            settings.smtp_host
+            and settings.smtp_username
+            and settings.smtp_password
+            and settings.smtp_from_email
+        ),
+        "email_login_code_expire_minutes": settings.email_login_code_expire_minutes,
         "github_oauth_enabled": bool(settings.github_client_id and settings.github_client_secret),
+        "google_oauth_enabled": bool(settings.google_client_id and settings.google_client_secret),
         "wechat_oauth_enabled": bool(settings.wechat_app_id and settings.wechat_app_secret),
     })
 

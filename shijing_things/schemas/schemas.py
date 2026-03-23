@@ -295,6 +295,28 @@ class OAuthCallback(BaseModel):
     state: str
 
 
+class EmailCodeRequest(BaseModel):
+    """请求邮箱验证码"""
+    email: str
+
+
+class EmailCodeVerify(BaseModel):
+    """校验邮箱验证码"""
+    email: str
+    code: str
+    next: Optional[str] = "/"
+
+
+class MessageResponse(BaseModel):
+    """通用消息响应"""
+    message: str
+
+
+class LoginRedirectResponse(MessageResponse):
+    """登录成功后的跳转响应"""
+    redirect_url: str
+
+
 # ==================== Token Schemas ====================
 
 class Token(BaseModel):

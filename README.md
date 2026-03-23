@@ -66,14 +66,31 @@ github_client_id=your_github_client_id
 github_client_secret=your_github_client_secret
 github_redirect_uri=https://shi.qtmuniao.com/auth/github/callback
 
+google_client_id=your_google_client_id
+google_client_secret=your_google_client_secret
+google_redirect_uri=https://shi.qtmuniao.com/auth/google/callback
+
 wechat_app_id=your_wechat_app_id
 wechat_app_secret=your_wechat_app_secret
 wechat_redirect_uri=https://shi.qtmuniao.com/auth/wechat/callback
+
+smtp_host=smtp.example.com
+smtp_port=587
+smtp_username=your_smtp_username
+smtp_password=your_smtp_password
+smtp_from_email=noreply@example.com
+smtp_from_name=诗经事物
+smtp_use_tls=true
+smtp_use_ssl=false
+email_login_code_expire_minutes=10
+email_login_code_cooldown_seconds=60
 ```
 
 说明：
 - `.env` 已被 `.gitignore` 忽略，不要提交真实密钥。
 - 管理员账号从 `.env` 读取，但不要把真实密码写进仓库或模板。
+- Google 登录需要在 Google Cloud Console 配置 Web 应用 OAuth Client。
+- 邮箱验证码登录需要可用的 SMTP 发信配置。
 - `github_redirect_uri` 和 `wechat_redirect_uri` 必须写完整回调路径，不能只写域名。
 - 如果你刚刚泄露过 `github_client_secret`，应先去 GitHub 重新生成新的 secret。
 

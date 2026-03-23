@@ -1,5 +1,5 @@
 """
-OAuth 工具函数 - GitHub / 微信 OAuth 流程
+OAuth 工具函数 - GitHub / Google / 微信 OAuth 流程
 """
 from urllib.parse import urlencode
 import httpx
@@ -98,6 +98,60 @@ class GitHubOAuth:
 
 # 全局 GitHub OAuth 实例
 github_oauth = GitHubOAuth()
+
+
+class GoogleOAuth:
+    """Google OAuth/OpenID Connect 客户端"""
+
+    AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+    TOKEN_URL = "https://oauth2.googleapis.com/token"
+    USER_API_URL = "https://openidconnect.googleapis.com/v1/userinfo"
+
+    def __init__(self):
+        self.client_id = settings.google_client_id
+        self.client_secret = settings.google_client_secret
+        self.redirect_uri = settings.google_redirect_uri
+
+    def get_authorize_url(self, state: str) -> str:
+        params = {
+            "client_id": self.client_id,
+            "redirect_uri": self.redirect_uri,
+            "response_type": "code",
+            "scope": "openid email profile",
+            "state": state,
+            "access_type": "offline",
+            "prompt": "consent",
+        }
+        return f"{self.AUTHORIZE_URL}?{urlencode(params)}"
+
+    async def get_access_token(self, code: str) -> Optional[Dict[str, Any]]:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                self.TOKEN_URL,
+                data={
+                    "client_id": self.client_id,
+                    "client_secret": self.client_secret,
+                    "code": code,
+                    "grant_type": "authorization_code",
+                    "redirect_uri": self.redirect_uri,
+                },
+            )
+            if response.status_code != 200:
+                return None
+            return response.json()
+
+    async def get_user_info(self, access_token: str) -> Optional[Dict[str, Any]]:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                self.USER_API_URL,
+                headers={"Authorization": f"Bearer {access_token}"},
+            )
+            if response.status_code != 200:
+                return None
+            return response.json()
+
+
+google_oauth = GoogleOAuth()
 
 
 class WeChatOAuth:

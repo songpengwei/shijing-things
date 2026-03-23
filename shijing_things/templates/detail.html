@@ -155,12 +155,16 @@
 
         <!-- 登录提示（未登录时显示） -->
         <div class="comment-login-tip" id="comment-login-tip" {% if is_oauth_user %}style="display: none;"{% endif %}>
-            <p>留言需要先使用 GitHub 或微信 OAuth 登录。</p>
+            <p>留言需要先登录。当前支持 GitHub、Google、邮箱验证码{% if wechat_oauth_enabled %}，也支持微信登录{% endif %}。</p>
             <div class="comment-login-actions">
                 <a class="btn btn-github" href="{{ github_login_url }}">使用 GitHub 登录</a>
+                {% if google_oauth_enabled %}
+                <a class="btn btn-google" href="{{ google_login_url }}">使用 Google 登录</a>
+                {% endif %}
                 {% if wechat_oauth_enabled %}
                 <a class="btn btn-wechat" href="{{ wechat_login_url }}">使用微信登录</a>
                 {% endif %}
+                <a class="btn btn-secondary" href="{{ comment_login_page_url }}">邮箱验证码登录</a>
             </div>
         </div>
 
@@ -183,12 +187,6 @@
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
-}
-
-.comment-login-actions .btn-wechat {
-    background: var(--color-cao);
-    color: white;
-    border: none;
 }
 </style>
 {% endblock %}
@@ -232,7 +230,7 @@ function updateLoginRequiredUI() {
     formContainer.style.display = 'none';
     loginTip.style.display = 'block';
     limitInfo.className = 'comment-limit-info warning';
-    limitText.innerHTML = '⚠️ 留言前请先完成 GitHub 或微信 OAuth 登录。';
+    limitText.innerHTML = '⚠️ 留言前请先登录后再发表评论。';
     limitInfo.style.display = 'block';
 }
 

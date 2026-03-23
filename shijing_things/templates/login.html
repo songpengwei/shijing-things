@@ -18,7 +18,54 @@
             </div>
             {% endif %}
 
-            {% if github_oauth_enabled or wechat_oauth_enabled %}
+            {% if email_login_enabled %}
+            <div class="email-login-section">
+                <div class="section-label">邮箱验证码登录</div>
+                <div class="login-form">
+                    <div class="form-group">
+                        <label for="email-login-input">邮箱</label>
+                        <input
+                            type="email"
+                            id="email-login-input"
+                            autocomplete="email"
+                            placeholder="请输入常用邮箱"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email-code-input">验证码</label>
+                        <div class="code-row">
+                            <input
+                                type="text"
+                                id="email-code-input"
+                                inputmode="numeric"
+                                maxlength="6"
+                                placeholder="6 位验证码"
+                            >
+                            <button type="button" class="btn btn-secondary" id="send-email-code-btn" onclick="requestEmailCode()">
+                                发送验证码
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="email-login-note">
+                        <p>验证码 {{ email_login_code_expire_minutes }} 分钟内有效，适合没有 GitHub 或 Google 账号的用户。</p>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg btn-block" id="verify-email-code-btn" onclick="verifyEmailCode()">
+                        邮箱登录
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if email_login_enabled and (github_oauth_enabled or google_oauth_enabled or wechat_oauth_enabled or admin_login_enabled) %}
+            <div class="divider">
+                <span>或</span>
+            </div>
+            {% endif %}
+
+            {% if github_oauth_enabled or google_oauth_enabled or wechat_oauth_enabled %}
             <!-- OAuth 登录 -->
             <div class="oauth-section">
                 {% if github_oauth_enabled %}
@@ -29,16 +76,21 @@
                     使用 GitHub 登录
                 </a>
                 {% endif %}
+                {% if google_oauth_enabled %}
+                <a href="/auth/login?provider=google&next={{ next }}" class="btn btn-google btn-lg btn-block">
+                    使用 Google 登录
+                </a>
+                {% endif %}
                 {% if wechat_oauth_enabled %}
                 <a href="/auth/login?provider=wechat&next={{ next }}" class="btn btn-wechat btn-lg btn-block">
                     使用微信登录
                 </a>
                 {% endif %}
-                <p class="oauth-note">留言用户通过 OAuth 登录，首次登录会自动创建账户</p>
+                <p class="oauth-note">留言用户可通过 GitHub、Google、微信或邮箱验证码登录，首次登录会自动创建账户</p>
             </div>
             {% endif %}
 
-            {% if (github_oauth_enabled or wechat_oauth_enabled) and admin_login_enabled %}
+            {% if (email_login_enabled or github_oauth_enabled or google_oauth_enabled or wechat_oauth_enabled) and admin_login_enabled %}
             <div class="divider">
                 <span>或</span>
             </div>
@@ -84,7 +136,7 @@
             </form>
             {% endif %}
 
-            {% if not github_oauth_enabled and not wechat_oauth_enabled and not admin_login_enabled %}
+            {% if not email_login_enabled and not github_oauth_enabled and not google_oauth_enabled and not wechat_oauth_enabled and not admin_login_enabled %}
             <div class="login-error">
                 <span>⚠️</span> 当前未配置任何登录方式
             </div>
@@ -156,6 +208,13 @@
     margin-bottom: 1.25rem;
 }
 
+.section-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    margin-bottom: 1rem;
+}
+
 .admin-login-note {
     margin-bottom: 1.25rem;
     padding: 0.875rem 1rem;
@@ -167,6 +226,19 @@
 
 .admin-login-note p {
     margin: 0.2rem 0;
+}
+
+.email-login-note {
+    margin-bottom: 1rem;
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-mu-soft);
+    color: var(--color-text);
+    font-size: 0.875rem;
+}
+
+.email-login-note p {
+    margin: 0;
 }
 
 .login-form label {
@@ -196,43 +268,42 @@
     width: 100%;
 }
 
+.code-row {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.code-row input {
+    flex: 1;
+}
+
+.code-row .btn {
+    white-space: nowrap;
+}
+
 /* OAuth 登录样式 */
 .oauth-section {
     margin-bottom: 1.5rem;
-}
-
-.btn-github {
-    background: var(--color-chong);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    border: none;
-    transition: background 0.2s;
-}
-
-.btn-wechat {
-    margin-top: 0.75rem;
-    background: var(--color-cao);
-    color: white;
-    border: none;
-}
-
-.btn-wechat:hover {
-    background: var(--color-cao-deep);
-    color: white;
-}
-
-.btn-github:hover {
-    background: var(--color-chong-deep);
-    color: white;
 }
 
 .github-icon {
     width: 20px;
     height: 20px;
     fill: currentColor;
+}
+
+.btn-github,
+.btn-google,
+.btn-wechat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.btn-google,
+.btn-wechat {
+    margin-top: 0.75rem;
 }
 
 .oauth-note {
@@ -277,4 +348,78 @@
     }
 }
 </style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const nextUrl = {{ next|tojson }};
+
+async function requestEmailCode() {
+    const emailInput = document.getElementById('email-login-input');
+    const sendButton = document.getElementById('send-email-code-btn');
+    const email = emailInput.value.trim();
+
+    if (!email) {
+        alert('请输入邮箱地址');
+        return;
+    }
+
+    sendButton.disabled = true;
+    sendButton.textContent = '发送中...';
+
+    try {
+        const response = await fetch('/auth/email/request-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            alert(data.detail || '验证码发送失败');
+            return;
+        }
+        alert(data.message || '验证码已发送');
+    } catch (error) {
+        console.error(error);
+        alert('网络错误，请稍后再试');
+    } finally {
+        sendButton.disabled = false;
+        sendButton.textContent = '发送验证码';
+    }
+}
+
+async function verifyEmailCode() {
+    const email = document.getElementById('email-login-input').value.trim();
+    const code = document.getElementById('email-code-input').value.trim();
+    const loginButton = document.getElementById('verify-email-code-btn');
+
+    if (!email || !code) {
+        alert('请输入邮箱和验证码');
+        return;
+    }
+
+    loginButton.disabled = true;
+    loginButton.textContent = '登录中...';
+
+    try {
+        const response = await fetch('/auth/email/verify-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, code, next: nextUrl })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            alert(data.detail || '登录失败');
+            return;
+        }
+        window.location.href = data.redirect_url || nextUrl || '/';
+    } catch (error) {
+        console.error(error);
+        alert('网络错误，请稍后再试');
+    } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = '邮箱登录';
+    }
+}
+</script>
 {% endblock %}

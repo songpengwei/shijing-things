@@ -839,6 +839,39 @@ body {
     background: var(--color-shou-soft-strong);
 }
 
+.btn-github {
+    background: var(--color-chong);
+    color: white;
+    border: none;
+}
+
+.btn-github:hover {
+    background: var(--color-chong-deep);
+    color: white;
+}
+
+.btn-wechat {
+    background: var(--color-cao);
+    color: white;
+    border: none;
+}
+
+.btn-wechat:hover {
+    background: var(--color-cao-deep);
+    color: white;
+}
+
+.btn-google {
+    background: var(--color-mu);
+    color: white;
+    border: none;
+}
+
+.btn-google:hover {
+    background: var(--color-mu-deep);
+    color: white;
+}
+
 /* ===== 弹窗 ===== */
 .modal {
     display: none;
@@ -1020,6 +1053,48 @@ body {
 
 .comment-user-info {
     margin-bottom: 12px;
+}
+
+.comment-login-user {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+}
+
+.comment-login-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-mu) 0%, var(--color-cao) 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.comment-login-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.comment-login-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.comment-login-meta strong {
+    color: var(--color-text);
+    font-size: 0.95rem;
+}
+
+.comment-login-meta span {
+    color: var(--color-text-light);
+    font-size: 0.85rem;
 }
 
 .comment-input, .comment-textarea {

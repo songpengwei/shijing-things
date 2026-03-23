@@ -1,16 +1,25 @@
 """
 认证路由 - 注册、登录、OAuth
 """
+from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
+import secrets
 
 from shijing_things.core.database import get_db
 from shijing_things.core.config import get_settings
-from shijing_things.core.oauth import github_oauth, wechat_oauth, generate_oauth_state
-from shijing_things.core.security import create_access_token
-from shijing_things.crud.crud import user as crud_user, oauth_account as crud_oauth, user_session as crud_session
-from shijing_things.schemas.schemas import UserCreate, UserLogin, UserResponse, Token
+from shijing_things.core.mail import send_email, is_email_login_enabled
+from shijing_things.core.oauth import github_oauth, google_oauth, wechat_oauth, generate_oauth_state
+from shijing_things.core.security import create_access_token, get_password_hash, verify_password
+from shijing_things.crud.crud import (
+    user as crud_user, oauth_account as crud_oauth, user_session as crud_session,
+    email_login_code as crud_email_login_code
+)
+from shijing_things.schemas.schemas import (
+    UserCreate, UserLogin, UserResponse, Token, EmailCodeRequest,
+    EmailCodeVerify, MessageResponse, LoginRedirectResponse
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 settings = get_settings()
@@ -19,6 +28,10 @@ OAUTH_PROVIDERS = {
     "github": {
         "client": github_oauth,
         "session_auth_type": "oauth_github",
+    },
+    "google": {
+        "client": google_oauth,
+        "session_auth_type": "oauth_google",
     },
     "wechat": {
         "client": wechat_oauth,
@@ -30,6 +43,8 @@ OAUTH_PROVIDERS = {
 def is_provider_enabled(provider: str) -> bool:
     if provider == "github":
         return bool(settings.github_client_id and settings.github_client_secret)
+    if provider == "google":
+        return bool(settings.google_client_id and settings.google_client_secret)
     if provider == "wechat":
         return bool(settings.wechat_app_id and settings.wechat_app_secret)
     return False
@@ -43,6 +58,25 @@ def set_authenticated_session(request: Request, *, user_id: int, session_token: 
     request.session["username"] = username
     request.session["nickname"] = nickname
     request.session["avatar_url"] = avatar_url
+
+
+def normalize_email(email: str) -> str:
+    return email.strip().lower()
+
+
+def create_user_session(request: Request, *, db: Session, user_id: int, auth_type: str, username: str = "", nickname: str = "", avatar_url: str = "") -> None:
+    client_ip = request.client.host if request.client else ""
+    user_agent = request.headers.get("user-agent", "")[:500]
+    session = crud_session.create(db, user_id=user_id, ip_address=client_ip, user_agent=user_agent)
+    set_authenticated_session(
+        request,
+        user_id=user_id,
+        session_token=session.session_token,
+        auth_type=auth_type,
+        username=username,
+        nickname=nickname,
+        avatar_url=avatar_url,
+    )
 
 
 # ==================== 注册/登录页面路由 ====================
@@ -95,13 +129,10 @@ def finalize_oauth_login(
         db.commit()
 
         crud_user.update_last_login(db, user_id=db_user.id)
-        client_ip = request.client.host if request.client else ""
-        user_agent = request.headers.get("user-agent", "")[:500]
-        session = crud_session.create(db, user_id=db_user.id, ip_address=client_ip, user_agent=user_agent)
-        set_authenticated_session(
+        create_user_session(
             request,
+            db=db,
             user_id=db_user.id,
-            session_token=session.session_token,
             auth_type=auth_type,
             username=db_user.username or "",
             nickname=db_user.nickname,
@@ -122,13 +153,10 @@ def finalize_oauth_login(
                 access_token=access_token
             )
             crud_user.update_last_login(db, user_id=existing_user.id)
-            client_ip = request.client.host if request.client else ""
-            user_agent = request.headers.get("user-agent", "")[:500]
-            session = crud_session.create(db, user_id=existing_user.id, ip_address=client_ip, user_agent=user_agent)
-            set_authenticated_session(
+            create_user_session(
                 request,
+                db=db,
                 user_id=existing_user.id,
-                session_token=session.session_token,
                 auth_type=auth_type,
                 username=existing_user.username or "",
                 nickname=existing_user.nickname,
@@ -146,13 +174,10 @@ def finalize_oauth_login(
         provider_account_id=provider_account_id,
         provider_account_email=email
     )
-    client_ip = request.client.host if request.client else ""
-    user_agent = request.headers.get("user-agent", "")[:500]
-    session = crud_session.create(db, user_id=db_user.id, ip_address=client_ip, user_agent=user_agent)
-    set_authenticated_session(
+    create_user_session(
         request,
+        db=db,
         user_id=db_user.id,
-        session_token=session.session_token,
         auth_type=auth_type,
         username=db_user.username or "",
         nickname=db_user.nickname,
@@ -214,6 +239,46 @@ async def github_callback(
     )
 
 
+@router.get("/google/callback")
+async def google_callback(
+    request: Request,
+    code: str,
+    state: str,
+    db: Session = Depends(get_db)
+):
+    """Google OAuth 回调处理"""
+    stored_state = request.session.get("oauth_state")
+    if not stored_state or state != stored_state:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid state parameter")
+
+    provider = "google"
+    if request.session.get("oauth_provider") not in (None, provider):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="OAuth provider mismatch")
+
+    token_data = await google_oauth.get_access_token(code)
+    if not token_data:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to get access token from Google")
+
+    access_token = token_data.get("access_token", "")
+    if not access_token:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Google OAuth response")
+
+    google_user = await google_oauth.get_user_info(access_token)
+    if not google_user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to get user info from Google")
+
+    return finalize_oauth_login(
+        request,
+        db=db,
+        provider=provider,
+        provider_account_id=str(google_user.get("sub")),
+        email=google_user.get("email", ""),
+        nickname=google_user.get("name") or google_user.get("email", "Google用户"),
+        avatar_url=google_user.get("picture", ""),
+        access_token=access_token,
+    )
+
+
 @router.get("/wechat/callback")
 async def wechat_callback(
     request: Request,
@@ -260,6 +325,104 @@ async def wechat_callback(
 
 
 # ==================== API 认证路由 ====================
+
+@router.post("/email/request-code", response_model=MessageResponse)
+def request_email_login_code(
+    payload: EmailCodeRequest,
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    """发送邮箱登录验证码"""
+    if not is_email_login_enabled():
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="邮箱验证码登录未配置")
+
+    email = normalize_email(payload.email)
+    if "@" not in email or "." not in email.split("@")[-1]:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="请输入有效邮箱地址")
+
+    latest_code = crud_email_login_code.get_latest_active(db, email=email)
+    if latest_code:
+        cooldown_deadline = latest_code.created_at + timedelta(seconds=settings.email_login_code_cooldown_seconds)
+        if cooldown_deadline > datetime.utcnow():
+            wait_seconds = int((cooldown_deadline - datetime.utcnow()).total_seconds()) + 1
+            raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=f"请求过于频繁，请在 {wait_seconds} 秒后重试")
+
+    plain_code = f"{secrets.randbelow(1_000_000):06d}"
+    expires_at = datetime.utcnow() + timedelta(minutes=settings.email_login_code_expire_minutes)
+    client_ip = request.client.host if request.client else ""
+    crud_email_login_code.create(
+        db,
+        email=email,
+        code_hash=get_password_hash(plain_code),
+        expires_at=expires_at,
+        ip_address=client_ip
+    )
+
+    subject = "诗经事物登录验证码"
+    text_content = (
+        f"您的登录验证码是：{plain_code}\n\n"
+        f"该验证码将在 {settings.email_login_code_expire_minutes} 分钟后失效。"
+    )
+    html_content = (
+        f"<p>您的登录验证码是：</p>"
+        f"<p style='font-size:28px;font-weight:700;letter-spacing:4px;'>{plain_code}</p>"
+        f"<p>该验证码将在 {settings.email_login_code_expire_minutes} 分钟后失效。</p>"
+    )
+    try:
+        send_email(to_email=email, subject=subject, html_content=html_content, text_content=text_content)
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"验证码发送失败：{exc}") from exc
+
+    return {"message": "验证码已发送，请查收邮箱"}
+
+
+@router.post("/email/verify-code", response_model=LoginRedirectResponse)
+def verify_email_login_code(
+    payload: EmailCodeVerify,
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    """校验邮箱验证码并登录"""
+    email = normalize_email(payload.email)
+    code = payload.code.strip()
+    if not code:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="请输入验证码")
+
+    record = crud_email_login_code.get_latest_active(db, email=email)
+    if not record or not verify_password(code, record.code_hash):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="验证码错误或已失效")
+
+    crud_email_login_code.consume(db, record=record)
+
+    user = crud_user.get_by_email(db, email=email)
+    if user and not user.is_active:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="账户已被禁用")
+
+    if not user:
+        local_part = email.split("@")[0] or "user"
+        username = crud_user.ensure_unique_username(db, base_username=f"email_{local_part}")
+        user = crud_user.create(
+            db,
+            email=email,
+            username=username,
+            password=secrets.token_urlsafe(24),
+            nickname=local_part[:50] or email,
+            avatar_url=""
+        )
+
+    crud_user.update_last_login(db, user_id=user.id)
+    create_user_session(
+        request,
+        db=db,
+        user_id=user.id,
+        auth_type="email_code",
+        username=user.username or "",
+        nickname=user.nickname,
+        avatar_url=user.avatar_url or "",
+    )
+
+    next_url = payload.next or "/"
+    return {"message": "登录成功", "redirect_url": next_url}
 
 @router.post("/register", response_model=UserResponse)
 def register(

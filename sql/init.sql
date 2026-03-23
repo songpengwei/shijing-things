@@ -751,3 +751,19 @@ CREATE TABLE user_sessions (
 CREATE INDEX ix_user_sessions_id ON user_sessions (id);
 CREATE INDEX ix_user_sessions_token ON user_sessions (session_token);
 CREATE INDEX ix_user_sessions_user_id ON user_sessions (user_id);
+
+-- 邮箱验证码登录表
+CREATE TABLE email_login_codes (
+    id INTEGER NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    code_hash VARCHAR(255) NOT NULL,
+    purpose VARCHAR(50) DEFAULT 'login' NOT NULL,
+    expires_at DATETIME NOT NULL,
+    consumed_at DATETIME,
+    ip_address VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+CREATE INDEX ix_email_login_codes_id ON email_login_codes (id);
+CREATE INDEX ix_email_login_codes_email ON email_login_codes (email);
+CREATE INDEX idx_email_login_code_email_purpose ON email_login_codes (email, purpose);

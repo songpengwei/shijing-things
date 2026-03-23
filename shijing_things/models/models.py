@@ -239,3 +239,24 @@ class UserSession(Base):
 
     def __repr__(self):
         return f"<UserSession(id={self.id}, user_id={self.user_id}, token='{self.session_token[:10]}...')>"
+
+
+class EmailLoginCode(Base):
+    """邮箱验证码登录记录"""
+    __tablename__ = "email_login_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(255), nullable=False, index=True)
+    code_hash = Column(String(255), nullable=False)
+    purpose = Column(String(50), nullable=False, default="login")
+    expires_at = Column(DateTime, nullable=False)
+    consumed_at = Column(DateTime, nullable=True)
+    ip_address = Column(String(50), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        Index("idx_email_login_code_email_purpose", "email", "purpose"),
+    )
+
+    def __repr__(self):
+        return f"<EmailLoginCode(id={self.id}, email='{self.email}', purpose='{self.purpose}')>"
