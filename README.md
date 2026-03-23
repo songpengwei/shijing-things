@@ -48,6 +48,34 @@ shijing-things/
 
 ## 快速开始
 
+## 环境变量
+
+项目配置从项目根目录 `.env` 读取，不需要再去改 `shijing_things/core/config.py`。
+
+```bash
+cp .env.example .env
+```
+
+至少需要按部署域名填写这些值：
+
+```env
+admin_username=qtmuniao
+admin_password=xiaosong
+
+github_client_id=your_github_client_id
+github_client_secret=your_github_client_secret
+github_redirect_uri=https://shi.qtmuniao.com/auth/github/callback
+
+wechat_app_id=your_wechat_app_id
+wechat_app_secret=your_wechat_app_secret
+wechat_redirect_uri=https://shi.qtmuniao.com/auth/wechat/callback
+```
+
+说明：
+- `.env` 已被 `.gitignore` 忽略，不要提交真实密钥。
+- `github_redirect_uri` 和 `wechat_redirect_uri` 必须写完整回调路径，不能只写域名。
+- 如果你刚刚泄露过 `github_client_secret`，应先去 GitHub 重新生成新的 secret。
+
 ### 方式一: 一键启动（推荐）
 
 **macOS/Linux:**

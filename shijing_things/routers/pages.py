@@ -29,7 +29,10 @@ def is_admin(request: Request) -> bool:
 
 def is_oauth_user(request: Request) -> bool:
     """检查是否是 OAuth 登录用户"""
-    return request.session.get("is_authenticated") is True
+    return (
+        request.session.get("is_authenticated") is True
+        and request.session.get("auth_type") in {"oauth_github", "oauth_wechat"}
+    )
 
 
 def require_login(request: Request):
@@ -99,6 +102,15 @@ def item_detail(item_id: int, request: Request, db: Session = Depends(get_db)):
         "item": item,
         "poem": poem,
         "poem_content": poem_content,
+        "is_admin": is_admin(request),
+        "is_oauth_user": is_oauth_user(request),
+        "github_login_url": f"/auth/login?next={request.url.path}",
+        "wechat_login_url": f"/auth/login?provider=wechat&next={request.url.path}",
+        "comment_login_page_url": f"/login?next={request.url.path}",
+        "comment_user_name": request.session.get("nickname") or request.session.get("username") or "GitHub用户",
+        "comment_user_avatar": request.session.get("avatar_url") or "",
+        "comment_auth_label": "微信" if request.session.get("auth_type") == "oauth_wechat" else "GitHub",
+        "wechat_oauth_enabled": bool(settings.wechat_app_id and settings.wechat_app_secret),
     })
 
 
@@ -117,6 +129,9 @@ def login_page(request: Request, next: Optional[str] = "/manage", error: Optiona
         "error": error,
         "admin_login_enabled": bool(settings.admin_username and settings.admin_password),
         "github_oauth_enabled": bool(settings.github_client_id and settings.github_client_secret),
+        "wechat_oauth_enabled": bool(settings.wechat_app_id and settings.wechat_app_secret),
+        "admin_username": settings.admin_username,
+        "admin_password": settings.admin_password,
     })
 
 

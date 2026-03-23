@@ -99,10 +99,12 @@
         </div>
 
         <!-- 操作按钮 -->
+        {% if is_admin %}
         <div class="detail-actions">
             <a href="/manage/item/{{ item.id }}" class="btn btn-primary">编辑</a>
             <button class="btn btn-danger" onclick="deleteItem({{ item.id }}, '{{ item.name }}')">删除</button>
         </div>
+        {% endif %}
     </article>
 
     <!-- 留言区域 -->
@@ -118,10 +120,21 @@
         </div>
 
         <!-- 留言输入框 -->
-        <div class="comment-form-container" id="comment-form-container">
+        <div class="comment-form-container" id="comment-form-container" {% if not is_oauth_user %}style="display: none;"{% endif %}>
             <div class="comment-user-info">
-                <input type="text" id="comment-nickname" class="comment-input nickname-input" 
-                       placeholder="您的昵称" maxlength="20" value="">
+                <div class="comment-login-user">
+                    <div class="comment-login-avatar">
+                        {% if comment_user_avatar %}
+                        <img src="{{ comment_user_avatar }}" alt="{{ comment_user_name }}">
+                        {% else %}
+                        {{ comment_user_name[:1] }}
+                        {% endif %}
+                    </div>
+                    <div class="comment-login-meta">
+                        <strong>{{ comment_user_name }}</strong>
+                        <span>已通过 {{ comment_auth_label }} 登录</span>
+                    </div>
+                </div>
             </div>
             <div class="comment-input-wrapper">
                 <textarea id="comment-content" class="comment-textarea" 
@@ -141,8 +154,14 @@
         </div>
 
         <!-- 登录提示（未登录时显示） -->
-        <div class="comment-login-tip" id="comment-login-tip" style="display: none;">
-            <p>您已达到留言上限，如需继续留言请联系管理员</p>
+        <div class="comment-login-tip" id="comment-login-tip" {% if is_oauth_user %}style="display: none;"{% endif %}>
+            <p>留言需要先使用 GitHub 或微信 OAuth 登录。</p>
+            <div class="comment-login-actions">
+                <a class="btn btn-github" href="{{ github_login_url }}">使用 GitHub 登录</a>
+                {% if wechat_oauth_enabled %}
+                <a class="btn btn-wechat" href="{{ wechat_login_url }}">使用微信登录</a>
+                {% endif %}
+            </div>
         </div>
 
         <!-- 留言列表 -->
@@ -159,58 +178,74 @@
 {% endblock %}
 
 {% block extra_css %}
-<!-- 留言样式已移至公共样式表 -->
+<style>
+.comment-login-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.comment-login-actions .btn-wechat {
+    background: #07c160;
+    color: white;
+    border: none;
+}
+</style>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 // 当前事物ID
 const currentItemId = {{ item.id }};
+const isOauthUser = {{ 'true' if is_oauth_user else 'false' }};
+const commentLoginPageUrl = {{ comment_login_page_url|tojson }};
+const githubLoginUrl = {{ github_login_url|tojson }};
 let currentReplyTo = null;
-let userIdentifier = localStorage.getItem('shijing_user_identifier');
-let userNickname = localStorage.getItem('shijing_user_nickname') || '';
-
-// 生成用户标识符
-function generateIdentifier() {
-    if (!userIdentifier) {
-        userIdentifier = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('shijing_user_identifier', userIdentifier);
-    }
-    return userIdentifier;
-}
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', function() {
-    generateIdentifier();
-    
-    // 恢复昵称
-    if (userNickname) {
-        document.getElementById('comment-nickname').value = userNickname;
-    }
-    
-    // 加载留言限制信息
-    loadCommentLimit();
-    
     // 加载留言列表
     loadComments();
+
+    if (isOauthUser) {
+        loadCommentLimit();
+    } else {
+        updateLoginRequiredUI();
+    }
     
     // 字符计数
     const textarea = document.getElementById('comment-content');
     const charCount = document.getElementById('char-count');
-    textarea.addEventListener('input', function() {
-        charCount.textContent = this.value.length;
-    });
+    if (textarea && charCount) {
+        textarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+    }
 });
+
+function updateLoginRequiredUI() {
+    const limitInfo = document.getElementById('comment-limit-info');
+    const formContainer = document.getElementById('comment-form-container');
+    const loginTip = document.getElementById('comment-login-tip');
+    const limitText = limitInfo.querySelector('.limit-text');
+
+    formContainer.style.display = 'none';
+    loginTip.style.display = 'block';
+    limitInfo.className = 'comment-limit-info warning';
+    limitText.innerHTML = '⚠️ 留言前请先完成 GitHub 或微信 OAuth 登录。';
+    limitInfo.style.display = 'block';
+}
 
 // 加载留言限制信息
 async function loadCommentLimit() {
     try {
-        const response = await fetch(`/api/comments/item/${currentItemId}/limit`, {
-            headers: {
-                'nickname': userNickname || '匿名用户'
-            }
-        });
-        
+        const response = await fetch(`/api/comments/item/${currentItemId}/limit`);
+
+        if (response.status === 401) {
+            updateLoginRequiredUI();
+            return;
+        }
+
         if (response.ok) {
             const data = await response.json();
             updateLimitUI(data);
@@ -364,21 +399,20 @@ function cancelReply() {
 
 // 提交留言
 async function submitComment() {
-    const nicknameInput = document.getElementById('comment-nickname');
     const contentInput = document.getElementById('comment-content');
     const submitBtn = document.getElementById('btn-submit-comment');
-    
-    const nickname = nicknameInput.value.trim() || '匿名用户';
+
+    if (!isOauthUser) {
+        window.location.href = commentLoginPageUrl;
+        return;
+    }
+
     const content = contentInput.value.trim();
     
     if (!content) {
         alert('请输入留言内容');
         return;
     }
-    
-    // 保存昵称
-    localStorage.setItem('shijing_user_nickname', nickname);
-    userNickname = nickname;
     
     submitBtn.disabled = true;
     submitBtn.textContent = '发送中...';
@@ -392,9 +426,7 @@ async function submitComment() {
             body: JSON.stringify({
                 content: content,
                 item_id: currentItemId,
-                parent_id: currentReplyTo,
-                nickname: nickname,
-                identifier: userIdentifier
+                parent_id: currentReplyTo
             })
         });
         
@@ -409,12 +441,15 @@ async function submitComment() {
             await loadCommentLimit();
             
             alert('留言发表成功！');
+        } else if (response.status === 401) {
+            window.location.href = commentLoginPageUrl;
         } else if (response.status === 429) {
             const error = await response.json();
             alert(error.detail || '留言次数已达上限');
             await loadCommentLimit();
         } else if (response.status === 403) {
-            alert('您已被禁言，无法发表留言');
+            const error = await response.json();
+            alert(error.detail || '当前无法发表留言');
         } else {
             const error = await response.json();
             alert('发表失败：' + (error.detail || '未知错误'));

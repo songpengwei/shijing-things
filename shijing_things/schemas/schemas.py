@@ -158,8 +158,6 @@ class CommentCreate(BaseModel):
     content: str
     item_id: int
     parent_id: Optional[int] = None
-    nickname: str  # 用户昵称
-    identifier: str  # 用户唯一标识
     is_approved: Optional[int] = 1
 
 
@@ -239,9 +237,25 @@ class UserLogin(BaseModel):
 class UserUpdate(BaseModel):
     """更新用户请求模型"""
     email: Optional[str] = None
+    username: Optional[str] = None
     nickname: Optional[str] = None
     avatar_url: Optional[str] = None
     password: Optional[str] = None
+    is_active: Optional[int] = None
+    max_comments_per_page: Optional[int] = None
+    max_comments_per_day: Optional[int] = None
+
+
+class UserAdminCreate(BaseModel):
+    """管理员创建用户请求模型"""
+    email: str
+    username: str
+    password: str
+    nickname: str
+    avatar_url: Optional[str] = ""
+    is_active: int = 1
+    max_comments_per_page: int = 10
+    max_comments_per_day: int = 50
 
 
 class UserResponse(UserBase):

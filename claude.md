@@ -54,6 +54,22 @@ shijing-things/
 
 ## 快速启动
 
+## 环境变量
+
+项目运行配置统一从项目根目录 `.env` 读取，示例文件为 `.env.example`。
+
+初始化方式：
+
+```bash
+cp .env.example .env
+```
+
+注意事项：
+
+- 不要把真实 `.env` 提交到仓库。
+- OAuth 回调地址必须是完整路径，例如 `https://shi.qtmuniao.com/auth/github/callback`。
+- GitHub 或微信密钥变更时，只需要更新 `.env`，不需要修改 Python 代码。
+
 ### 方式一：一键启动（推荐）
 
 **macOS/Linux:**
@@ -136,6 +152,7 @@ pydantic-settings==2.6.1
 jinja2==3.1.4
 python-multipart==0.0.17
 aiofiles==24.1.0
+httpx==0.27.2
 ```
 
 ## 常用命令
@@ -183,6 +200,14 @@ python scripts/export_data.py -f poems -o poems.json
 | `database_url` | sqlite:///./shijing.db | 数据库路径 |
 | `static_dir` | ./shijing_things/static | 静态文件目录 |
 | `img_dir` | ./shijing_things/static/img | 图片目录 |
+| `admin_username` | qtmuniao | 固定管理员用户名 |
+| `admin_password` | xiaosong | 固定管理员密码 |
+| `github_client_id` | 空 | GitHub OAuth App Client ID |
+| `github_client_secret` | 空 | GitHub OAuth App Client Secret |
+| `github_redirect_uri` | http://localhost:8000/auth/github/callback | GitHub 回调地址 |
+| `wechat_app_id` | 空 | 微信开放平台网站应用 App ID |
+| `wechat_app_secret` | 空 | 微信开放平台网站应用 App Secret |
+| `wechat_redirect_uri` | http://localhost:8000/auth/wechat/callback | 微信登录回调地址 |
 
 ## API 端点
 
@@ -191,7 +216,8 @@ python scripts/export_data.py -f poems -o poems.json
 | 类型 | 方法 | 说明 |
 |------|------|------|
 | 🔓 公开 | GET | 任何人都可以访问 |
-| 🔒 需登录 | POST, PUT, DELETE | 需要登录（401 未授权） |
+| 🔒 管理员 | POST, PUT, DELETE | 需要管理员固定账号登录 |
+| 🔐 OAuth 用户 | 留言相关接口 | 需要 GitHub 或微信登录 |
 
 ### 事物 (Items)
 | 方法 | 端点 | 描述 | 权限 |
@@ -210,9 +236,38 @@ python scripts/export_data.py -f poems -o poems.json
 | GET | `/api/poems/` | 列表 | 🔓 公开 |
 | GET | `/api/poems/{id}` | 详情 | 🔓 公开 |
 | GET | `/api/poems/title/{title}` | 按标题查询 | 🔓 公开 |
-| POST | `/api/poems/` | 创建 | 🔒 需登录 |
-| PUT | `/api/poems/{id}` | 更新 | 🔒 需登录 |
-| DELETE | `/api/poems/{id}` | 删除 | 🔒 需登录 |
+| POST | `/api/poems/` | 创建 | 🔒 管理员 |
+| PUT | `/api/poems/{id}` | 更新 | 🔒 管理员 |
+| DELETE | `/api/poems/{id}` | 删除 | 🔒 管理员 |
+
+### 认证与用户
+| 方法 | 端点 | 描述 | 权限 |
+|------|------|------|------|
+| GET | `/auth/login?provider=github` | 发起 GitHub OAuth 登录 | 🔓 公开 |
+| GET | `/auth/login?provider=wechat` | 发起微信 OAuth 登录 | 🔓 公开 |
+| GET | `/auth/github/callback` | GitHub OAuth 回调 | 🔓 公开 |
+| GET | `/auth/wechat/callback` | 微信 OAuth 回调 | 🔓 公开 |
+| POST | `/auth/register` | 创建普通留言用户账号 | 🔓 公开 |
+| POST | `/auth/login` | 用户名/邮箱+密码登录 | 🔓 公开 |
+| POST | `/auth/logout` | 注销当前用户会话 | 🔓 公开 |
+| GET | `/auth/me` | 当前登录用户信息 | 🔐 OAuth/密码用户 |
+| GET | `/auth/status` | 当前认证状态 | 🔓 公开 |
+
+### 留言 (Comments)
+| 方法 | 端点 | 描述 | 权限 |
+|------|------|------|------|
+| GET | `/api/comments/item/{item_id}` | 获取某事物留言树 | 🔓 公开 |
+| GET | `/api/comments/item/{item_id}/limit` | 获取当前登录用户留言限制 | 🔐 OAuth 用户 |
+| POST | `/api/comments/` | 发表留言/回复 | 🔐 OAuth 用户 |
+
+### 后台用户管理
+| 方法 | 端点 | 描述 | 权限 |
+|------|------|------|------|
+| GET | `/api/admin/users/` | 正式用户列表 | 🔒 管理员 |
+| POST | `/api/admin/users/` | 创建正式用户 | 🔒 管理员 |
+| GET | `/api/admin/users/{user_id}` | 用户详情 | 🔒 管理员 |
+| PUT | `/api/admin/users/{user_id}` | 更新用户资料/状态/留言限制 | 🔒 管理员 |
+| DELETE | `/api/admin/users/{user_id}` | 删除正式用户 | 🔒 管理员 |
 
 ## 页面路由
 
@@ -220,18 +275,27 @@ python scripts/export_data.py -f poems -o poems.json
 |------|------|------|
 | `/` | 首页 - 事物卡片列表 | 公开 |
 | `/item/{id}` | 事物详情页 | 公开 |
-| `/login` | 管理员登录页 | 公开 |
+| `/login` | 统一登录页（管理员 / GitHub / 微信） | 公开 |
 | `/logout` | 登出 | 登录后 |
-| `/manage` | 数据管理页（表格） | 需登录 |
-| `/manage/item/new` | 新建事物 | 需登录 |
-| `/manage/item/{id}` | 编辑事物 | 需登录 |
+| `/manage` | 数据管理页（表格） | 管理员 |
+| `/manage/item/new` | 新建事物 | 管理员 |
+| `/manage/item/{id}` | 编辑事物 | 管理员 |
 
 ### 管理员账号
 
 - **用户名**: `qtmuniao`
 - **密码**: `xiaosong`
 
-访问管理页面需要先登录，未登录会自动跳转到登录页。
+访问管理页面需要先用固定管理员账号登录，未登录会自动跳转到 `/login`。
+
+## 认证与留言规则
+
+- 管理员不进入普通用户表，后台管理仍然使用固定账号 `qtmuniao / xiaosong`。
+- 留言用户使用正式 `users` 表管理，支持后台增删改查。
+- 留言前必须先完成 OAuth 登录，目前支持 GitHub 和微信。
+- OAuth 首次登录会自动创建正式用户，并同步生成留言用的内部映射身份。
+- 后台“用户管理”页现在管理的是正式登录用户，不再是匿名访客影子用户。
+- 详情页只有管理员才显示“编辑/删除”按钮。
 
 ## 数据规模
 

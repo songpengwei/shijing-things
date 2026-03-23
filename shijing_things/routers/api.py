@@ -15,13 +15,13 @@ from shijing_things.schemas.schemas import (
     PoemCreate, PoemUpdate, PoemResponse, PoemList,
     CommentCreate, CommentUpdate, CommentResponse, CommentList, CommentStats,
     GuestUserCreate, GuestUserUpdate, GuestUserResponse,
-    UserCommentLimit
+    UserCommentLimit, UserAdminCreate, UserUpdate, UserResponse
 )
 from shijing_things.crud.crud import (
     item as crud_item, poem as crud_poem,
     comment as crud_comment, guest_user as crud_guest_user,
     rate_limit as crud_rate_limit, ip_blacklist as crud_ip_blacklist,
-    spam_pattern as crud_spam_pattern
+    spam_pattern as crud_spam_pattern, user as crud_user
 )
 
 router = APIRouter(prefix="/api")
@@ -45,6 +45,46 @@ def require_admin(request: Request):
             detail="需要管理员权限"
         )
     return True
+
+
+def get_oauth_comment_user(request: Request, db: Session):
+    """获取当前 OAuth 登录用户对应的留言身份"""
+    auth_type = request.session.get("auth_type")
+    if auth_type not in {"oauth_github", "oauth_wechat"} or not request.session.get("is_authenticated"):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="留言需要使用 GitHub 或微信登录"
+        )
+
+    user_id = request.session.get("user_id")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="登录状态已失效，请重新登录"
+        )
+
+    db_user = crud_user.get(db, user_id=user_id)
+    if not db_user or not db_user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="登录状态已失效，请重新登录"
+        )
+
+    identifier = f"oauth_user_{db_user.id}"
+    nickname = db_user.nickname or db_user.username or "OAuth用户"
+    avatar_url = db_user.avatar_url or ""
+    comment_user = crud_guest_user.get_or_create(
+        db,
+        identifier=identifier,
+        nickname=nickname,
+        avatar_url=avatar_url,
+        default_max_comments=db_user.max_comments_per_page
+    )
+    if comment_user.max_comments_per_page != db_user.max_comments_per_page:
+        comment_user.max_comments_per_page = db_user.max_comments_per_page
+        db.add(comment_user)
+        db.commit()
+    return comment_user, identifier
 
 
 # ==================== 事物 API ====================
@@ -228,18 +268,10 @@ def get_comments_by_item(
 def get_user_comment_limit(
     item_id: int,
     request: Request,
-    nickname: str = Header("匿名用户"),
     db: Session = Depends(get_db)
 ):
-    """获取当前用户在该事物的留言限制信息"""
-    identifier = generate_user_identifier(request)
-    
-    # 获取或创建用户
-    user = crud_guest_user.get_or_create(
-        db, 
-        identifier=identifier, 
-        nickname=nickname
-    )
+    """获取当前 OAuth 登录用户在该事物的留言限制信息"""
+    user, _ = get_oauth_comment_user(request, db)
     
     # 检查用户是否被禁言
     if user.is_blocked:
@@ -272,7 +304,7 @@ def create_comment(
     comment_in: CommentCreate,
     db: Session = Depends(get_db)
 ):
-    """创建评论（无需登录，但有多层安全防护）"""
+    """创建评论（需要 OAuth 登录）"""
     settings = get_settings()
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "")[:500]
@@ -286,19 +318,14 @@ def create_comment(
                 detail=f"您的IP已被限制访问，原因：{reason or '违反社区规定'}"
             )
     
-    # 获取或创建用户
-    user = crud_guest_user.get_or_create(
-        db,
-        identifier=comment_in.identifier,
-        nickname=comment_in.nickname
-    )
+    user, identifier = get_oauth_comment_user(request, db)
     
     # ========== 第2层防护：用户禁言检查 ==========
     if user.is_blocked:
         # 记录可疑行为
         crud_rate_limit.increment(
             db,
-            identifier=comment_in.identifier,
+            identifier=identifier,
             action_type="blocked_attempt",
             ip_address=client_ip
         )
@@ -330,7 +357,7 @@ def create_comment(
     # ========== 第5层防护：用户全局频率限制（每小时） ==========
     allowed, current_hour_count = crud_rate_limit.check_rate_limit(
         db,
-        identifier=comment_in.identifier,
+        identifier=identifier,
         ip_address=client_ip,
         action_type="comment",
         window_minutes=60,
@@ -340,7 +367,7 @@ def create_comment(
         # 触发频率限制，添加到黑名单观察列表
         crud_rate_limit.increment(
             db,
-            identifier=comment_in.identifier,
+            identifier=identifier,
             action_type="rate_limit_triggered",
             ip_address=client_ip
         )
@@ -453,11 +480,14 @@ def create_comment(
     
     # 更新用户统计
     crud_guest_user.update_after_comment(db, user_id=user.id)
+    db_user_id = request.session.get("user_id")
+    if db_user_id:
+        crud_user.update_after_comment(db, user_id=db_user_id)
     
     # 更新频率限制计数
     crud_rate_limit.increment(
         db,
-        identifier=comment_in.identifier,
+        identifier=identifier,
         action_type="comment",
         ip_address=client_ip
     )
@@ -574,68 +604,90 @@ def delete_comment(
 # ==================== 用户管理 API（需要管理员权限） ====================
 
 @router.get("/admin/users/")
-def list_guest_users(
+def list_users(
     request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=200),
-    is_blocked: Optional[int] = Query(None),
+    is_active: Optional[int] = Query(None),
     db: Session = Depends(get_db),
     _: bool = Depends(require_admin)
 ):
-    """获取所有访客用户（需要管理员权限）"""
-    items, total = crud_guest_user.get_multi(
-        db, skip=skip, limit=limit, is_blocked=is_blocked
+    """获取所有正式用户（需要管理员权限）"""
+    items, total = crud_user.get_multi(
+        db, skip=skip, limit=limit, is_active=is_active
     )
     return {"items": items, "total": total}
 
 
+@router.post("/admin/users/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+def create_user(
+    request: Request,
+    user_in: UserAdminCreate,
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_admin)
+):
+    """创建正式用户（需要管理员权限）"""
+    if crud_user.get_by_email(db, email=user_in.email):
+        raise HTTPException(status_code=400, detail="Email already registered")
+    if crud_user.get_by_username(db, username=user_in.username):
+        raise HTTPException(status_code=400, detail="Username already taken")
+    return crud_user.create_from_admin(db, obj_in=user_in)
+
+
 @router.get("/admin/users/{user_id}")
-def get_guest_user(
+def get_user(
     request: Request,
     user_id: int,
     db: Session = Depends(get_db),
     _: bool = Depends(require_admin)
 ):
-    """获取访客用户详情（需要管理员权限）"""
-    user = crud_guest_user.get(db, user_id=user_id)
+    """获取正式用户详情（需要管理员权限）"""
+    user = crud_user.get(db, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="用户不存在")
-    
-    # 获取用户评论统计
-    _, comments_count = crud_comment.get_multi(
-        db, skip=0, limit=1, user_id=user_id, is_deleted=0
-    )
-    
+
     return {
         "user": user,
-        "comments_count": comments_count
+        "comments_count": user.total_comments or 0
     }
 
 
 @router.put("/admin/users/{user_id}")
-def update_guest_user(
+def update_user(
     request: Request,
     user_id: int,
-    user_in: GuestUserUpdate,
+    user_in: UserUpdate,
     db: Session = Depends(get_db),
     _: bool = Depends(require_admin)
 ):
-    """更新访客用户（需要管理员权限）- 可修改留言上限、禁言状态等"""
-    db_user = crud_guest_user.get(db, user_id=user_id)
+    """更新正式用户（需要管理员权限）"""
+    db_user = crud_user.get(db, user_id=user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="用户不存在")
-    return crud_guest_user.update(db, db_obj=db_user, obj_in=user_in)
+    update_data = user_in.model_dump(exclude_unset=True)
+
+    if "email" in update_data and update_data["email"] and update_data["email"] != db_user.email:
+        existing = crud_user.get_by_email(db, email=update_data["email"])
+        if existing and existing.id != user_id:
+            raise HTTPException(status_code=400, detail="Email already registered")
+
+    if "username" in update_data and update_data["username"] and update_data["username"] != db_user.username:
+        existing = crud_user.get_by_username(db, username=update_data["username"])
+        if existing and existing.id != user_id:
+            raise HTTPException(status_code=400, detail="Username already taken")
+
+    return crud_user.update(db, db_obj=db_user, **update_data)
 
 
 @router.delete("/admin/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_guest_user(
+def delete_user(
     request: Request,
     user_id: int,
     db: Session = Depends(get_db),
     _: bool = Depends(require_admin)
 ):
-    """删除访客用户及其所有评论（需要管理员权限）"""
-    db_user = crud_guest_user.delete(db, user_id=user_id)
+    """删除正式用户及其留言映射（需要管理员权限）"""
+    db_user = crud_user.delete(db, user_id=user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="用户不存在")
     return None

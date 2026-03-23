@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from shijing_things.core.database import get_db
 from shijing_things.core.config import get_settings
-from shijing_things.core.oauth import github_oauth, generate_oauth_state
+from shijing_things.core.oauth import github_oauth, wechat_oauth, generate_oauth_state
 from shijing_things.core.security import create_access_token
 from shijing_things.crud.crud import user as crud_user, oauth_account as crud_oauth, user_session as crud_session
 from shijing_things.schemas.schemas import UserCreate, UserLogin, UserResponse, Token
@@ -15,29 +15,151 @@ from shijing_things.schemas.schemas import UserCreate, UserLogin, UserResponse, 
 router = APIRouter(prefix="/auth", tags=["auth"])
 settings = get_settings()
 
+OAUTH_PROVIDERS = {
+    "github": {
+        "client": github_oauth,
+        "session_auth_type": "oauth_github",
+    },
+    "wechat": {
+        "client": wechat_oauth,
+        "session_auth_type": "oauth_wechat",
+    },
+}
+
+
+def is_provider_enabled(provider: str) -> bool:
+    if provider == "github":
+        return bool(settings.github_client_id and settings.github_client_secret)
+    if provider == "wechat":
+        return bool(settings.wechat_app_id and settings.wechat_app_secret)
+    return False
+
+
+def set_authenticated_session(request: Request, *, user_id: int, session_token: str, auth_type: str, username: str = "", nickname: str = "", avatar_url: str = "") -> None:
+    request.session["user_id"] = user_id
+    request.session["session_token"] = session_token
+    request.session["is_authenticated"] = True
+    request.session["auth_type"] = auth_type
+    request.session["username"] = username
+    request.session["nickname"] = nickname
+    request.session["avatar_url"] = avatar_url
+
 
 # ==================== 注册/登录页面路由 ====================
 
 @router.get("/login")
-def login_page(request: Request, next: str = "/"):
-    """登录页面 - 支持 GitHub OAuth"""
-    if not settings.github_client_id or not settings.github_client_secret:
+def login_page(request: Request, next: str = "/", provider: str = "github"):
+    """OAuth 登录入口，默认 GitHub"""
+    if provider not in OAUTH_PROVIDERS:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="OAuth provider not found")
+    if not is_provider_enabled(provider):
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="GitHub OAuth 未配置"
+            detail=f"{provider} OAuth 未配置"
         )
 
-    # 生成 state 防止 CSRF
     state = generate_oauth_state()
     request.session["oauth_state"] = state
-    
-    # 保存跳转地址
+    request.session["oauth_provider"] = provider
     request.session["next_url"] = next
-    
-    # 获取 GitHub 授权 URL
-    github_auth_url = github_oauth.get_authorize_url(state)
+    auth_url = OAUTH_PROVIDERS[provider]["client"].get_authorize_url(state)
+    return RedirectResponse(url=auth_url, status_code=302)
 
-    return RedirectResponse(url=github_auth_url, status_code=302)
+
+def finalize_oauth_login(
+    request: Request,
+    *,
+    db: Session,
+    provider: str,
+    provider_account_id: str,
+    email: str,
+    nickname: str,
+    avatar_url: str,
+    access_token: str
+):
+    existing_oauth = crud_oauth.get_by_provider_account(
+        db, provider=provider, provider_account_id=provider_account_id
+    )
+
+    auth_type = OAUTH_PROVIDERS[provider]["session_auth_type"]
+
+    if existing_oauth:
+        db_user = crud_user.get(db, user_id=existing_oauth.user_id)
+        if not db_user or not db_user.is_active:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is disabled")
+
+        existing_oauth.access_token = access_token
+        if email:
+            existing_oauth.provider_account_email = email
+        db.add(existing_oauth)
+        db.commit()
+
+        crud_user.update_last_login(db, user_id=db_user.id)
+        client_ip = request.client.host if request.client else ""
+        user_agent = request.headers.get("user-agent", "")[:500]
+        session = crud_session.create(db, user_id=db_user.id, ip_address=client_ip, user_agent=user_agent)
+        set_authenticated_session(
+            request,
+            user_id=db_user.id,
+            session_token=session.session_token,
+            auth_type=auth_type,
+            username=db_user.username or "",
+            nickname=db_user.nickname,
+            avatar_url=db_user.avatar_url or "",
+        )
+        next_url = request.session.get("next_url", "/")
+        return RedirectResponse(url=next_url, status_code=302)
+
+    if email:
+        existing_user = crud_user.get_by_email(db, email=email)
+        if existing_user:
+            crud_oauth.create(
+                db,
+                user_id=existing_user.id,
+                provider=provider,
+                provider_account_id=provider_account_id,
+                provider_account_email=email,
+                access_token=access_token
+            )
+            crud_user.update_last_login(db, user_id=existing_user.id)
+            client_ip = request.client.host if request.client else ""
+            user_agent = request.headers.get("user-agent", "")[:500]
+            session = crud_session.create(db, user_id=existing_user.id, ip_address=client_ip, user_agent=user_agent)
+            set_authenticated_session(
+                request,
+                user_id=existing_user.id,
+                session_token=session.session_token,
+                auth_type=auth_type,
+                username=existing_user.username or "",
+                nickname=existing_user.nickname,
+                avatar_url=existing_user.avatar_url or "",
+            )
+            next_url = request.session.get("next_url", "/")
+            return RedirectResponse(url=next_url, status_code=302)
+
+    db_user = crud_user.create_oauth_user(
+        db,
+        email=email or f"{provider}_{provider_account_id}@placeholder.local",
+        nickname=nickname,
+        avatar_url=avatar_url,
+        provider=provider,
+        provider_account_id=provider_account_id,
+        provider_account_email=email
+    )
+    client_ip = request.client.host if request.client else ""
+    user_agent = request.headers.get("user-agent", "")[:500]
+    session = crud_session.create(db, user_id=db_user.id, ip_address=client_ip, user_agent=user_agent)
+    set_authenticated_session(
+        request,
+        user_id=db_user.id,
+        session_token=session.session_token,
+        auth_type=auth_type,
+        username=db_user.username or "",
+        nickname=db_user.nickname,
+        avatar_url=db_user.avatar_url or "",
+    )
+    next_url = request.session.get("next_url", "/")
+    return RedirectResponse(url=next_url, status_code=302)
 
 
 @router.get("/github/callback")
@@ -56,7 +178,10 @@ async def github_callback(
             detail="Invalid state parameter"
         )
     
-    # 获取访问令牌
+    provider = "github"
+    if request.session.get("oauth_provider") not in (None, provider):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="OAuth provider mismatch")
+
     access_token = await github_oauth.get_access_token(code)
     if not access_token:
         raise HTTPException(
@@ -77,103 +202,61 @@ async def github_callback(
     github_name = github_user.get("name") or github_user.get("login", "GitHub用户")
     github_avatar = github_user.get("avatar_url", "")
     
-    # 检查是否已有该 GitHub 账户关联
-    existing_oauth = crud_oauth.get_by_provider_account(
-        db, provider="github", provider_account_id=github_id
-    )
-    
-    if existing_oauth:
-        # 已存在，更新信息并登录
-        db_user = crud_user.get(db, user_id=existing_oauth.user_id)
-        if db_user and db_user.is_active:
-            # 更新 OAuth token
-            existing_oauth.access_token = access_token
-            db.add(existing_oauth)
-            db.commit()
-            
-            # 更新登录时间
-            crud_user.update_last_login(db, user_id=db_user.id)
-            
-            # 创建会话
-            client_ip = request.client.host if request.client else ""
-            user_agent = request.headers.get("user-agent", "")[:500]
-            session = crud_session.create(
-                db, user_id=db_user.id, ip_address=client_ip, user_agent=user_agent
-            )
-            
-            # 设置 session cookie
-            request.session["user_id"] = db_user.id
-            request.session["session_token"] = session.session_token
-            request.session["is_authenticated"] = True
-            request.session["auth_type"] = "oauth_github"
-            
-            # 跳转回首页或指定页面
-            next_url = request.session.get("next_url", "/")
-            return RedirectResponse(url=next_url, status_code=302)
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Account is disabled"
-            )
-    
-    # 检查邮箱是否已被注册
-    if github_email:
-        existing_user = crud_user.get_by_email(db, email=github_email)
-        if existing_user:
-            # 邮箱已存在，自动关联 OAuth
-            crud_oauth.create(
-                db,
-                user_id=existing_user.id,
-                provider="github",
-                provider_account_id=github_id,
-                provider_account_email=github_email,
-                access_token=access_token
-            )
-            
-            # 登录
-            crud_user.update_last_login(db, user_id=existing_user.id)
-            
-            client_ip = request.client.host if request.client else ""
-            user_agent = request.headers.get("user-agent", "")[:500]
-            session = crud_session.create(
-                db, user_id=existing_user.id, ip_address=client_ip, user_agent=user_agent
-            )
-            
-            request.session["user_id"] = existing_user.id
-            request.session["session_token"] = session.session_token
-            request.session["is_authenticated"] = True
-            request.session["auth_type"] = "oauth_github"
-            
-            next_url = request.session.get("next_url", "/")
-            return RedirectResponse(url=next_url, status_code=302)
-    
-    # 创建新用户
-    db_user = crud_user.create_oauth_user(
-        db,
-        email=github_email or f"github_{github_id}@placeholder.local",
+    return finalize_oauth_login(
+        request,
+        db=db,
+        provider=provider,
+        provider_account_id=github_id,
+        email=github_email,
         nickname=github_name,
         avatar_url=github_avatar,
-        provider="github",
-        provider_account_id=github_id,
-        provider_account_email=github_email
+        access_token=access_token,
     )
-    
-    # 创建会话
-    client_ip = request.client.host if request.client else ""
-    user_agent = request.headers.get("user-agent", "")[:500]
-    session = crud_session.create(
-        db, user_id=db_user.id, ip_address=client_ip, user_agent=user_agent
+
+
+@router.get("/wechat/callback")
+async def wechat_callback(
+    request: Request,
+    code: str,
+    state: str,
+    db: Session = Depends(get_db)
+):
+    """微信 OAuth 回调处理"""
+    stored_state = request.session.get("oauth_state")
+    if not stored_state or state != stored_state:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid state parameter")
+
+    provider = "wechat"
+    if request.session.get("oauth_provider") not in (None, provider):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="OAuth provider mismatch")
+
+    token_data = await wechat_oauth.get_access_token(code)
+    if not token_data:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to get access token from WeChat")
+
+    access_token = token_data.get("access_token", "")
+    openid = token_data.get("openid", "")
+    if not access_token or not openid:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid WeChat OAuth response")
+
+    wechat_user = await wechat_oauth.get_user_info(access_token, openid)
+    if not wechat_user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to get user info from WeChat")
+
+    provider_account_id = wechat_user.get("unionid") or openid
+    nickname = wechat_user.get("nickname") or "微信用户"
+    avatar_url = wechat_user.get("headimgurl", "")
+
+    return finalize_oauth_login(
+        request,
+        db=db,
+        provider=provider,
+        provider_account_id=str(provider_account_id),
+        email="",
+        nickname=nickname,
+        avatar_url=avatar_url,
+        access_token=access_token,
     )
-    
-    # 设置 session
-    request.session["user_id"] = db_user.id
-    request.session["session_token"] = session.session_token
-    request.session["is_authenticated"] = True
-    request.session["auth_type"] = "oauth_github"
-    
-    # 跳转
-    next_url = request.session.get("next_url", "/")
-    return RedirectResponse(url=next_url, status_code=302)
 
 
 # ==================== API 认证路由 ====================

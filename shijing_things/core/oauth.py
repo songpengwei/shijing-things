@@ -1,6 +1,7 @@
 """
-OAuth 工具函数 - GitHub OAuth 流程
+OAuth 工具函数 - GitHub / 微信 OAuth 流程
 """
+from urllib.parse import urlencode
 import httpx
 from typing import Optional, Dict, Any
 from shijing_things.core.config import get_settings
@@ -29,7 +30,7 @@ class GitHubOAuth:
             "scope": "user:email",  # 获取用户邮箱权限
             "state": state,
         }
-        query = "&".join([f"{k}={v}" for k, v in params.items()])
+        query = urlencode(params)
         return f"{self.AUTHORIZE_URL}?{query}"
     
     async def get_access_token(self, code: str) -> Optional[str]:
@@ -97,6 +98,71 @@ class GitHubOAuth:
 
 # 全局 GitHub OAuth 实例
 github_oauth = GitHubOAuth()
+
+
+class WeChatOAuth:
+    """微信开放平台网站应用 OAuth 客户端"""
+
+    AUTHORIZE_URL = "https://open.weixin.qq.com/connect/qrconnect"
+    TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token"
+    USER_API_URL = "https://api.weixin.qq.com/sns/userinfo"
+
+    def __init__(self):
+        self.app_id = settings.wechat_app_id
+        self.app_secret = settings.wechat_app_secret
+        self.redirect_uri = settings.wechat_redirect_uri
+
+    def get_authorize_url(self, state: str) -> str:
+        params = {
+            "appid": self.app_id,
+            "redirect_uri": self.redirect_uri,
+            "response_type": "code",
+            "scope": "snsapi_login",
+            "state": state,
+        }
+        return f"{self.AUTHORIZE_URL}?{urlencode(params)}#wechat_redirect"
+
+    async def get_access_token(self, code: str) -> Optional[Dict[str, Any]]:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                self.TOKEN_URL,
+                params={
+                    "appid": self.app_id,
+                    "secret": self.app_secret,
+                    "code": code,
+                    "grant_type": "authorization_code",
+                },
+            )
+
+            if response.status_code != 200:
+                return None
+
+            data = response.json()
+            if data.get("errcode"):
+                return None
+            return data
+
+    async def get_user_info(self, access_token: str, openid: str) -> Optional[Dict[str, Any]]:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                self.USER_API_URL,
+                params={
+                    "access_token": access_token,
+                    "openid": openid,
+                    "lang": "zh_CN",
+                },
+            )
+
+            if response.status_code != 200:
+                return None
+
+            data = response.json()
+            if data.get("errcode"):
+                return None
+            return data
+
+
+wechat_oauth = WeChatOAuth()
 
 
 def generate_oauth_state() -> str:

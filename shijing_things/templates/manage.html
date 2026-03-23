@@ -171,8 +171,8 @@
             <div class="filter-section">
                 <select id="user-filter" class="filter-select" onchange="loadUsers()">
                     <option value="">全部用户</option>
-                    <option value="0">正常</option>
-                    <option value="1">已禁言</option>
+                    <option value="1">正常</option>
+                    <option value="0">已停用</option>
                 </select>
             </div>
             <button class="btn btn-secondary" onclick="loadUsers()">🔄 刷新</button>
@@ -183,9 +183,9 @@
                     <tr>
                         <th>ID</th>
                         <th>昵称</th>
-                        <th>标识符</th>
+                        <th>用户名</th>
                         <th>留言上限</th>
-                        <th>信任分</th>
+                        <th>日上限</th>
                         <th>总留言</th>
                         <th>状态</th>
                         <th>创建时间</th>
@@ -1134,12 +1134,12 @@ async function deleteComment(id) {
 async function loadUsers() {
     const filter = document.getElementById('user-filter').value;
     const tbody = document.getElementById('users-table-body');
-    tbody.innerHTML = '<tr><td colspan="7" class="loading-cell">加载中...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="loading-cell">加载中...</td></tr>';
     
     try {
         let url = '/api/admin/users/';
         if (filter !== '') {
-            url += `?is_blocked=${filter}`;
+            url += `?is_active=${filter}`;
         }
         
         const response = await fetch(url);
@@ -1168,25 +1168,25 @@ function renderUsers(users) {
     }
     
     tbody.innerHTML = users.map(u => {
-        const statusText = u.is_blocked ? '已禁言' : '正常';
-        const statusClass = u.is_blocked ? 'rejected' : 'approved';
-        const trustClass = u.trust_score < 50 ? 'warning' : u.trust_score < 80 ? 'pending' : 'approved';
+        const statusText = u.is_active ? '正常' : '已停用';
+        const statusClass = u.is_active ? 'approved' : 'rejected';
+        const accountName = u.username || u.email || '-';
         
         return `
             <tr>
                 <td>${u.id}</td>
                 <td>${u.nickname}</td>
-                <td title="${u.identifier}">${u.identifier.substring(0, 16)}...</td>
+                <td title="${accountName}">${accountName}</td>
                 <td>${u.max_comments_per_page}</td>
-                <td><span class="comment-status status-${trustClass}">${u.trust_score.toFixed(1)}</span></td>
+                <td>${u.max_comments_per_day}</td>
                 <td>${u.total_comments || 0}</td>
                 <td><span class="comment-status status-${statusClass}">${statusText}</span></td>
                 <td>${formatDateTime(u.created_at)}</td>
                 <td class="actions">
-                    <button class="btn btn-sm btn-primary" onclick="editUser(${u.id}, '${u.nickname}', ${u.max_comments_per_page}, ${u.is_blocked})">编辑</button>
-                    ${u.is_blocked 
-                        ? `<button class="btn btn-sm btn-success" onclick="unblockUser(${u.id})">解除禁言</button>`
-                        : `<button class="btn btn-sm btn-warning" onclick="blockUser(${u.id})">禁言</button>`
+                    <button class="btn btn-sm btn-primary" onclick="editUser(${u.id}, '${u.nickname}', ${u.max_comments_per_page})">编辑</button>
+                    ${u.is_active 
+                        ? `<button class="btn btn-sm btn-warning" onclick="disableUser(${u.id})">停用</button>`
+                        : `<button class="btn btn-sm btn-success" onclick="enableUser(${u.id})">启用</button>`
                     }
                     <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">删除</button>
                 </td>
@@ -1195,12 +1195,12 @@ function renderUsers(users) {
     }).join('');
 }
 
-async function blockUser(id) {
-    await updateUser(id, { is_blocked: 1 });
+async function disableUser(id) {
+    await updateUser(id, { is_active: 0 });
 }
 
-async function unblockUser(id) {
-    await updateUser(id, { is_blocked: 0 });
+async function enableUser(id) {
+    await updateUser(id, { is_active: 1 });
 }
 
 async function updateUser(id, data) {
@@ -1237,7 +1237,7 @@ async function deleteUser(id) {
     }
 }
 
-function editUser(id, nickname, maxComments, isBlocked) {
+function editUser(id, nickname, maxComments) {
     const newMax = prompt(`修改用户 "${nickname}" 的留言上限（当前: ${maxComments}）:`, maxComments);
     if (newMax === null) return;
     

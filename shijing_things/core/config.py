@@ -1,5 +1,5 @@
 from pydantic import Field
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 from pathlib import Path
 import secrets
@@ -10,6 +10,12 @@ ROOT_DIR = Path(__file__).parent.parent.parent
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
     app_name: str = "诗经事物 API"
     app_version: str = "1.0.0"
     database_url: str = f"sqlite:///{ROOT_DIR / 'shijing.db'}"
@@ -34,20 +40,20 @@ class Settings(BaseSettings):
     github_client_secret: str = ""  # GitHub OAuth App Client Secret
     github_redirect_uri: str = "http://localhost:8000/auth/github/callback"  # 回调地址
     
+    # 微信 OAuth 配置（网站应用扫码登录）
+    wechat_app_id: str = ""
+    wechat_app_secret: str = ""
+    wechat_redirect_uri: str = "http://localhost:8000/auth/wechat/callback"
+    
     # 应用安全配置
     secret_key: str = Field(default_factory=lambda: secrets.token_urlsafe(32))  # JWT/Session 密钥
     access_token_expire_minutes: int = 60 * 24 * 7  # Token 过期时间（7天）
     session_https_only: bool = False
     session_same_site: str = "lax"
 
-    # 管理员账户（未配置则禁用密码登录）
-    admin_username: str = ""
-    admin_password: str = ""
-    
-    class Config:
-        env_file = ".env"
-
-
+    # 管理员账户
+    admin_username: str = "qtmuniao"
+    admin_password: str = "xiaosong"
 @lru_cache()
 def get_settings():
     return Settings()

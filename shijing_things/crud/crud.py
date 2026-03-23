@@ -9,7 +9,8 @@ from shijing_things.models.models import (
 )
 from shijing_things.schemas.schemas import (
     ShijingItemCreate, ShijingItemUpdate, PoemCreate, PoemUpdate,
-    CommentCreate, CommentUpdate, GuestUserCreate, GuestUserUpdate
+    CommentCreate, CommentUpdate, GuestUserCreate, GuestUserUpdate,
+    UserAdminCreate
 )
 
 
@@ -237,14 +238,20 @@ class CRUDGuestUser:
         *, 
         identifier: str, 
         nickname: str,
+        avatar_url: str = "",
         default_max_comments: int = 3
     ) -> GuestUser:
         """获取或创建用户"""
         user = self.get_by_identifier(db, identifier)
         if user:
-            # 更新昵称（如果 changed）
+            updated = False
             if user.nickname != nickname:
                 user.nickname = nickname
+                updated = True
+            if avatar_url and user.avatar_url != avatar_url:
+                user.avatar_url = avatar_url
+                updated = True
+            if updated:
                 db.commit()
                 db.refresh(user)
             return user
@@ -253,6 +260,7 @@ class CRUDGuestUser:
         user_in = GuestUserCreate(
             identifier=identifier,
             nickname=nickname,
+            avatar_url=avatar_url,
             max_comments_per_page=default_max_comments
         )
         return self.create(db, obj_in=user_in)
@@ -774,7 +782,8 @@ class CRUDUser:
         return items, total
     
     def create(self, db: Session, *, email: str, username: str, password: str,
-               nickname: str, avatar_url: str = "") -> User:
+               nickname: str, avatar_url: str = "", is_active: int = 1,
+               max_comments_per_page: int = 10, max_comments_per_day: int = 50) -> User:
         """创建新用户"""
         from shijing_things.core.security import get_password_hash
         
@@ -784,11 +793,27 @@ class CRUDUser:
             hashed_password=get_password_hash(password),
             nickname=nickname,
             avatar_url=avatar_url,
+            is_active=is_active,
+            max_comments_per_page=max_comments_per_page,
+            max_comments_per_day=max_comments_per_day,
         )
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
         return db_obj
+
+    def create_from_admin(self, db: Session, *, obj_in: UserAdminCreate) -> User:
+        return self.create(
+            db,
+            email=obj_in.email,
+            username=obj_in.username,
+            password=obj_in.password,
+            nickname=obj_in.nickname,
+            avatar_url=obj_in.avatar_url or "",
+            is_active=obj_in.is_active,
+            max_comments_per_page=obj_in.max_comments_per_page,
+            max_comments_per_day=obj_in.max_comments_per_day,
+        )
     
     def create_oauth_user(
         self, 
@@ -869,6 +894,34 @@ class CRUDUser:
             user.last_login_at = datetime.utcnow()
             db.add(user)
             db.commit()
+
+    def update_after_comment(self, db: Session, *, user_id: int) -> None:
+        """用户留言后更新统计"""
+        user = self.get(db, user_id=user_id)
+        if user:
+            user.last_comment_at = datetime.utcnow()
+            user.total_comments += 1
+            db.add(user)
+            db.commit()
+
+    def delete(self, db: Session, *, user_id: int) -> Optional[User]:
+        """删除用户及其 OAuth 关联、会话和留言映射"""
+        db_obj = self.get(db, user_id=user_id)
+        if not db_obj:
+            return None
+
+        shadow_identifier = f"github_user_{user_id}"
+        alt_shadow_identifier = f"oauth_user_{user_id}"
+        shadows = db.query(GuestUser).filter(
+            GuestUser.identifier.in_([shadow_identifier, alt_shadow_identifier])
+        ).all()
+        for shadow in shadows:
+            db.delete(shadow)
+
+        db.query(UserSession).filter(UserSession.user_id == user_id).delete()
+        db.delete(db_obj)
+        db.commit()
+        return db_obj
 
 
 class CRUDOAuthAccount:
