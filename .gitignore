@@ -63,3 +63,5 @@ backend/static/img/*.jpg
 backend/static/img/*.png
 backend/static/img/*.webp
 backend/static/img/*.gif
+
+.venv

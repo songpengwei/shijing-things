@@ -20,28 +20,38 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd "$SCRIPT_DIR"
 
-# 1. 检查并激活 conda 环境
-echo -e "${YELLOW}[1/5] 检查 conda 环境...${NC}"
+# 1. 检查运行环境
+echo -e "${YELLOW}[1/5] 检查运行环境...${NC}"
 
-# 检查是否在 conda 环境中
-if [ -z "$CONDA_DEFAULT_ENV" ]; then
-    # 尝试激活环境
-    if conda info --envs | grep -q "^shijing"; then
-        echo "  找到 shijing 环境，正在激活..."
-        # shellcheck source=/dev/null
-        source "$(conda info --base)/etc/profile.d/conda.sh"
-        conda activate shijing
-        echo -e "  ${GREEN}✓ conda 环境已激活: $CONDA_DEFAULT_ENV${NC}"
+USE_VENV=0
+if command -v conda >/dev/null 2>&1; then
+    if [ -z "$CONDA_DEFAULT_ENV" ]; then
+        if conda info --envs | grep -q "^shijing"; then
+            echo "  找到 shijing 环境，正在激活..."
+            # shellcheck source=/dev/null
+            source "$(conda info --base)/etc/profile.d/conda.sh"
+            conda activate shijing
+            echo -e "  ${GREEN}✓ conda 环境已激活: $CONDA_DEFAULT_ENV${NC}"
+        else
+            echo -e "  ${YELLOW}⚠ 未找到 shijing conda 环境，尝试使用项目虚拟环境${NC}"
+            USE_VENV=1
+        fi
     else
-        echo -e "  ${RED}✗ 未找到 shijing 环境${NC}"
-        echo ""
-        echo "请使用以下命令创建环境:"
-        echo "  conda create -n shijing python=3.11"
-        echo ""
-        exit 1
+        echo -e "  ${GREEN}✓ 当前已在 conda 环境中: $CONDA_DEFAULT_ENV${NC}"
     fi
 else
-    echo -e "  ${GREEN}✓ 当前已在 conda 环境中: $CONDA_DEFAULT_ENV${NC}"
+    echo -e "  ${YELLOW}⚠ 未检测到 conda，尝试使用项目虚拟环境${NC}"
+    USE_VENV=1
+fi
+
+if [ "$USE_VENV" -eq 1 ]; then
+    if [ ! -d ".venv" ]; then
+        echo "  未找到 .venv，正在创建..."
+        python3 -m venv .venv
+    fi
+    # shellcheck source=/dev/null
+    source ".venv/bin/activate"
+    echo -e "  ${GREEN}✓ 已切换到项目虚拟环境: .venv${NC}"
 fi
 
 # 2. 安装依赖
