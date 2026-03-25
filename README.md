@@ -94,6 +94,37 @@ email_login_code_cooldown_seconds=60
 - `github_redirect_uri` 和 `wechat_redirect_uri` 必须写完整回调路径，不能只写域名。
 - 如果你刚刚泄露过 `github_client_secret`，应先去 GitHub 重新生成新的 secret。
 
+## 运行时数据备份
+
+仓库里的代码可以靠 Git 管理，但 `.env`、`shijing.db` 这类运行时数据建议单独备份。
+
+可直接执行：
+
+```bash
+./scripts/backup_runtime_data.sh
+```
+
+默认行为：
+- 备份 `.env`
+- 备份 `shijing.db`
+- 输出到 `./backups/`
+- 生成带 UTC 时间戳的 `.tar.gz` 归档
+
+常见用法：
+
+```bash
+# 连 data 目录一起打包
+./scripts/backup_runtime_data.sh --include-data
+
+# 再额外带上其他运行时目录
+./scripts/backup_runtime_data.sh --extra /srv/shijing-things/uploads
+
+# 自定义数据库和输出目录
+./scripts/backup_runtime_data.sh --db-path /srv/shijing-things/shijing.db --backup-dir /srv/shijing-backups
+```
+
+恢复时把归档解开，再将其中的 `.env`、`shijing.db` 或额外目录放回目标机器对应位置即可。
+
 ### 方式一: 一键启动（推荐）
 
 **macOS/Linux:**

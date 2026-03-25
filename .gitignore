@@ -65,3 +65,4 @@ backend/static/img/*.webp
 backend/static/img/*.gif
 
 .venv
+backups/
