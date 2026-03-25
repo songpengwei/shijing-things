@@ -107,6 +107,7 @@ email_login_code_cooldown_seconds=60
 默认行为：
 - 备份 `.env`
 - 备份 `shijing.db`
+- 备份 `shijing_things/static/img/`
 - 输出到 `./backups/`
 - 生成带 UTC 时间戳的 `.tar.gz` 归档
 
@@ -121,9 +122,12 @@ email_login_code_cooldown_seconds=60
 
 # 自定义数据库和输出目录
 ./scripts/backup_runtime_data.sh --db-path /srv/shijing-things/shijing.db --backup-dir /srv/shijing-backups
+
+# 自定义静态图片目录
+./scripts/backup_runtime_data.sh --static-img-path /srv/shijing-things/static/img
 ```
 
-恢复时把归档解开，再将其中的 `.env`、`shijing.db` 或额外目录放回目标机器对应位置即可。
+恢复时把归档解开，再将其中的 `.env`、`shijing.db`、`static/img/` 或额外目录放回目标机器对应位置即可。
 
 ### 方式一: 一键启动（推荐）
 

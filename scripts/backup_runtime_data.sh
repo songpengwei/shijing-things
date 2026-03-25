@@ -11,6 +11,7 @@ BACKUP_BASE_DIR="${BACKUP_BASE_DIR:-${PROJECT_ROOT}/backups}"
 ARCHIVE_PREFIX="${ARCHIVE_PREFIX:-shijing-runtime-backup}"
 DB_PATH="${DB_PATH:-${PROJECT_ROOT}/shijing.db}"
 ENV_PATH="${ENV_PATH:-${PROJECT_ROOT}/.env}"
+STATIC_IMG_PATH="${STATIC_IMG_PATH:-${PROJECT_ROOT}/shijing_things/static/img}"
 
 INCLUDE_DATA_DIR=0
 EXTRA_PATHS=()
@@ -26,18 +27,21 @@ Options:
   --backup-dir DIR         Override output directory (default: ./backups)
   --db-path PATH           Override database path (default: ./shijing.db)
   --env-path PATH          Override env file path (default: ./.env)
+  --static-img-path PATH   Override static image directory (default: ./shijing_things/static/img)
   -h, --help               Show help
 
 Environment variables:
   BACKUP_BASE_DIR          Same as --backup-dir
   DB_PATH                  Same as --db-path
   ENV_PATH                 Same as --env-path
+  STATIC_IMG_PATH          Same as --static-img-path
   ARCHIVE_PREFIX           Backup archive filename prefix
 
 Examples:
   ./scripts/backup_runtime_data.sh
   ./scripts/backup_runtime_data.sh --include-data
   ./scripts/backup_runtime_data.sh --extra /srv/shijing-things/uploads
+  ./scripts/backup_runtime_data.sh --static-img-path /srv/shijing-things/static/img
 EOF
 }
 
@@ -77,6 +81,14 @@ while [[ $# -gt 0 ]]; do
                 exit 1
             fi
             ENV_PATH="$2"
+            shift 2
+            ;;
+        --static-img-path)
+            if [[ $# -lt 2 ]]; then
+                echo "error: --static-img-path requires a path" >&2
+                exit 1
+            fi
+            STATIC_IMG_PATH="$2"
             shift 2
             ;;
         -h|--help)
@@ -132,6 +144,12 @@ else
     echo "warning: database file not found: ${DB_PATH}" >&2
 fi
 
+if [[ -d "${STATIC_IMG_PATH}" ]]; then
+    copy_path_into_staging "${STATIC_IMG_PATH}" "static/img"
+else
+    echo "warning: static image directory not found: ${STATIC_IMG_PATH}" >&2
+fi
+
 if [[ "${INCLUDE_DATA_DIR}" -eq 1 ]]; then
     copy_path_into_staging "${PROJECT_ROOT}/data" "data"
 fi
@@ -152,6 +170,7 @@ hostname=${HOSTNAME_VALUE}
 project_root=${PROJECT_ROOT}
 env_path=${ENV_PATH}
 db_path=${DB_PATH}
+static_img_path=${STATIC_IMG_PATH}
 include_data_dir=${INCLUDE_DATA_DIR}
 extra_paths=${EXTRA_PATHS[*]:-}
 EOF
