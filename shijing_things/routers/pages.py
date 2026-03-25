@@ -22,6 +22,7 @@ from shijing_things.crud.crud import item as crud_item, poem as crud_poem
 router = APIRouter()
 templates = Jinja2Templates(directory="shijing_things/templates")
 settings = get_settings()
+MANAGE_TABS = {"items", "comments", "users", "security"}
 
 
 def is_logged_in(request: Request) -> bool:
@@ -196,20 +197,22 @@ def logout(request: Request):
 
 # ==================== 管理页面（需要管理员登录） ====================
 
-@router.get("/manage", response_class=HTMLResponse)
-def manage_page(
-    request: Request, 
-    db: Session = Depends(get_db),
+def render_manage_page(
+    request: Request,
+    *,
+    active_tab: str,
+    db: Session,
     search: Optional[str] = None
 ):
-    """管理页面 - 仅管理员可访问"""
-    # 检查管理员登录状态
+    """渲染管理页面"""
     if not is_admin(request):
-        return RedirectResponse(url="/login?next=/manage", status_code=302)
-    
-    items, total = crud_item.get_multi(db, skip=0, limit=1000, search=search)
-    
-    # 分类名称映射
+        return RedirectResponse(url=f"/login?next=/manage/{active_tab}", status_code=302)
+
+    items = []
+    total = 0
+    if active_tab == "items":
+        items, total = crud_item.get_multi(db, skip=0, limit=1000, search=search)
+
     category_names = {
         "草": "草木",
         "木": "树木",
@@ -224,9 +227,46 @@ def manage_page(
         "items": items,
         "total": total,
         "search": search or "",
+        "active_tab": active_tab,
+        "manage_tab_urls": {
+            "items": "/manage/items",
+            "comments": "/manage/comments",
+            "users": "/manage/users",
+            "security": "/manage/security",
+        },
         "username": request.session.get("admin_username", ""),
         "category_names": category_names,
     })
+
+
+@router.get("/manage")
+def manage_page_redirect():
+    """管理首页重定向到事物管理"""
+    return RedirectResponse(url="/manage/items", status_code=302)
+
+
+@router.get("/manage/items", response_class=HTMLResponse)
+def manage_items_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    search: Optional[str] = None
+):
+    return render_manage_page(request, active_tab="items", db=db, search=search)
+
+
+@router.get("/manage/comments", response_class=HTMLResponse)
+def manage_comments_page(request: Request, db: Session = Depends(get_db)):
+    return render_manage_page(request, active_tab="comments", db=db)
+
+
+@router.get("/manage/users", response_class=HTMLResponse)
+def manage_users_page(request: Request, db: Session = Depends(get_db)):
+    return render_manage_page(request, active_tab="users", db=db)
+
+
+@router.get("/manage/security", response_class=HTMLResponse)
+def manage_security_page(request: Request, db: Session = Depends(get_db)):
+    return render_manage_page(request, active_tab="security", db=db)
 
 
 @router.get("/manage/item/new", response_class=HTMLResponse)

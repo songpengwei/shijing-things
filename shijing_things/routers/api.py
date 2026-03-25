@@ -2,7 +2,11 @@
 RESTful API 路由
 提供 JSON 格式的数据接口
 """
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status, Header
+import os
+import shutil
+from pathlib import Path
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status, Header, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from typing import Optional, List
 import hashlib
@@ -26,6 +30,7 @@ from shijing_things.crud.crud import (
 )
 
 router = APIRouter(prefix="/api")
+ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
 
 def require_login(request: Request):
@@ -46,6 +51,49 @@ def require_admin(request: Request):
             detail="需要管理员权限"
         )
     return True
+
+
+def normalize_static_image_path(raw_path: str) -> str:
+    """将上传目标路径规范化到 /static/img/ 下"""
+    candidate = (raw_path or "").strip()
+    if not candidate:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="图片路径不能为空")
+
+    if candidate.startswith("/"):
+        candidate = candidate.lstrip("/")
+
+    if not candidate.startswith("static/img/"):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="图片必须保存到 /static/img/ 目录")
+
+    normalized = Path(candidate)
+    if normalized.name in {"", ".", ".."}:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="图片文件名无效")
+
+    if ".." in normalized.parts:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="图片路径非法")
+
+    suffix = normalized.suffix.lower()
+    if suffix not in ALLOWED_IMAGE_EXTENSIONS:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="仅支持 jpg、jpeg、png、webp、gif 图片"
+        )
+
+    return "/" + normalized.as_posix()
+
+
+def resolve_image_upload_target(*, target_path: str) -> tuple[str, Path]:
+    """把静态资源路径映射到磁盘路径"""
+    normalized_url = normalize_static_image_path(target_path)
+    relative_path = normalized_url.lstrip("/")
+    file_path = Path(settings.static_dir) / Path(relative_path).relative_to("static")
+    file_path = file_path.resolve()
+    img_root = Path(settings.img_dir).resolve()
+
+    if img_root not in file_path.parents:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="图片路径超出静态目录")
+
+    return normalized_url, file_path
 
 
 def get_oauth_comment_user(request: Request, db: Session):
@@ -167,6 +215,49 @@ def delete_item(
     if not db_item:
         raise HTTPException(status_code=404, detail="事物不存在")
     return None
+
+
+@router.post("/items/{item_id}/image", status_code=status.HTTP_200_OK)
+async def upload_item_image(
+    item_id: int,
+    request: Request,
+    image: UploadFile = File(...),
+    target_path: Optional[str] = Form(None),
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_admin)
+):
+    """上传事物图片并写入 /static/img/，支持覆盖原图"""
+    db_item = crud_item.get(db, item_id=item_id)
+    if not db_item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="事物不存在")
+
+    upload_name = Path(image.filename or "").name
+    if not upload_name:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="未选择图片文件")
+
+    desired_path = (target_path or "").strip() or (db_item.image_url or "").strip()
+    if not desired_path:
+        desired_path = f"/static/img/{upload_name}"
+
+    normalized_url, file_path = resolve_image_upload_target(target_path=desired_path)
+    os.makedirs(file_path.parent, exist_ok=True)
+
+    try:
+        with file_path.open("wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+    finally:
+        await image.close()
+
+    db_item.image_url = normalized_url
+    db.add(db_item)
+    db.commit()
+    db.refresh(db_item)
+
+    return {
+        "message": "图片上传成功",
+        "image_url": normalized_url,
+        "stored_filename": file_path.name,
+    }
 
 
 # ==================== 诗篇 API ====================

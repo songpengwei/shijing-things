@@ -124,7 +124,28 @@
                     <label for="image_url">图片路径</label>
                     <input type="text" id="image_url" name="image_url"
                            value="{{ item.image_url if item else '' }}"
-                           placeholder="/img/xxx.jpg">
+                           placeholder="/static/img/xxx.jpg">
+                </div>
+
+                <div class="form-group">
+                    <label for="image_file">上传图片</label>
+                    <div class="image-upload-row">
+                        <input type="file" id="image_file" accept="image/*">
+                        <button type="button" class="btn btn-secondary" id="upload-image-btn" onclick="uploadImage()">
+                            上传并覆盖
+                        </button>
+                    </div>
+                    <p class="form-help">
+                        如果上方已填写 `/static/img/xxx.jpg`，上传时会直接覆盖同名文件；如果为空，则自动使用上传文件名。
+                    </p>
+                    <div id="image-upload-status" class="upload-status" style="display: none;"></div>
+                    <div class="image-preview" id="image-preview" {% if not item or not item.image_url %}style="display: none;"{% endif %}>
+                        <img
+                            id="image-preview-img"
+                            src="{{ item.image_url if item and item.image_url else '' }}"
+                            alt="图片预览"
+                        >
+                    </div>
                 </div>
             </div>
         </div>
@@ -177,6 +198,74 @@ document.getElementById('item-form').addEventListener('submit', async function(e
         alert('网络错误，请重试');
     }
 });
+
+async function uploadImage() {
+    const isEdit = {{ 'true' if is_edit else 'false' }};
+    const itemId = {{ item.id if item else 'null' }};
+    const fileInput = document.getElementById('image_file');
+    const imageUrlInput = document.getElementById('image_url');
+    const statusBox = document.getElementById('image-upload-status');
+    const uploadBtn = document.getElementById('upload-image-btn');
+
+    if (!isEdit || !itemId) {
+        statusBox.className = 'upload-status warning';
+        statusBox.textContent = '请先创建事物，再上传图片。';
+        statusBox.style.display = 'block';
+        return;
+    }
+
+    if (!fileInput.files || fileInput.files.length === 0) {
+        statusBox.className = 'upload-status warning';
+        statusBox.textContent = '请先选择图片文件。';
+        statusBox.style.display = 'block';
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+    if (imageUrlInput.value.trim()) {
+        formData.append('target_path', imageUrlInput.value.trim());
+    }
+
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = '上传中...';
+    statusBox.className = 'upload-status';
+    statusBox.textContent = '正在上传图片...';
+    statusBox.style.display = 'block';
+
+    try {
+        const response = await fetch(`/api/items/${itemId}/image`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.detail || '上传失败');
+        }
+
+        imageUrlInput.value = result.image_url;
+        fileInput.value = '';
+        statusBox.className = 'upload-status success';
+        statusBox.textContent = `上传成功，已保存到 ${result.image_url}`;
+        updateImagePreview(result.image_url);
+    } catch (err) {
+        console.error(err);
+        statusBox.className = 'upload-status error';
+        statusBox.textContent = err.message || '上传失败';
+    } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = '上传并覆盖';
+    }
+}
+
+function updateImagePreview(imageUrl) {
+    const preview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('image-preview-img');
+    const cacheBustedUrl = `${imageUrl}${imageUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
+    previewImg.src = cacheBustedUrl;
+    preview.style.display = 'block';
+}
 </script>
 {% endblock %}
 
@@ -211,6 +300,58 @@ document.getElementById('item-form').addEventListener('submit', async function(e
     font-weight: 500;
 }
 
+.image-upload-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.form-help {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+}
+
+.upload-status {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.upload-status.success {
+    background: var(--color-cao-soft);
+    color: var(--color-cao-deep);
+}
+
+.upload-status.warning {
+    background: var(--color-niao-soft);
+    color: var(--color-text);
+}
+
+.upload-status.error {
+    background: var(--color-shou-soft);
+    color: var(--color-shou-deep);
+}
+
+.image-preview {
+    margin-top: 1rem;
+}
+
+.image-preview img {
+    display: block;
+    max-width: 220px;
+    max-height: 220px;
+    width: auto;
+    height: auto;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+}
+
 @media (max-width: 640px) {
     .page-header {
         flex-direction: column;
@@ -220,6 +361,10 @@ document.getElementById('item-form').addEventListener('submit', async function(e
     .page-header-right {
         width: 100%;
         justify-content: space-between;
+    }
+
+    .image-upload-row {
+        align-items: stretch;
     }
 }
 </style>

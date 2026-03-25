@@ -146,6 +146,14 @@ class GuestUserSimple(BaseModel):
     avatar_url: Optional[str] = ""
 
 
+class ShijingItemSimple(BaseModel):
+    """事物简化信息（用于评论展示）"""
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+
+
 class CommentBase(BaseModel):
     """留言基础模型"""
     content: str
@@ -175,6 +183,7 @@ class CommentResponse(CommentBase):
     id: int
     user_id: int
     user: GuestUserSimple  # 嵌套用户信息
+    item: Optional[ShijingItemSimple] = None
     is_approved: int
     is_deleted: int
     created_at: datetime

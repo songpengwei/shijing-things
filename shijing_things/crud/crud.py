@@ -325,7 +325,8 @@ class CRUDComment:
     def get(self, db: Session, comment_id: int) -> Optional[Comment]:
         """根据 ID 获取评论"""
         return db.query(Comment).options(
-            joinedload(Comment.user)
+            joinedload(Comment.user),
+            joinedload(Comment.item)
         ).filter(Comment.id == comment_id).first()
     
     def get_multi(
@@ -341,7 +342,10 @@ class CRUDComment:
         parent_id: Optional[int] = None
     ) -> tuple[List[Comment], int]:
         """获取多条评论"""
-        query = db.query(Comment).options(joinedload(Comment.user))
+        query = db.query(Comment).options(
+            joinedload(Comment.user),
+            joinedload(Comment.item)
+        )
         
         if item_id is not None:
             query = query.filter(Comment.item_id == item_id)
@@ -377,6 +381,7 @@ class CRUDComment:
         """
         query = db.query(Comment).options(
             joinedload(Comment.user),
+            joinedload(Comment.item),
             joinedload(Comment.replies).joinedload(Comment.user)
         ).filter(
             Comment.item_id == item_id,

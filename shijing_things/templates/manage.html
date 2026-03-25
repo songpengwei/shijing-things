@@ -17,28 +17,28 @@
 
     <!-- 管理标签页 -->
     <div class="manage-tabs">
-        <button class="tab-btn active" data-tab="items" onclick="switchTab('items')">
+        <a href="{{ manage_tab_urls['items'] }}" class="tab-btn {% if active_tab == 'items' %}active{% endif %}" data-tab="items">
             📚 事物管理
-        </button>
-        <button class="tab-btn" data-tab="comments" onclick="switchTab('comments')">
+        </a>
+        <a href="{{ manage_tab_urls['comments'] }}" class="tab-btn {% if active_tab == 'comments' %}active{% endif %}" data-tab="comments">
             💬 留言管理
             <span class="tab-badge" id="comments-badge">0</span>
-        </button>
-        <button class="tab-btn" data-tab="users" onclick="switchTab('users')">
+        </a>
+        <a href="{{ manage_tab_urls['users'] }}" class="tab-btn {% if active_tab == 'users' %}active{% endif %}" data-tab="users">
             👥 用户管理
-        </button>
-        <button class="tab-btn" data-tab="security" onclick="switchTab('security')">
+        </a>
+        <a href="{{ manage_tab_urls['security'] }}" class="tab-btn {% if active_tab == 'security' %}active{% endif %}" data-tab="security">
             🛡️ 安全防护
-        </button>
+        </a>
     </div>
 
     <!-- 事物管理面板 -->
-    <div id="tab-items" class="tab-panel active">
+    <div id="tab-items" class="tab-panel {% if active_tab == 'items' %}active{% endif %}">
         <div class="panel-header">
             <a href="/manage/item/new" class="btn btn-primary">+ 新建事物</a>
             <!-- 搜索区域 -->
             <div class="search-section-inline">
-                <form class="search-box" method="get" action="/manage">
+                <form class="search-box" method="get" action="{{ manage_tab_urls['items'] }}">
                     <input type="text" 
                            name="search" 
                            class="search-input" 
@@ -47,7 +47,7 @@
                            id="search-input">
                     <button type="submit" class="search-btn">🔍</button>
                     {% if search %}
-                    <a href="/manage" class="btn btn-secondary">清除</a>
+                    <a href="{{ manage_tab_urls['items'] }}" class="btn btn-secondary">清除</a>
                     {% endif %}
                 </form>
             </div>
@@ -115,7 +115,7 @@
     </div>
 
     <!-- 留言管理面板 -->
-    <div id="tab-comments" class="tab-panel">
+    <div id="tab-comments" class="tab-panel {% if active_tab == 'comments' %}active{% endif %}">
         <div class="panel-header">
             <div class="filter-section">
                 <select id="comment-filter" class="filter-select" onchange="loadComments()">
@@ -166,7 +166,7 @@
     </div>
 
     <!-- 用户管理面板 -->
-    <div id="tab-users" class="tab-panel">
+    <div id="tab-users" class="tab-panel {% if active_tab == 'users' %}active{% endif %}">
         <div class="panel-header">
             <div class="filter-section">
                 <select id="user-filter" class="filter-select" onchange="loadUsers()">
@@ -200,7 +200,7 @@
     </div>
 
     <!-- 安全防护面板 -->
-    <div id="tab-security" class="tab-panel">
+    <div id="tab-security" class="tab-panel {% if active_tab == 'security' %}active{% endif %}">
         <div class="panel-header">
             <h3>🛡️ 安全统计</h3>
             <button class="btn btn-secondary" onclick="loadSecurityStats()">🔄 刷新</button>
@@ -415,6 +415,16 @@
     font-weight: 500;
 }
 
+.table-link {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.table-link:hover {
+    color: var(--color-primary-dark);
+}
+
 /* 管理标签页 */
 .manage-tabs {
     display: flex;
@@ -437,6 +447,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    text-decoration: none;
 }
 
 .tab-btn:hover {
@@ -983,31 +994,7 @@ document.getElementById('confirm-modal').addEventListener('click', function(e) {
 
 // 搜索仅在点击搜索按钮时提交，不启用实时搜索
 
-// ==================== 标签页切换 ====================
-function switchTab(tabName) {
-    // 更新按钮状态
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === tabName);
-    });
-    
-    // 更新面板显示
-    document.querySelectorAll('.tab-panel').forEach(panel => {
-        panel.classList.remove('active');
-    });
-    document.getElementById(`tab-${tabName}`).classList.add('active');
-    
-    // 加载数据
-    if (tabName === 'comments') {
-        loadComments();
-        loadCommentStats();
-    } else if (tabName === 'users') {
-        loadUsers();
-    } else if (tabName === 'security') {
-        loadSecurityStats();
-        loadIPBlacklist();
-        loadSpamPatterns();
-    }
-}
+const activeManageTab = {{ active_tab|tojson }};
 
 // ==================== 留言管理 ====================
 async function loadCommentStats() {
@@ -1072,7 +1059,7 @@ function renderComments(comments) {
             <tr>
                 <td>${c.id}</td>
                 <td>${c.user.nickname}</td>
-                <td>事物#${c.item_id}</td>
+                <td><a href="/manage/item/${c.item_id}" class="table-link">编辑“${escapeHtml(c.item?.name || `事物#${c.item_id}`)}”</a></td>
                 <td title="${escapeHtml(c.content)}">${escapeHtml(content)}</td>
                 <td><span class="comment-status status-${statusClass}">${statusText}</span></td>
                 <td>${formatDateTime(c.created_at)}</td>
@@ -1268,8 +1255,16 @@ function formatDateTime(timeStr) {
     });
 }
 
-// 初始化时加载统计数据
 loadCommentStats();
+if (activeManageTab === 'comments') {
+    loadComments();
+} else if (activeManageTab === 'users') {
+    loadUsers();
+} else if (activeManageTab === 'security') {
+    loadSecurityStats();
+    loadIPBlacklist();
+    loadSpamPatterns();
+}
 
 // ==================== 安全管理 ====================
 
