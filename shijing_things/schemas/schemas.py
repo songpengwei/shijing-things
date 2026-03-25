@@ -326,6 +326,11 @@ class LoginRedirectResponse(MessageResponse):
     redirect_url: str
 
 
+class HomepageSettingsResponse(BaseModel):
+    """首页配置响应"""
+    homepage_category_preview_count: int
+
+
 # ==================== Token Schemas ====================
 
 class Token(BaseModel):

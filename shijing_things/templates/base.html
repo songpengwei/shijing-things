@@ -22,7 +22,6 @@
                 </div>
                 <nav class="nav">
                     <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">首页</a>
-                    <a href="/manage" class="nav-link {% if request.url.path.startswith('/manage') %}active{% endif %}">管理</a>
                 </nav>
             </div>
         </div>
@@ -36,8 +35,14 @@
     <!-- 底部 -->
     <footer class="footer">
         <div class="container">
-            <p class="footer-quote">"多识于鸟兽草木之名" —— 孔子</p>
-            <p class="footer-copy">诗经物什 © <a href="https://www.qtmuniao.com/about" target="_blank" rel="noopener">木鸟杂记</a> since 2026</p>
+            <div class="footer-top">
+                <p class="footer-quote">🌿 “多识于鸟兽草木之名” · 孔子</p>
+                <p class="footer-brand">📚 诗经物什 · <a href="https://www.qtmuniao.com/about" target="_blank" rel="noopener">木鸟杂记</a></p>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">🪶 since 2026 · 草木鸟兽之间，留一点细读与辨认</p>
+                <p class="footer-admin-entry"><a href="/manage/items" rel="nofollow">🔐 管理入口</a></p>
+            </div>
         </div>
     </footer>
 

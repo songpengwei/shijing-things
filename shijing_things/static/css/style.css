@@ -374,12 +374,60 @@ body {
     gap: 1.5rem;
 }
 
+.category-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+}
+
+.category-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.section-header-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-primary-dark);
+}
+
+.section-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+}
+
+.section-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid transparent;
+}
+
+.section-link:hover {
+    color: var(--color-primary-dark);
+    border-bottom-color: var(--color-primary-dark);
+}
+
 .item-card {
     background: var(--color-card);
     border-radius: var(--radius);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
-    border: 2px solid transparent;
     cursor: pointer;
     transition: all 0.3s;
 }
@@ -389,12 +437,9 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
-.item-card.category-草 { border-color: var(--color-cao); }
-.item-card.category-木 { border-color: var(--color-mu); }
-.item-card.category-鸟 { border-color: var(--color-niao); }
-.item-card.category-兽 { border-color: var(--color-shou); }
-.item-card.category-虫 { border-color: var(--color-chong); }
-.item-card.category-鱼 { border-color: var(--color-yu); }
+.section-toggle-card {
+    display: none;
+}
 
 .card-image {
     position: relative;
@@ -941,19 +986,80 @@ body {
 .footer {
     background: var(--color-card);
     border-top: 1px solid var(--color-border);
-    padding: 2rem 0;
-    text-align: center;
+    padding: 2rem 0 2.25rem;
+}
+
+.footer .container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.footer-top,
+.footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.footer-quote,
+.footer-brand,
+.footer-copy,
+.footer-admin-entry {
+    margin: 0;
 }
 
 .footer-quote {
-    font-style: italic;
-    color: var(--color-text-light);
-    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--color-primary-dark);
+}
+
+.footer-brand {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.footer-brand a {
+    color: var(--color-cao-deep);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+
+.footer-brand a:hover {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
 }
 
 .footer-copy {
     font-size: 0.875rem;
     color: var(--color-text-light);
+}
+
+.footer-admin-entry a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: var(--color-bg-soft);
+    color: var(--color-primary-dark);
+    text-decoration: none;
+    border: 1px solid var(--color-border-soft);
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.footer-admin-entry a:hover {
+    color: white;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
 }
 
 /* ===== 响应式 ===== */
@@ -1006,6 +1112,21 @@ body {
         border-bottom-color: var(--color-primary);
     }
 
+    .footer-top,
+    .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footer-quote {
+        font-size: 0.95rem;
+    }
+
+    .footer-brand,
+    .footer-copy {
+        font-size: 0.875rem;
+    }
+
     .hero-title {
         font-size: 1.75rem;
     }
@@ -1022,6 +1143,90 @@ body {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 1rem;
     }
+
+    .section-header-row {
+        align-items: flex-start;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+    }
+
+    .item-card.is-collapsed-mobile {
+        display: none;
+    }
+
+    .category-section[data-expanded="true"] .item-card.is-collapsed-mobile {
+        display: block;
+    }
+
+    .section-toggle-card {
+        display: flex;
+        min-height: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.4rem;
+        position: relative;
+        overflow: hidden;
+        padding: 1.15rem 1rem 1rem;
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius);
+        background:
+            radial-gradient(circle at top right, var(--color-bg-soft), transparent 45%),
+            var(--color-card);
+        color: var(--color-primary-dark);
+        box-shadow: var(--shadow-sm);
+        font: inherit;
+        cursor: pointer;
+        text-align: left;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .section-toggle-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+    }
+
+    .section-toggle-band {
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 6px;
+        background: var(--color-primary);
+    }
+
+    .section-toggle-icon {
+        width: 2.4rem;
+        height: 2.4rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: var(--color-bg);
+        font-size: 1.2rem;
+    }
+
+    .section-toggle-text {
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .section-toggle-meta {
+        font-size: 0.85rem;
+        color: var(--color-text-light);
+    }
+
+    .section-toggle-tip {
+        font-size: 0.8rem;
+        color: var(--color-text-light);
+    }
+
+    .section-toggle-card-草 .section-toggle-band { background: var(--color-cao); }
+    .section-toggle-card-木 .section-toggle-band { background: var(--color-mu); }
+    .section-toggle-card-鸟 .section-toggle-band { background: var(--color-niao); }
+    .section-toggle-card-兽 .section-toggle-band { background: var(--color-shou); }
+    .section-toggle-card-虫 .section-toggle-band { background: var(--color-chong); }
+    .section-toggle-card-鱼 .section-toggle-band { background: var(--color-yu); }
     
     .form-row {
         grid-template-columns: 1fr;
@@ -1039,6 +1244,16 @@ body {
     
     .manage-table .actions {
         flex-direction: column;
+    }
+}
+
+@media (min-width: 769px) {
+    .item-card.is-collapsed-desktop {
+        display: none;
+    }
+
+    .category-section[data-expanded="true"] .item-card.is-collapsed-desktop {
+        display: block;
     }
 }
 

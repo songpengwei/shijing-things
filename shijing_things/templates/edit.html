@@ -239,7 +239,14 @@ async function uploadImage() {
             body: formData,
         });
 
-        const result = await response.json();
+        const rawBody = await response.text();
+        let result = {};
+        try {
+            result = rawBody ? JSON.parse(rawBody) : {};
+        } catch {
+            result = { detail: rawBody || '上传失败' };
+        }
+
         if (!response.ok) {
             throw new Error(result.detail || '上传失败');
         }

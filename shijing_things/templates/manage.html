@@ -226,6 +226,20 @@
         </div>
 
         <div class="security-sections">
+            <div class="security-section">
+                <div class="section-header">
+                    <h4>🏠 首页展示配置</h4>
+                </div>
+                <div class="settings-form-row">
+                    <div class="form-group">
+                        <label for="homepage-preview-count">宽屏每类默认展示数量</label>
+                        <input type="number" id="homepage-preview-count" class="form-input" min="1" max="24" value="8">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveHomepageSettings()">保存</button>
+                </div>
+                <p class="settings-help">手机端仍默认每类展示 3 个，宽屏端使用这里的数值。</p>
+            </div>
+
             <!-- IP 黑名单 -->
             <div class="security-section">
                 <div class="section-header">
@@ -496,6 +510,24 @@
 .search-section-inline {
     flex: 1;
     max-width: 500px;
+}
+
+.settings-form-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.settings-form-row .form-group {
+    min-width: 220px;
+    margin: 0;
+}
+
+.settings-help {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-text-light);
 }
 
 /* 安全管理样式 */
@@ -1261,9 +1293,45 @@ if (activeManageTab === 'comments') {
 } else if (activeManageTab === 'users') {
     loadUsers();
 } else if (activeManageTab === 'security') {
+    loadHomepageSettings();
     loadSecurityStats();
     loadIPBlacklist();
     loadSpamPatterns();
+}
+
+function loadHomepageSettings() {
+    fetch('/api/admin/settings/homepage')
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
+            document.getElementById('homepage-preview-count').value = data.homepage_category_preview_count;
+        })
+        .catch(err => console.error('加载首页配置失败:', err));
+}
+
+function saveHomepageSettings() {
+    const count = parseInt(document.getElementById('homepage-preview-count').value, 10);
+    if (Number.isNaN(count) || count < 1 || count > 24) {
+        alert('请输入 1 到 24 之间的数字');
+        return;
+    }
+
+    const params = new URLSearchParams({
+        homepage_category_preview_count: String(count),
+    });
+
+    fetch('/api/admin/settings/homepage?' + params.toString(), { method: 'PUT' })
+        .then(async (response) => {
+            if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                throw new Error(data.detail || '保存失败');
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById('homepage-preview-count').value = data.homepage_category_preview_count;
+            alert('首页展示配置已保存');
+        })
+        .catch(err => alert(err.message || '保存失败'));
 }
 
 // ==================== 安全管理 ====================

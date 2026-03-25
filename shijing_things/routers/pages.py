@@ -17,7 +17,7 @@ from shijing_things.core.session_auth import (
     is_comment_interactive_user,
     is_comment_user_logged_in,
 )
-from shijing_things.crud.crud import item as crud_item, poem as crud_poem
+from shijing_things.crud.crud import item as crud_item, poem as crud_poem, site_setting as crud_site_setting
 
 router = APIRouter()
 templates = Jinja2Templates(directory="shijing_things/templates")
@@ -62,14 +62,47 @@ def home(
     db: Session = Depends(get_db)
 ):
     """首页 - 展示事物列表"""
+    category_options = [
+        {"key": "all", "label": "全部", "icon": "🌿"},
+        {"key": "草", "label": "草木", "icon": "🌱"},
+        {"key": "木", "label": "树木", "icon": "🌳"},
+        {"key": "鸟", "label": "鸟类", "icon": "🦅"},
+        {"key": "兽", "label": "兽类", "icon": "🦌"},
+        {"key": "虫", "label": "昆虫", "icon": "🦋"},
+        {"key": "鱼", "label": "鱼类", "icon": "🐟"},
+    ]
+
     items, total = crud_item.get_multi(
         db, skip=0, limit=1000, category=category, search=search
     )
     stats = crud_item.get_stats(db)
+    homepage_preview_count = crud_site_setting.get_int(
+        db,
+        key="homepage_category_preview_count",
+        default=8,
+    )
+    grouped_items = []
+
+    if (category or "all") == "all":
+        for category_option in category_options:
+            category_key = category_option["key"]
+            if category_key == "all":
+                continue
+            section_items = [item for item in items if item.category == category_key]
+            if section_items:
+                grouped_items.append({
+                    "key": category_key,
+                    "label": category_option["label"],
+                    "icon": category_option["icon"],
+                    "count": len(section_items),
+                    "items": section_items,
+                })
     
     return templates.TemplateResponse("index.html", {
         "request": request,
         "items": items,
+        "grouped_items": grouped_items,
+        "homepage_preview_count": homepage_preview_count,
         "total": total,
         "stats": stats,
         "current_category": category or "all",
@@ -84,15 +117,7 @@ def home(
         "google_login_url": f"/auth/login?provider=google&next={request.url.path}",
         "google_oauth_enabled": bool(settings.google_client_id and settings.google_client_secret),
         "wechat_oauth_enabled": bool(settings.wechat_app_id and settings.wechat_app_secret),
-        "categories": [
-            {"key": "all", "label": "全部", "icon": "🌿"},
-            {"key": "草", "label": "草木", "icon": "🌱"},
-            {"key": "木", "label": "树木", "icon": "🌳"},
-            {"key": "鸟", "label": "鸟类", "icon": "🦅"},
-            {"key": "兽", "label": "兽类", "icon": "🦌"},
-            {"key": "虫", "label": "昆虫", "icon": "🦋"},
-            {"key": "鱼", "label": "鱼类", "icon": "🐟"},
-        ]
+        "categories": category_options
     })
 
 

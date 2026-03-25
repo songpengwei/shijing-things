@@ -5,6 +5,7 @@ RESTful API 路由
 import os
 import shutil
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status, Header, UploadFile, File, Form
 from sqlalchemy.orm import Session
@@ -20,16 +21,19 @@ from shijing_things.schemas.schemas import (
     PoemCreate, PoemUpdate, PoemResponse, PoemList,
     CommentCreate, CommentUpdate, CommentResponse, CommentList, CommentStats,
     GuestUserCreate, GuestUserUpdate, GuestUserResponse,
-    UserCommentLimit, UserAdminCreate, UserUpdate, UserResponse
+    UserCommentLimit, UserAdminCreate, UserUpdate, UserResponse,
+    HomepageSettingsResponse
 )
 from shijing_things.crud.crud import (
     item as crud_item, poem as crud_poem,
     comment as crud_comment, guest_user as crud_guest_user,
     rate_limit as crud_rate_limit, ip_blacklist as crud_ip_blacklist,
-    spam_pattern as crud_spam_pattern, user as crud_user
+    spam_pattern as crud_spam_pattern, user as crud_user,
+    site_setting as crud_site_setting
 )
 
 router = APIRouter(prefix="/api")
+settings = get_settings()
 ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
 
@@ -58,6 +62,8 @@ def normalize_static_image_path(raw_path: str) -> str:
     candidate = (raw_path or "").strip()
     if not candidate:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="图片路径不能为空")
+
+    candidate = urlsplit(candidate).path.strip()
 
     if candidate.startswith("/"):
         candidate = candidate.lstrip("/")
@@ -248,14 +254,15 @@ async def upload_item_image(
     finally:
         await image.close()
 
-    db_item.image_url = normalized_url
+    versioned_url = f"{normalized_url}?v={int(file_path.stat().st_mtime_ns)}"
+    db_item.image_url = versioned_url
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
 
     return {
         "message": "图片上传成功",
-        "image_url": normalized_url,
+        "image_url": versioned_url,
         "stored_filename": file_path.name,
     }
 
@@ -929,6 +936,39 @@ def get_security_stats(
         "active_blacklist_count": active_blacklist,
         "active_users_24h": active_users,
         "low_trust_users": low_trust_users
+    }
+
+
+@router.get("/admin/settings/homepage", response_model=HomepageSettingsResponse)
+def get_homepage_settings(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_admin)
+):
+    return {
+        "homepage_category_preview_count": crud_site_setting.get_int(
+            db,
+            key="homepage_category_preview_count",
+            default=8,
+        )
+    }
+
+
+@router.put("/admin/settings/homepage", response_model=HomepageSettingsResponse)
+def update_homepage_settings(
+    request: Request,
+    homepage_category_preview_count: int = Query(..., ge=1, le=24),
+    db: Session = Depends(get_db),
+    _: bool = Depends(require_admin)
+):
+    crud_site_setting.set_value(
+        db,
+        key="homepage_category_preview_count",
+        value=str(homepage_category_preview_count),
+        description="首页宽屏每类默认展示数量",
+    )
+    return {
+        "homepage_category_preview_count": homepage_category_preview_count
     }
 
 

@@ -5,7 +5,7 @@ from datetime import datetime
 
 from shijing_things.models.models import (
     ShijingItem, Poem, Comment, GuestUser, RateLimit, IPBlacklist, SpamPattern,
-    User, OAuthAccount, UserSession, EmailLoginCode
+    User, OAuthAccount, UserSession, EmailLoginCode, SiteSetting
 )
 from shijing_things.schemas.schemas import (
     ShijingItemCreate, ShijingItemUpdate, PoemCreate, PoemUpdate,
@@ -190,6 +190,44 @@ class CRUDPoem:
 # 实例化 CRUD 对象
 item = CRUDItem()
 poem = CRUDPoem()
+
+
+class CRUDSiteSetting:
+    """站点配置 CRUD"""
+
+    def get(self, db: Session, *, key: str) -> Optional[SiteSetting]:
+        return db.query(SiteSetting).filter(SiteSetting.setting_key == key).first()
+
+    def get_value(self, db: Session, *, key: str, default: str = "") -> str:
+        setting = self.get(db, key=key)
+        return setting.setting_value if setting else default
+
+    def get_int(self, db: Session, *, key: str, default: int) -> int:
+        raw = self.get_value(db, key=key, default=str(default))
+        try:
+            return max(1, int(raw))
+        except (TypeError, ValueError):
+            return default
+
+    def set_value(self, db: Session, *, key: str, value: str, description: str = "") -> SiteSetting:
+        setting = self.get(db, key=key)
+        if setting:
+            setting.setting_value = value
+            if description:
+                setting.description = description
+        else:
+            setting = SiteSetting(
+                setting_key=key,
+                setting_value=value,
+                description=description,
+            )
+        db.add(setting)
+        db.commit()
+        db.refresh(setting)
+        return setting
+
+
+site_setting = CRUDSiteSetting()
 
 
 # ==================== GuestUser CRUD ====================

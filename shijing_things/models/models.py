@@ -260,3 +260,17 @@ class EmailLoginCode(Base):
 
     def __repr__(self):
         return f"<EmailLoginCode(id={self.id}, email='{self.email}', purpose='{self.purpose}')>"
+
+
+class SiteSetting(Base):
+    """站点配置"""
+    __tablename__ = "site_settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    setting_key = Column(String(100), unique=True, nullable=False, index=True)
+    setting_value = Column(String(255), nullable=False, default="")
+    description = Column(String(255), nullable=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<SiteSetting(key='{self.setting_key}', value='{self.setting_value}')>"
