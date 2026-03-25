@@ -83,10 +83,12 @@
         <section class="category-section category-section-{{ group['key'] }}" data-category-section data-expanded="false">
             <div class="section-header-row">
                 <div class="section-heading">
-                    <h2 class="section-title">{{ group['icon'] }} {{ group['label'] }}</h2>
+                    <h2 class="section-title"><a href="/?category={{ group['key'] }}">{{ group['icon'] }} {{ group['label'] }}</a></h2>
                     <p class="section-subtitle">共 {{ group['count'] }} 种，按《诗经》相关事物归类查看</p>
                 </div>
-                <a href="/?category={{ group['key'] }}" class="section-link">查看全部 {{ group['label'] }}</a>
+                {% if group['count'] > homepage_preview_count or group['count'] > 3 %}
+                <button type="button" class="section-link section-expand-link" data-section-toggle>展开全部</button>
+                {% endif %}
             </div>
 
             <div class="items-grid">
@@ -244,16 +246,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function bindCategoryExpand() {
-    if (!window.matchMedia('(max-width: 768px)').matches) {
-        return;
-    }
-
     document.querySelectorAll('[data-section-toggle]').forEach((button) => {
         button.addEventListener('click', () => {
             const section = button.closest('[data-category-section]');
             if (!section) return;
             section.dataset.expanded = 'true';
-            button.style.display = 'none';
+            section.querySelectorAll('[data-section-toggle]').forEach((toggle) => {
+                toggle.style.display = 'none';
+            });
         });
     });
 }

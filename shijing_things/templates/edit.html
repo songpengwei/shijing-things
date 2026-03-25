@@ -37,11 +37,11 @@
                     <label for="category">分类 <span class="required">*</span></label>
                     <select id="category" name="category" required>
                         <option value="">请选择</option>
-                        <option value="草" {% if item and item.category == '草' %}selected{% endif %}>草（草木）</option>
-                        <option value="木" {% if item and item.category == '木' %}selected{% endif %}>木（树木）</option>
+                        <option value="草" {% if item and item.category == '草' %}selected{% endif %}>草（草类）</option>
+                        <option value="木" {% if item and item.category == '木' %}selected{% endif %}>木（木类）</option>
                         <option value="鸟" {% if item and item.category == '鸟' %}selected{% endif %}>鸟（鸟类）</option>
                         <option value="兽" {% if item and item.category == '兽' %}selected{% endif %}>兽（兽类）</option>
-                        <option value="虫" {% if item and item.category == '虫' %}selected{% endif %}>虫（昆虫）</option>
+                        <option value="虫" {% if item and item.category == '虫' %}selected{% endif %}>虫（虫类）</option>
                         <option value="鱼" {% if item and item.category == '鱼' %}selected{% endif %}>鱼（鱼类）</option>
                     </select>
                 </div>

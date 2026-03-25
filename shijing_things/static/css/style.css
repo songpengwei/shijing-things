@@ -406,6 +406,16 @@ body {
     color: var(--color-primary-dark);
 }
 
+.section-title a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+
+.section-title a:hover {
+    border-bottom-color: currentColor;
+}
+
 .section-subtitle {
     font-size: 0.9rem;
     color: var(--color-text-light);
@@ -416,11 +426,84 @@ body {
     text-decoration: none;
     font-weight: 600;
     border-bottom: 1px solid transparent;
+    background: none;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
 }
 
 .section-link:hover {
     color: var(--color-primary-dark);
     border-bottom-color: var(--color-primary-dark);
+}
+
+.category-section-草 .section-title,
+.category-section-草 .section-link,
+.section-toggle-card-草 {
+    color: var(--color-cao-deep);
+}
+
+.category-section-木 .section-title,
+.category-section-木 .section-link,
+.section-toggle-card-木 {
+    color: var(--color-mu-deep);
+}
+
+.category-section-鸟 .section-title,
+.category-section-鸟 .section-link,
+.section-toggle-card-鸟 {
+    color: var(--color-niao-deep);
+}
+
+.category-section-兽 .section-title,
+.category-section-兽 .section-link,
+.section-toggle-card-兽 {
+    color: var(--color-shou-deep);
+}
+
+.category-section-虫 .section-title,
+.category-section-虫 .section-link,
+.section-toggle-card-虫 {
+    color: var(--color-chong-deep);
+}
+
+.category-section-鱼 .section-title,
+.category-section-鱼 .section-link,
+.section-toggle-card-鱼 {
+    color: var(--color-cao-deep);
+}
+
+.category-section-草 .section-link:hover {
+    color: var(--color-cao);
+    border-bottom-color: var(--color-cao);
+}
+
+.category-section-木 .section-link:hover {
+    color: var(--color-mu);
+    border-bottom-color: var(--color-mu);
+}
+
+.category-section-鸟 .section-link:hover {
+    color: var(--color-niao-deep);
+    border-bottom-color: var(--color-niao-deep);
+}
+
+.category-section-兽 .section-link:hover {
+    color: var(--color-shou);
+    border-bottom-color: var(--color-shou);
+}
+
+.category-section-虫 .section-link:hover {
+    color: var(--color-chong);
+    border-bottom-color: var(--color-chong);
+}
+
+.category-section-鱼 .section-link:hover {
+    color: var(--color-yu);
+    border-bottom-color: var(--color-yu);
 }
 
 .item-card {

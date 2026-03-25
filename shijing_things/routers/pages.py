@@ -64,11 +64,11 @@ def home(
     """首页 - 展示事物列表"""
     category_options = [
         {"key": "all", "label": "全部", "icon": "🌿"},
-        {"key": "草", "label": "草木", "icon": "🌱"},
-        {"key": "木", "label": "树木", "icon": "🌳"},
+        {"key": "草", "label": "草类", "icon": "🌱"},
+        {"key": "木", "label": "木类", "icon": "🌳"},
         {"key": "鸟", "label": "鸟类", "icon": "🦅"},
         {"key": "兽", "label": "兽类", "icon": "🦌"},
-        {"key": "虫", "label": "昆虫", "icon": "🦋"},
+        {"key": "虫", "label": "虫类", "icon": "🦋"},
         {"key": "鱼", "label": "鱼类", "icon": "🐟"},
     ]
 
@@ -239,11 +239,11 @@ def render_manage_page(
         items, total = crud_item.get_multi(db, skip=0, limit=1000, search=search)
 
     category_names = {
-        "草": "草木",
-        "木": "树木",
+        "草": "草类",
+        "木": "木类",
         "鸟": "鸟类",
         "兽": "兽类",
-        "虫": "昆虫",
+        "虫": "虫类",
         "鱼": "鱼类"
     }
     
