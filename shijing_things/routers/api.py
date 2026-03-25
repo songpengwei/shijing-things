@@ -9,6 +9,7 @@ import hashlib
 
 from shijing_things.core.database import get_db
 from shijing_things.core.config import get_settings
+from shijing_things.core.session_auth import is_admin_logged_in, is_comment_user_logged_in
 from shijing_things.models.models import Comment
 from shijing_things.schemas.schemas import (
     ShijingItemCreate, ShijingItemUpdate, ShijingItemResponse, ShijingItemList,
@@ -29,7 +30,7 @@ router = APIRouter(prefix="/api")
 
 def require_login(request: Request):
     """检查用户是否已登录，未登录返回 401"""
-    if not (request.session.get("logged_in") or request.session.get("is_authenticated")):
+    if not (is_admin_logged_in(request) or is_comment_user_logged_in(request)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="未登录，请先登录"
@@ -39,7 +40,7 @@ def require_login(request: Request):
 
 def require_admin(request: Request):
     """检查是否为管理员，未授权返回 403"""
-    if not request.session.get("logged_in"):
+    if not is_admin_logged_in(request):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="需要管理员权限"
@@ -49,14 +50,14 @@ def require_admin(request: Request):
 
 def get_oauth_comment_user(request: Request, db: Session):
     """获取当前已登录用户对应的留言身份"""
-    auth_type = request.session.get("auth_type")
-    if auth_type not in {"oauth_github", "oauth_google", "oauth_wechat", "email_code"} or not request.session.get("is_authenticated"):
+    auth_type = request.session.get("comment_auth_type")
+    if auth_type not in {"oauth_github", "oauth_google", "oauth_wechat", "email_code"} or not request.session.get("comment_is_authenticated"):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="留言需要先登录支持的账号"
         )
 
-    user_id = request.session.get("user_id")
+    user_id = request.session.get("comment_user_id")
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -480,7 +481,7 @@ def create_comment(
     
     # 更新用户统计
     crud_guest_user.update_after_comment(db, user_id=user.id)
-    db_user_id = request.session.get("user_id")
+    db_user_id = request.session.get("comment_user_id")
     if db_user_id:
         crud_user.update_after_comment(db, user_id=db_user_id)
     

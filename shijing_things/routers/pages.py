@@ -10,6 +10,13 @@ from typing import Optional
 
 from shijing_things.core.config import get_settings
 from shijing_things.core.database import get_db
+from shijing_things.core.session_auth import (
+    clear_admin_session,
+    get_comment_auth_label,
+    is_admin_logged_in,
+    is_comment_interactive_user,
+    is_comment_user_logged_in,
+)
 from shijing_things.crud.crud import item as crud_item, poem as crud_poem
 
 router = APIRouter()
@@ -19,31 +26,17 @@ settings = get_settings()
 
 def is_logged_in(request: Request) -> bool:
     """检查用户是否已登录（管理员或 OAuth 用户）"""
-    return request.session.get("logged_in") is True or request.session.get("is_authenticated") is True
+    return is_admin_logged_in(request) or is_comment_user_logged_in(request)
 
 
 def is_admin(request: Request) -> bool:
     """检查是否是管理员"""
-    return request.session.get("logged_in") is True
+    return is_admin_logged_in(request)
 
 
 def is_oauth_user(request: Request) -> bool:
     """检查是否是可用于留言的登录用户"""
-    return (
-        request.session.get("is_authenticated") is True
-        and request.session.get("auth_type") in {"oauth_github", "oauth_google", "oauth_wechat", "email_code"}
-    )
-
-
-def get_comment_auth_label(request: Request) -> str:
-    auth_type = request.session.get("auth_type")
-    if auth_type == "oauth_wechat":
-        return "微信"
-    if auth_type == "oauth_google":
-        return "Google"
-    if auth_type == "email_code":
-        return "邮箱验证码"
-    return "GitHub"
+    return is_comment_interactive_user(request)
 
 
 def require_login(request: Request):
@@ -84,8 +77,8 @@ def home(
         "github_login_url": f"/auth/login?next={request.url.path}",
         "wechat_login_url": f"/auth/login?provider=wechat&next={request.url.path}",
         "comment_login_page_url": f"/login?next={request.url.path}",
-        "comment_user_name": request.session.get("nickname") or request.session.get("username") or "登录用户",
-        "comment_user_avatar": request.session.get("avatar_url") or "",
+        "comment_user_name": request.session.get("comment_nickname") or request.session.get("comment_username") or "登录用户",
+        "comment_user_avatar": request.session.get("comment_avatar_url") or "",
         "comment_auth_label": get_comment_auth_label(request),
         "google_login_url": f"/auth/login?provider=google&next={request.url.path}",
         "google_oauth_enabled": bool(settings.google_client_id and settings.google_client_secret),
@@ -128,8 +121,8 @@ def item_detail(item_id: int, request: Request, db: Session = Depends(get_db)):
         "github_login_url": f"/auth/login?next={request.url.path}",
         "wechat_login_url": f"/auth/login?provider=wechat&next={request.url.path}",
         "comment_login_page_url": f"/login?next={request.url.path}",
-        "comment_user_name": request.session.get("nickname") or request.session.get("username") or "登录用户",
-        "comment_user_avatar": request.session.get("avatar_url") or "",
+        "comment_user_name": request.session.get("comment_nickname") or request.session.get("comment_username") or "登录用户",
+        "comment_user_avatar": request.session.get("comment_avatar_url") or "",
         "comment_auth_label": get_comment_auth_label(request),
         "google_login_url": f"/auth/login?provider=google&next={request.url.path}",
         "google_oauth_enabled": bool(settings.google_client_id and settings.google_client_secret),
@@ -142,14 +135,19 @@ def item_detail(item_id: int, request: Request, db: Session = Depends(get_db)):
 @router.get("/login", response_class=HTMLResponse)
 def login_page(request: Request, next: Optional[str] = "/manage", error: Optional[str] = None):
     """登录页面"""
-    # 如果已登录，直接跳转
-    if is_logged_in(request):
+    # 管理员已登录时，访问管理员目标页直接跳转；留言用户不应阻塞管理员再次登录
+    if is_admin(request) and next and next.startswith("/manage"):
         return RedirectResponse(url=next, status_code=302)
     
     return templates.TemplateResponse("login.html", {
         "request": request,
         "next": next,
         "error": error,
+        "is_admin_logged_in": is_admin(request),
+        "admin_username": request.session.get("admin_username", ""),
+        "is_comment_logged_in": is_comment_user_logged_in(request),
+        "comment_user_name": request.session.get("comment_nickname") or request.session.get("comment_username") or "登录用户",
+        "comment_auth_label": get_comment_auth_label(request),
         "admin_login_enabled": bool(settings.admin_username and settings.admin_password),
         "email_login_enabled": bool(
             settings.smtp_host
@@ -179,8 +177,8 @@ def login_submit(
         )
 
     if username == settings.admin_username and password == settings.admin_password:
-        request.session["logged_in"] = True
-        request.session["username"] = username
+        request.session["admin_logged_in"] = True
+        request.session["admin_username"] = username
         return RedirectResponse(url=next, status_code=302)
     else:
         return RedirectResponse(
@@ -192,7 +190,7 @@ def login_submit(
 @router.get("/logout")
 def logout(request: Request):
     """登出"""
-    request.session.clear()
+    clear_admin_session(request)
     return RedirectResponse(url="/", status_code=302)
 
 
@@ -226,7 +224,7 @@ def manage_page(
         "items": items,
         "total": total,
         "search": search or "",
-        "username": request.session.get("username", ""),
+        "username": request.session.get("admin_username", ""),
         "category_names": category_names,
     })
 
@@ -242,7 +240,7 @@ def new_item_page(request: Request):
         "request": request,
         "item": None,
         "is_edit": False,
-        "username": request.session.get("username", ""),
+        "username": request.session.get("admin_username", ""),
     })
 
 
@@ -261,5 +259,5 @@ def edit_item_page(item_id: int, request: Request, db: Session = Depends(get_db)
         "request": request,
         "item": item,
         "is_edit": True,
-        "username": request.session.get("username", ""),
+        "username": request.session.get("admin_username", ""),
     })

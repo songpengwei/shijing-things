@@ -18,6 +18,19 @@
             </div>
             {% endif %}
 
+            {% if is_comment_logged_in %}
+            <div class="login-status-note">
+                当前留言账户 <strong>{{ comment_user_name }}</strong> 已通过 {{ comment_auth_label }} 登录。
+                管理员登录与留言账户相互独立，可同时保持登录。
+            </div>
+            {% endif %}
+
+            {% if is_admin_logged_in %}
+            <div class="login-status-note">
+                当前管理员账户 <strong>{{ admin_username }}</strong> 已登录。
+            </div>
+            {% endif %}
+
             {% if email_login_enabled %}
             <div class="email-login-section">
                 <div class="section-label">邮箱验证码登录</div>
@@ -202,6 +215,17 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.login-status-note {
+    background: var(--color-bg);
+    color: var(--color-text);
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--color-border);
+    line-height: 1.6;
 }
 
 .login-form .form-group {

@@ -7,11 +7,11 @@
     <div class="page-header">
         <div class="page-header-left">
             <h1 class="page-title">📋 后台管理</h1>
-            <span class="user-badge">👤 {{ username }}</span>
+            <span class="user-badge">管理员：{{ username }}</span>
         </div>
         <div class="page-header-right">
             <a href="/" class="btn btn-secondary">返回首页</a>
-            <a href="/logout" class="btn btn-secondary">退出登录</a>
+            <a href="/logout" class="btn btn-secondary">退出管理员</a>
         </div>
     </div>
 
@@ -346,21 +346,21 @@
 <div id="login-modal" class="modal">
     <div class="modal-content modal-small">
         <div class="modal-header">
-            <h3>🔐 请先登录</h3>
+            <h3>🔐 请先登录管理员账户</h3>
             <span class="modal-close" onclick="closeLoginModal()">&times;</span>
         </div>
         <div class="modal-body">
             <div id="login-error" class="login-error" style="display: none;"></div>
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label>用户名</label>
-                    <input type="text" id="login-username" required placeholder="请输入用户名">
+                    <label>管理员用户名</label>
+                    <input type="text" id="login-username" required placeholder="请输入管理员用户名">
                 </div>
                 <div class="form-group">
                     <label>密码</label>
                     <input type="password" id="login-password" required placeholder="请输入密码">
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">登录</button>
+                <button type="submit" class="btn btn-primary btn-block">管理员登录</button>
             </form>
         </div>
     </div>
@@ -890,8 +890,8 @@ async function doDelete(id, name) {
     try {
         const response = await fetch(`/api/items/${id}`, { method: 'DELETE' });
         
-        if (response.status === 401) {
-            // 未登录，显示登录弹窗
+        if (response.status === 401 || response.status === 403) {
+            // 未登录或当前仅是留言账户，显示管理员登录弹窗
             closeConfirmModal();
             showLoginModal();
             return false;
@@ -935,8 +935,8 @@ async function deleteItem(id, name) {
     try {
         const response = await fetch(`/api/items/${id}`, { method: 'DELETE' });
         
-        if (response.status === 401) {
-            // 未登录，显示登录弹窗
+        if (response.status === 401 || response.status === 403) {
+            // 未登录或当前仅是留言账户，显示管理员登录弹窗
             showLoginModal();
             return;
         }

@@ -12,6 +12,7 @@ from shijing_things.core.config import get_settings
 from shijing_things.core.mail import send_email, is_email_login_enabled
 from shijing_things.core.oauth import github_oauth, google_oauth, wechat_oauth, generate_oauth_state
 from shijing_things.core.security import create_access_token, get_password_hash, verify_password
+from shijing_things.core.session_auth import clear_comment_session
 from shijing_things.crud.crud import (
     user as crud_user, oauth_account as crud_oauth, user_session as crud_session,
     email_login_code as crud_email_login_code
@@ -51,13 +52,13 @@ def is_provider_enabled(provider: str) -> bool:
 
 
 def set_authenticated_session(request: Request, *, user_id: int, session_token: str, auth_type: str, username: str = "", nickname: str = "", avatar_url: str = "") -> None:
-    request.session["user_id"] = user_id
-    request.session["session_token"] = session_token
-    request.session["is_authenticated"] = True
-    request.session["auth_type"] = auth_type
-    request.session["username"] = username
-    request.session["nickname"] = nickname
-    request.session["avatar_url"] = avatar_url
+    request.session["comment_user_id"] = user_id
+    request.session["comment_session_token"] = session_token
+    request.session["comment_is_authenticated"] = True
+    request.session["comment_auth_type"] = auth_type
+    request.session["comment_username"] = username
+    request.session["comment_nickname"] = nickname
+    request.session["comment_avatar_url"] = avatar_url
 
 
 def normalize_email(email: str) -> str:
@@ -490,10 +491,13 @@ def login(
     )
     
     # 设置 session
-    request.session["user_id"] = user.id
-    request.session["session_token"] = session.session_token
-    request.session["is_authenticated"] = True
-    request.session["auth_type"] = "password"
+    request.session["comment_user_id"] = user.id
+    request.session["comment_session_token"] = session.session_token
+    request.session["comment_is_authenticated"] = True
+    request.session["comment_auth_type"] = "password"
+    request.session["comment_username"] = user.username or ""
+    request.session["comment_nickname"] = user.nickname
+    request.session["comment_avatar_url"] = user.avatar_url or ""
     
     return {
         "access_token": access_token,
@@ -509,11 +513,11 @@ def logout(
     db: Session = Depends(get_db)
 ):
     """用户登出"""
-    session_token = request.session.get("session_token")
+    session_token = request.session.get("comment_session_token")
     if session_token:
         crud_session.invalidate(db, token=session_token)
-    
-    request.session.clear()
+
+    clear_comment_session(request)
     
     return {"message": "Successfully logged out"}
 
@@ -526,7 +530,7 @@ def get_current_user_info(
     db: Session = Depends(get_db)
 ):
     """获取当前登录用户信息"""
-    user_id = request.session.get("user_id")
+    user_id = request.session.get("comment_user_id")
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -546,9 +550,9 @@ def get_current_user_info(
 @router.get("/status")
 def auth_status(request: Request):
     """检查认证状态"""
-    is_authenticated = request.session.get("is_authenticated", False)
-    user_id = request.session.get("user_id")
-    auth_type = request.session.get("auth_type")
+    is_authenticated = request.session.get("comment_is_authenticated", False)
+    user_id = request.session.get("comment_user_id")
+    auth_type = request.session.get("comment_auth_type")
     
     return {
         "is_authenticated": is_authenticated,
