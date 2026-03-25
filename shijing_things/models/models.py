@@ -5,7 +5,7 @@ from shijing_things.core.database import Base
 
 
 class ShijingItem(Base):
-    """诗经事物模型 - 草木鸟兽虫鱼"""
+    """诗经事物模型 - 鸟兽草木虫鱼"""
     __tablename__ = "shijing_items"
 
     id = Column(Integer, primary_key=True, index=True)

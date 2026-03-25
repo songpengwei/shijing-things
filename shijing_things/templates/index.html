@@ -33,8 +33,8 @@
 <div class="container">
     <!-- 英雄区域 -->
     <section class="hero">
-        <h1 class="hero-title">诗经草木鸟兽大全</h1>
-        <p class="hero-subtitle">《诗经》三百篇，涉及草木鸟兽者过半。本网站整理了《诗经》中出现的 {{ stats.total }} 种草木鸟兽，以飨读者。</p>
+        <h1 class="hero-title">诗经鸟兽草木大全</h1>
+        <p class="hero-subtitle">《诗经》三百篇，涉及鸟兽草木者过半。本网站整理了《诗经》中出现的 {{ stats.total }} 种鸟兽草木，以飨读者。</p>
         <p class="hero-note">📌 由于精力所限，配图配文多有疏漏，欢迎在具体页面留言指出。如有其他建议，可以在<a href="https://www.qtmuniao.com/about/" target="_blank" rel="noopener">这里</a>找到我，或者在最下面留言板留言。</p>
         <div class="hero-stats">
             {% for cat, count in stats.by_category.items() %}
@@ -65,7 +65,7 @@
             <input type="text" 
                    name="search" 
                    class="search-input" 
-                   placeholder="搜索草木鸟兽、诗篇或出处..."
+                   placeholder="搜索鸟兽草木、诗篇或出处..."
                    value="{{ search }}">
             <button type="submit" class="search-btn">🔍</button>
         </form>
@@ -73,7 +73,7 @@
 
     <!-- 结果统计 -->
     <div class="results-info">
-        共找到 <strong>{{ total }}</strong> 种草木鸟兽
+        共找到 <strong>{{ total }}</strong> 种鸟兽草木
         {% if search %}（搜索: "{{ search }}"）{% endif %}
     </div>
 

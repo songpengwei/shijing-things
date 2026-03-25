@@ -35,17 +35,18 @@
     <!-- 事物管理面板 -->
     <div id="tab-items" class="tab-panel {% if active_tab == 'items' %}active{% endif %}">
         <div class="panel-header">
-            <a href="/manage/item/new" class="btn btn-primary">+ 新建事物</a>
-            <!-- 搜索区域 -->
-            <div class="search-section-inline">
-                <form class="search-box" method="get" action="{{ manage_tab_urls['items'] }}">
+            <div class="panel-actions">
+                <a href="/manage/item/new" class="btn btn-primary">+ 新建事物</a>
+            </div>
+            <div class="panel-tools search-section-inline">
+                <form class="search-box manage-search-box" method="get" action="{{ manage_tab_urls['items'] }}">
                     <input type="text" 
                            name="search" 
                            class="search-input" 
                            placeholder="搜索名称、分类、出处、诗篇、引文、今名..."
                            value="{{ search }}"
                            id="search-input">
-                    <button type="submit" class="search-btn">🔍</button>
+                    <button type="submit" class="btn btn-primary">🔍 搜索</button>
                     {% if search %}
                     <a href="{{ manage_tab_urls['items'] }}" class="btn btn-secondary">清除</a>
                     {% endif %}
@@ -117,15 +118,18 @@
     <!-- 留言管理面板 -->
     <div id="tab-comments" class="tab-panel {% if active_tab == 'comments' %}active{% endif %}">
         <div class="panel-header">
-            <div class="filter-section">
-                <select id="comment-filter" class="filter-select" onchange="loadComments()">
-                    <option value="">全部留言</option>
-                    <option value="0">待审核</option>
-                    <option value="1">已通过</option>
-                    <option value="2">已拒绝</option>
-                </select>
+            <div class="panel-tools">
+                <div class="filter-section">
+                    <label class="toolbar-label" for="comment-filter">留言状态</label>
+                    <select id="comment-filter" class="filter-select" onchange="loadComments()">
+                        <option value="">全部留言</option>
+                        <option value="0">待审核</option>
+                        <option value="1">已通过</option>
+                        <option value="2">已拒绝</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary" onclick="loadComments()">🔄 刷新</button>
             </div>
-            <button class="btn btn-secondary" onclick="loadComments()">🔄 刷新</button>
         </div>
         <div class="stats-cards" id="comment-stats">
             <div class="stat-card">
@@ -168,14 +172,17 @@
     <!-- 用户管理面板 -->
     <div id="tab-users" class="tab-panel {% if active_tab == 'users' %}active{% endif %}">
         <div class="panel-header">
-            <div class="filter-section">
-                <select id="user-filter" class="filter-select" onchange="loadUsers()">
-                    <option value="">全部用户</option>
-                    <option value="1">正常</option>
-                    <option value="0">已停用</option>
-                </select>
+            <div class="panel-tools">
+                <div class="filter-section">
+                    <label class="toolbar-label" for="user-filter">用户状态</label>
+                    <select id="user-filter" class="filter-select" onchange="loadUsers()">
+                        <option value="">全部用户</option>
+                        <option value="1">正常</option>
+                        <option value="0">已停用</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary" onclick="loadUsers()">🔄 刷新</button>
             </div>
-            <button class="btn btn-secondary" onclick="loadUsers()">🔄 刷新</button>
         </div>
         <div class="manage-table-wrapper">
             <table class="manage-table">
@@ -202,8 +209,12 @@
     <!-- 安全防护面板 -->
     <div id="tab-security" class="tab-panel {% if active_tab == 'security' %}active{% endif %}">
         <div class="panel-header">
-            <h3>🛡️ 安全统计</h3>
-            <button class="btn btn-secondary" onclick="loadSecurityStats()">🔄 刷新</button>
+            <div class="panel-actions">
+                <h3>🛡️ 安全统计</h3>
+            </div>
+            <div class="panel-tools">
+                <button class="btn btn-secondary" onclick="loadSecurityStats()">🔄 刷新</button>
+            </div>
         </div>
         
         <div class="stats-cards" id="security-stats">
@@ -504,12 +515,31 @@
     align-items: center;
     margin-bottom: 1rem;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.875rem;
+    padding: 1rem 1.1rem;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.panel-actions,
+.panel-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
 .search-section-inline {
     flex: 1;
-    max-width: 500px;
+    max-width: 720px;
+}
+
+.toolbar-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    white-space: nowrap;
 }
 
 .settings-form-row {
@@ -569,16 +599,20 @@
 .filter-section {
     display: flex;
     gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .filter-select {
-    padding: 0.5rem 1rem;
+    min-height: 40px;
+    padding: 0.625rem 0.95rem;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--radius-sm);
     background: var(--color-card);
     color: var(--color-text);
-    font-size: 0.9rem;
+    font-size: 0.9375rem;
     cursor: pointer;
+    min-width: 180px;
 }
 
 /* 统计卡片 */
@@ -632,11 +666,17 @@
     margin-bottom: 0.75rem;
 }
 
+.manage-search-box {
+    margin-bottom: 0;
+    width: 100%;
+}
+
 .search-input {
     flex: 1;
+    min-height: 40px;
     padding: 0.625rem 1rem;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--radius-sm);
     font-size: 0.9375rem;
     background: var(--color-card);
     color: var(--color-text);
@@ -662,6 +702,12 @@
 
 .search-btn:hover {
     background: var(--color-primary-dark);
+}
+
+.manage-search-box .btn,
+.panel-tools .btn,
+.panel-actions .btn {
+    min-height: 40px;
 }
 
 .search-info {
@@ -835,12 +881,21 @@
         flex: 1;
     }
     
-    .search-box {
+    .search-box,
+    .panel-tools,
+    .panel-actions,
+    .filter-section {
         flex-wrap: wrap;
     }
     
-    .search-input {
+    .search-input,
+    .filter-select {
         width: 100%;
+        min-width: 0;
+    }
+
+    .panel-header {
+        padding: 0.9rem;
     }
     
     .manage-table-wrapper {

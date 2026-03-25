@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}诗经草木鸟兽大全{% endblock %}</title>
+    <title>{% block title %}诗经鸟兽草木大全{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_css %}{% endblock %}
 </head>
@@ -15,14 +15,15 @@
                 <div class="logo-wrap">
                     <a href="/" class="logo">
                         <span class="logo-icon">🌿</span>
-                        <span class="logo-text">诗经草木鸟兽</span>
+                        <span class="logo-text">诗经物什</span>
                     </a>
                     <span class="logo-separator">·</span>
                     <a href="https://www.qtmuniao.com/about" target="_blank" rel="noopener" class="logo-author">木鸟杂记</a>
                 </div>
-                <nav class="nav">
-                    <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">首页</a>
-                </nav>
+                <blockquote class="header-quote">
+                    <p>“多识于鸟兽草木之名”</p>
+                    <cite>—— 孔子</cite>
+                </blockquote>
             </div>
         </div>
     </header>
@@ -36,11 +37,10 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-top">
-                <p class="footer-quote">🌿 “多识于鸟兽草木之名” · 孔子</p>
                 <p class="footer-brand">📚 诗经物什 · <a href="https://www.qtmuniao.com/about" target="_blank" rel="noopener">木鸟杂记</a></p>
             </div>
             <div class="footer-bottom">
-                <p class="footer-copy">🪶 since 2026 · 草木鸟兽之间，留一点细读与辨认</p>
+                <p class="footer-copy">🪶 since 2026 · 鸟兽草木之间，留一点细读与辨认</p>
                 <p class="footer-admin-entry"><a href="/manage/items" rel="nofollow">🔐 管理入口</a></p>
             </div>
         </div>
