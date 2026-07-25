@@ -17,7 +17,22 @@
         </header>
 
         <div class="detail-body">
-            <!-- 图片 -->
+            <!-- 图片：名物图解古画 + 实物 古今对照 -->
+            {% if tujie_url %}
+            <div class="detail-figures">
+                <figure class="figure-tujie">
+                    <img src="{{ tujie_url }}" alt="{{ item.name }} 名物图解">
+                    <figcaption>《诗经名物图解》· 细井徇 1848</figcaption>
+                </figure>
+                {% if item.image_url %}
+                <figure class="figure-photo">
+                    <img src="{{ item.image_url }}" alt="{{ item.name }} 实物">
+                    <figcaption>实物</figcaption>
+                </figure>
+                {% endif %}
+            </div>
+            <p class="figure-credit">古画插图：《诗经名物图解》（细井徇，1848 年），日本国立国会图书馆藏，公有领域</p>
+            {% else %}
             <div class="detail-image">
                 {% if item.image_url %}
                 <img src="{{ item.image_url }}" alt="{{ item.name }}">
@@ -34,6 +49,7 @@
                 </div>
                 {% endif %}
             </div>
+            {% endif %}
 
             <!-- 引用 -->
             <blockquote class="detail-quote">

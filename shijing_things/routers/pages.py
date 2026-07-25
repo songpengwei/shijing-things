@@ -2,15 +2,18 @@
 页面路由 - 渲染 HTML 模板
 """
 import json
+import os
 import re
+from datetime import date
 from fastapi import APIRouter, Request, Depends, HTTPException, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional
 
 from shijing_things.core.config import get_settings
 from shijing_things.core.database import get_db
+from shijing_things.core.poster import make_daily_poster
 from shijing_things.core.session_auth import (
     clear_admin_session,
     get_comment_auth_label,
@@ -108,6 +111,74 @@ def highlight_quote_lines(poem_content: list, quote: str) -> list:
     return out
 
 
+TUJIE_DIR = 'shijing_things/static/img/tujie'
+
+
+def tujie_url_for(item_id: int) -> Optional[str]:
+    """《诗经名物图解》古画 URL（不存在则为 None）"""
+    path = os.path.join(TUJIE_DIR, f'{item_id}.jpg')
+    return f'/static/img/tujie/{item_id}.jpg' if os.path.exists(path) else None
+
+
+def tujie_file_for(item) -> Optional[str]:
+    """日签海报用图：优先古画，退回实物照片的本地路径"""
+    tujie = os.path.join(TUJIE_DIR, f'{item.id}.jpg')
+    if os.path.exists(tujie):
+        return tujie
+    if item.image_url:
+        photo = os.path.join('shijing_things', item.image_url.lstrip('/'))
+        if os.path.exists(photo):
+            return photo
+    return None
+
+
+def pick_daily_item(db: Session):
+    """按日期轮转选出当日名物"""
+    items, _ = crud_item.get_multi(db, skip=0, limit=1000)
+    items = sorted(items, key=lambda x: x.id)
+    if not items:
+        return None
+    return items[date.today().toordinal() % len(items)]
+
+
+@router.get("/daily", response_class=HTMLResponse)
+def daily(request: Request, db: Session = Depends(get_db)):
+    """每日名物日签"""
+    item = pick_daily_item(db)
+    if not item:
+        raise HTTPException(status_code=404, detail="暂无数据")
+
+    return templates.TemplateResponse("daily.html", {
+        "request": request,
+        "item": item,
+        "daily_image": tujie_url_for(item.id) or item.image_url,
+        "has_tujie": tujie_url_for(item.id) is not None,
+        "date_str": date.today().strftime('%Y 年 %m 月 %d 日'),
+    })
+
+
+@router.get("/daily/poster.png")
+def daily_poster(db: Session = Depends(get_db)):
+    """日签海报图（可保存分享）"""
+    item = pick_daily_item(db)
+    if not item:
+        raise HTTPException(status_code=404, detail="暂无数据")
+
+    image_path = tujie_file_for(item)
+    if not image_path:
+        raise HTTPException(status_code=404, detail="该名物暂无图片")
+
+    png = make_daily_poster(
+        item.name, item.category, item.quote, item.section, item.title,
+        image_path, date.today().isoformat(),
+    )
+    return Response(
+        content=png,
+        media_type='image/png',
+        headers={'Content-Disposition': f'inline; filename="daily-{item.id}.png"'},
+    )
+
+
 @router.get("/", response_class=HTMLResponse)
 def home(
     request: Request,
@@ -193,12 +264,13 @@ def item_detail(item_id: int, request: Request, db: Session = Depends(get_db)):
 
     # 引用在正文中高亮
     poem_content = highlight_quote_lines(poem_content, item.quote)
-    
+
     return templates.TemplateResponse("detail.html", {
         "request": request,
         "item": item,
         "poem": poem,
         "poem_content": poem_content,
+        "tujie_url": tujie_url_for(item.id),
         "is_admin": is_admin(request),
         "is_oauth_user": is_oauth_user(request),
         "github_login_url": f"/auth/login?next={request.url.path}",

@@ -252,6 +252,23 @@ body {
     color: var(--color-text-light);
 }
 
+.hero-daily {
+    margin-top: 2.25rem;
+}
+
+.hero-daily a {
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+
+.hero-daily a:hover {
+    color: var(--color-primary-dark);
+    border-bottom-color: var(--color-primary-dark);
+}
+
 /* 统计数字蓝绿+红黄四色间隔配色 */
 .stat-草 .stat-number { color: var(--color-cao); }
 .stat-木 .stat-number { color: var(--color-mu); }
@@ -712,6 +729,138 @@ body {
     font-size: 2.25rem;
     font-weight: 300;
     letter-spacing: 0.08em;
+}
+
+/* ===== 古今对照图 ===== */
+.detail-figures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.detail-figures:has(figure:only-child) {
+    grid-template-columns: minmax(0, 480px);
+    justify-content: center;
+}
+
+.detail-figures figure {
+    margin: 0;
+    border: 1px solid var(--color-border);
+    background: var(--color-card);
+}
+
+.detail-figures figure img {
+    display: block;
+    width: 100%;
+    height: 360px;
+    object-fit: contain;
+    background: var(--color-card);
+}
+
+.detail-figures figcaption {
+    padding: 0.6rem 1rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--color-text-light);
+    border-top: 1px solid var(--color-border);
+}
+
+.figure-credit {
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--color-text-light);
+    margin: 0 0 2rem;
+}
+
+/* ===== 每日名物日签 ===== */
+.daily-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0 3rem;
+}
+
+.daily-card {
+    width: 100%;
+    max-width: 560px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    padding: 2.5rem 2.5rem 2rem;
+    text-align: center;
+}
+
+.daily-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    color: var(--color-text-light);
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.daily-image {
+    margin-bottom: 2rem;
+}
+
+.daily-image img {
+    width: 100%;
+    max-height: 480px;
+    object-fit: contain;
+    border: 1px solid var(--color-border);
+}
+
+.daily-name {
+    font-size: 2.4rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.4rem;
+}
+
+.daily-cat {
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: var(--color-text-light);
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
+.daily-quote {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: var(--color-primary-dark);
+    margin: 1.25rem 0 0.5rem;
+}
+
+.daily-source {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--color-text-light);
+    margin-bottom: 1.75rem;
+}
+
+.daily-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.daily-credit {
+    margin-top: 1.75rem;
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--color-text-light);
+}
+
+@media (max-width: 768px) {
+    .detail-figures {
+        grid-template-columns: 1fr;
+    }
+
+    .daily-card {
+        padding: 1.5rem 1.25rem;
+    }
 }
 
 .detail-image {

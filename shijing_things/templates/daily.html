@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}每日名物 · {{ item.name }} - 诗经事物{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="daily-wrap">
+        <div class="daily-card">
+            <div class="daily-head">
+                <span>每日名物</span>
+                <span>{{ date_str }}</span>
+            </div>
+
+            {% if daily_image %}
+            <div class="daily-image">
+                <img src="{{ daily_image }}" alt="{{ item.name }}">
+            </div>
+            {% endif %}
+
+            <h1 class="daily-name">
+                {{ item.name }}
+                <span class="daily-cat">{{ item.category }}类</span>
+            </h1>
+
+            <p class="daily-quote">「{{ item.quote }}」</p>
+            <p class="daily-source">——《{{ item.section }}·{{ item.title }}》</p>
+
+            <div class="daily-actions">
+                <a class="btn btn-primary" href="/daily/poster.png" target="_blank">保存日签图</a>
+                <a class="btn btn-secondary" href="/item/{{ item.id }}">查看详情</a>
+            </div>
+
+            {% if has_tujie %}
+            <p class="daily-credit">古画插图：《诗经名物图解》（细井徇，1848 年），日本国立国会图书馆藏，公有领域</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
