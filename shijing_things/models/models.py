@@ -34,7 +34,7 @@ class Poem(Base):
     __tablename__ = "poems"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(100), nullable=False, unique=True, index=True)  # 诗名
+    title = Column(String(100), nullable=False, index=True)  # 诗名（不同章节可同名，如邶风/鄘风《柏舟》）
     chapter = Column(String(50), nullable=False, index=True)  # 章节（如：国风）
     section = Column(String(50), nullable=False, index=True)  # 部分（如：周南）
     content = Column(Text, nullable=False)  # 诗篇内容（JSON 数组字符串）

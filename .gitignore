@@ -66,3 +66,6 @@ backend/static/img/*.gif
 
 .venv
 backups/
+
+# 核对/修正工作区（数据备份与一次性脚本）
+.ctext_verify/

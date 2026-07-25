@@ -91,7 +91,7 @@
                 </h3>
                 <div class="poem-content">
                     {% for line in poem_content %}
-                    <p class="poem-line">{{ line }}</p>
+                    <p class="poem-line">{{ line | safe }}</p>
                     {% endfor %}
                 </div>
             </div>

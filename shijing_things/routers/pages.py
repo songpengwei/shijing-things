@@ -2,6 +2,7 @@
 页面路由 - 渲染 HTML 模板
 """
 import json
+import re
 from fastapi import APIRouter, Request, Depends, HTTPException, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -52,6 +53,59 @@ def require_admin(request: Request):
     if not is_admin(request):
         return RedirectResponse(url="/login?next=" + str(request.url.path), status_code=302)
     return None
+
+
+_PUNCT_RE = re.compile(r'[。，！？、；：""''（）【】《》·—…\s]')
+
+
+def highlight_quote_lines(poem_content: list, quote: str) -> list:
+    """将引用在诗篇正文中对应的文字用 <mark> 标出（返回 HTML 转义后的行）"""
+    from html import escape
+
+    norm_quote = _PUNCT_RE.sub('', quote or '')
+    if not norm_quote or not poem_content:
+        return [escape(line) for line in poem_content]
+
+    # 全文去标点后的字符 -> (行号, 原字符下标) 映射
+    mapping = []
+    norm_chars = []
+    for li, line in enumerate(poem_content):
+        for ci, ch in enumerate(line):
+            if not _PUNCT_RE.match(ch):
+                norm_chars.append(ch)
+                mapping.append((li, ci))
+    norm_all = ''.join(norm_chars)
+
+    hit_positions = set()
+    start = norm_all.find(norm_quote)
+    if start >= 0:
+        hit_positions.update(mapping[start:start + len(norm_quote)])
+    else:
+        # 回退：4 字滑窗（容忍个别异体字差异）
+        for i in range(0, max(len(norm_quote) - 3, 1)):
+            j = norm_all.find(norm_quote[i:i + 4])
+            if j >= 0:
+                hit_positions.update(mapping[j:j + 4])
+    if not hit_positions:
+        return [escape(line) for line in poem_content]
+
+    out = []
+    for li, line in enumerate(poem_content):
+        buf = []
+        in_mark = False
+        for ci, ch in enumerate(line):
+            hit = (li, ci) in hit_positions
+            if hit and not in_mark:
+                buf.append('<mark class="quote-hl">')
+                in_mark = True
+            elif not hit and in_mark:
+                buf.append('</mark>')
+                in_mark = False
+            buf.append(escape(ch))
+        if in_mark:
+            buf.append('</mark>')
+        out.append(''.join(buf))
+    return out
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -128,14 +182,17 @@ def item_detail(item_id: int, request: Request, db: Session = Depends(get_db)):
     if not item:
         raise HTTPException(status_code=404, detail="事物不存在")
     
-    # 获取所属诗篇
-    poem = crud_poem.get_by_title(db, title=item.title)
+    # 获取所属诗篇（按 poem_id 精确取，同名诗篇如《黄鸟》《柏舟》不会串）
+    poem = crud_poem.get(db, poem_id=item.poem_id)
     poem_content = []
     if poem:
         try:
             poem_content = json.loads(poem.content)
         except:
             poem_content = []
+
+    # 引用在正文中高亮
+    poem_content = highlight_quote_lines(poem_content, item.quote)
     
     return templates.TemplateResponse("detail.html", {
         "request": request,
